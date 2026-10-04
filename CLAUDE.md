@@ -1,0 +1,341 @@
+# CLAUDE.md — Instrucciones para Claude Code
+
+Este archivo es el brief del portfolio de Ana Nadal. Léelo entero antes de cada tarea.
+
+## Cómo trabajar
+
+- **Stack:** web estática con HTML, CSS y JavaScript sin frameworks. Debe desplegarse en Vercel sin configuración.
+- **Idioma de la web:** inglés. Usa los textos de este documento tal cual; no reescribas el copy sin pedir permiso.
+- **Niveles de lectura:** el Nivel 1 siempre visible; el Nivel 2 se despliega al interactuar (por ejemplo, con `<details>` o un botón accesible).
+- **Dirección visual:** manda la sección "Dirección visual (v1)": DM Sans, blanco y negro, retícula de 12 columnas, detalles en las esquinas, líneas finas. En la v1 no hay gradientes ni color.
+- **Imágenes:** están en `/images`, una subcarpeta por proyecto. Optimízalas para web. Esquinas rectas, sin sombras.
+- **Reglas:** respeta siempre la sección "Reglas, confidencialidad y backlog".
+- **Forma de trabajar:** construye sección por sección. Antes de cambios grandes, explica brevemente qué vas a hacer.
+
+---
+
+# Portfolio Ana Nadal — Brief & Copy
+
+## Concepto
+
+Un portfolio minimalista que muestra cómo trabajo, no solo lo que he hecho. Objetivo: aplicar a puestos de Design Lead y Product Designer senior.
+
+- **Referencia:** Balance Phone. Quedarse con lo esencial y quitar el ruido. La mayoría de portfolios son galerías; este muestra criterio.
+- **Por qué:** los proyectos son siempre de equipo. Lo que importa es qué aporto yo a ese equipo: mi proceso, mis decisiones y mi forma de trabajar con otras personas.
+- **Columna vertebral:** tres principios (Keep it clean, Show the direction, Keep it compelling), demostrados con proyectos.
+- **Hilo conductor interno (no aparece en la web):** la casa. El logo o la interfaz es el tejado y llega al final; antes van la escucha, el discovery, el plan y las decisiones compartidas.
+- **Idioma de la web:** inglés.
+
+## Voz y tono
+
+**Personalidad:** una diseñadora senior que explica las cosas como lo haría una buena compañera. Clara, cercana, segura de lo que sabe y honesta con lo que no. Usa su experiencia para que los demás entiendan, no para impresionar.
+
+**Valores:** Helpful · Human-centered · Expert · Positive impact · Cercana · Inteligencia para crear comprensión · Honestidad · Amabilidad.
+
+| Escala | Posición |
+| --- | --- |
+| Formal ↔ Cercana | Profesional y cálida |
+| Seria ↔ Lúdica | Seria, con algún toque ligero |
+| Técnica ↔ Sencilla | Sencilla; jerga solo si se explica |
+| Reservada ↔ Directa | Directa, sin rodeos |
+
+**Reglas de escritura**
+
+- Cada frase ayuda a entender algo. Un término técnico se explica en la misma frase.
+- Hablamos de lo que cambió para las personas, no de entregables.
+- La experiencia se nota en las decisiones y su porqué, no en adjetivos ni superlativos.
+- "We" cuando el trabajo fue de equipo; "I" para mi rol y mis decisiones.
+- Frases cortas, como se hablan. Nunca se critica a un cliente, ni de forma sutil.
+- Decimos con naturalidad qué es concepto, qué está en curso y qué no salió.
+- Evitamos: frases-aforismo, fragmentos tipo eslogan, el "no es X, es Y" y todo lo que suene a LinkedIn.
+
+## Estructura e interacción
+
+Una one-page con los tres principios como eje, y una página ligera por caso de estudio.
+
+**Orden de la home**
+
+1. Hero
+2. Kept / Cut (ubicación a validar al verlo maquetado)
+3. Principles
+4. How I work
+5. Evidence, agrupada por principio
+6. Now
+7. Contact
+
+**Dos niveles de lectura**
+
+- **Nivel 1, en diagonal:** una frase corta y humana. Se entiende el enfoque en segundos.
+- **Nivel 2, en profundidad:** aparece al interactuar (desplegar, clicar o hover). Mantiene el detalle completo de los textos.
+
+**Experiencia**
+
+- Web dinámica con imágenes abstractas. Nada literal: la casa no se dibuja.
+- Transiciones entre home y caso que parezcan la misma página: la imagen hero se queda fija o solo cambia de escala (View Transitions API).
+- Carga rápida, responsive en cualquier dispositivo, accesible (WCAG AA como mínimo).
+
+**Profundidad por tipo de caso**
+
+| Tipo | Casos | Contenido |
+| --- | --- | --- |
+| Caso completo | Resa | Challenge, Direction, Solution, Outcome con imágenes "Concept design" |
+| Caso de proceso (NDA) | AI tools for corporate bankers, A guide for newcomers to Spain | Sin nombres ni pantallas; artefactos recreados en estilo neutro |
+| Pieza de craft | Oros, Mr Sunday, Havaianas | Una imagen potente y la decisión de detalle que la explica |
+
+## Dirección visual (v1)
+
+Versión sencilla para presentar ya: tipografía protagonista, retícula visible y líneas finas, en blanco y negro.
+
+- **Tipografía:** DM Sans (Google Fonts). Jerarquía muy marcada: titulares enormes y ajustados, texto de lectura pequeño y limpio, etiquetas en mayúsculas pequeñas.
+- **Color:** blanco y negro. Fondo blanco roto, texto negro, gris solo para información secundaria.
+- **Retícula:** 12 columnas, líneas de la retícula visibles y muy finas en algunas secciones, como en un plano.
+- **Esquinas:** detalles de meta-información que hablan del modo de trabajo: versión (V1.0), estado ("In progress"), Madrid con hora local, número y nombre de la sección en curso ("02 — How I work").
+- **Imágenes abstractas:** composiciones de líneas finas, verticales y horizontales, con ritmo y pausas. Inspiradas en la arquitectura, nunca literales.
+- **Imágenes de proyecto:** esquinas rectas, sin bordes redondeados ni sombras.
+- **Movimiento:** discreto. Las líneas se dibujan al entrar en pantalla y el nivel 2 se despliega con suavidad.
+- **Referencias:** clemenceguillemot.com (meta-información en esquinas, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
+
+## Copy: Hero
+
+**Nivel 1**
+
+> **Ana Nadal** — Product & Brand Design Lead
+>
+> I turn noise into direction.
+
+**Nivel 2**
+
+> For more than ten years I've designed brands and digital products. Today I also design how people talk to AI. I help teams bring order to complexity, choose the direction worth following, and make it beautiful enough to be noticed.
+
+## Copy: Kept / Cut
+
+> **Cut:** Endless mockups. Buzzwords. Decoration.
+>
+> **Kept:** How I think. How I decide. How I work with a team.
+
+## Copy: Principles
+
+Un solo nivel de lectura.
+
+> **Keep it clean.** In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.
+>
+> **Show the direction.** When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.
+>
+> **Keep it compelling.** Beauty isn't decoration — it's what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.
+
+## Copy: How I work
+
+**Nivel 1**
+
+> **Listen** — I start with questions that save time later.
+>
+> **Discover** — I get to know the brand, the people and what's already there, and share what I find.
+>
+> **Plan** — We agree on clear steps, so everyone knows what's coming.
+>
+> **Build together** — We decide as a team. Once something's agreed, we move on.
+>
+> **Craft** — Then it's time to make it beautiful.
+
+**Nivel 2**
+
+> Most people see designers as the ones who make things look good. That part comes last.
+>
+> **01 · Listen**
+> Every project starts with listening: what the project needs, and what the people behind it need too. Experience helps me ask the right questions from day one, and show where design can help long before anything is drawn.
+>
+> **02 · Discover**
+> Before shaping anything, I get to know the brand, look at what already exists and search for the value proposition. When a project is already underway, a blueprint workshop helps us see where we stand. I share what I'm finding before we choose a path, often with references or a quick low-fi sketch. A simple visual sparks a better conversation than a concept explained in words.
+>
+> **03 · Plan**
+> We set clear milestones, with clear deliverables at each one. Delivering in phases gives strategy the weight it deserves, and gives the visual work a solid reason to exist.
+>
+> **04 · Build together**
+> Every proposal is a draft, open to improvement until we reach a shared goal. I bring the team and the client into each decision, because a decision made together rarely gets overturned. Once we agree, that phase is closed and we move forward without going back.
+>
+> **05 · Craft**
+> Only now does the final design take shape, built on everything that came before.
+>
+> **Always**
+> *Talk early, talk often.* With the team and with the client, at every step.
+> *Even a draft should be beautiful.* A rough idea presented with care earns the trust to develop the rest calmly.
+> *Build to last.* When everyone understands why each phase exists, what we create can grow and scale over time.
+
+## Copy: Evidence
+
+| Principio | Caso | Tipo | Carpeta de imágenes |
+| --- | --- | --- | --- |
+| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | — (artefactos recreados) |
+| Show the direction | Resa | Completo | images/resa |
+| Show the direction | AI tools for corporate bankers | Proceso (NDA) | — (artefactos recreados) |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros |
+| Keep it compelling | Mr Sunday | Craft | images/mr-sunday |
+| Keep it compelling | Havaianas | Craft | images/havaianas |
+
+### Resa
+
+**Nivel 1**
+
+> **Resa** — Two businesses, two brands, one website.
+
+**Nivel 2**
+
+> Design Lead · Brand strategy, UX/UI · With SEO, content strategy, data and an external development team · 2025
+>
+> **Challenge**
+> Resa runs university residences across Spain. Students stay for the academic year, and when rooms are free, travellers book them like a hotel. Each business had its own website and its own identity, and Resa wanted one.
+>
+> One website meant speaking to very different people: students choosing where to live, parents paying for it, and travellers looking for a place in the city. Some of those travellers didn't know they were booking a student residence.
+>
+> Early on we saw a deeper need: the brand itself wasn't unified. Before designing a website, we had to agree on who Resa was.
+>
+> **Direction**
+> *Brand first.* I proposed starting with a brand strategy workshop, with archetypes, visual references and positioning, so every screen would rest on a shared definition.
+>
+> *Community at the centre.* Competitors lead with services and locations. Resa's residents talk about something else: activities that turn strangers into friends almost overnight. We put that at the heart of the story.
+>
+> *Clear for travellers.* We said openly that guests stay in a student residence. Clear expectations make for better stays.
+>
+> *Building on what they had.* The workshop pointed to a bold new brand. Seeing it on screen, the team preferred to evolve their identity, so the third concept kept Resa's youthful character and refined its existing assets.
+>
+> **Solution**
+> A split-screen layout became the visual thread: two ways to stay, one brand. We rebuilt the palette as a fully accessible digital palette, aligned with the residences' signage. We chose two open-source typefaces: Bricolage Grotesque for personality, and Outfit for easy reading on screen. Two photography styles: natural lifestyle images for life at Resa, and careful architectural shots for the spaces. A modern set of illustrations and icons replaced the old, more childish shapes.
+>
+> I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.
+>
+> **Outcome**
+> [Imágenes de images/resa con caption: *Concept design*]
+
+### AI tools for corporate bankers
+
+**Nivel 1**
+
+> **AI tools for corporate bankers** — AI that saves time, while the banker keeps the final word.
+
+**Nivel 2**
+
+> Product Designer, sole designer · Conversation design, UX/UI · With product, data, engineering, front-end, architecture and business · Financial sector · In progress
+>
+> **Challenge**
+> Corporate bankers win on relationships. What they know about each client, and how they use it, is what makes a proposal work. A research team studied how bankers work today and where their time goes. Two tools came out of that work, and I design both: an AI assistant inside the bankers' CRM, and a tool that drafts client presentations.
+>
+> Both share one question: how can AI save time without losing what makes a banker's work valuable? An answer is only useful if it can be trusted, and a proposal only works if it sounds like the banker.
+>
+> **Direction**
+> *Reliable answers first.* The assistant works with sensitive internal information, so accurate, verified answers matter more than impressive ones. We designed what happens when it doesn't know as carefully as the ideal answer: it says so clearly and offers a next step.
+>
+> *A voice that fits.* I defined the assistant's personality, voice and tone for a banker's day-to-day, within the bank's guidelines. Professional and concise, and helpful like a good colleague.
+>
+> *Designed for the platform.* The assistant lives in the CRM's chat module. I mapped which components the platform supports and brought the bank's identity into them, so it feels at home in both.
+>
+> *The banker has the final word.* The presentation tool creates a first draft for each type of pitch. The banker then adjusts it through chat until it says exactly what they want their client to hear. Each response explains what changed, why, and what they can do next.
+>
+> **How we work**
+> We map each use case and its user flows to anticipate what bankers will need. Every step is agreed with front-end, data and the product owner. The presentation tool moves in phases: each prototype is reviewed with business, architecture, front-end, data and engineering, then tested with users as a simple prototype before anything is built.
+>
+> **Status**
+> A pilot group of bankers is testing the assistant's first version, and their feedback is shaping what comes next. The presentation tool reaches its first users in Q4 2026.
+
+Visuales: diagrama de human-in-the-loop, tarjeta de voz y tono con ejemplos inventados, taxonomía de fallbacks, mapa de equipos. Estilo neutro de líneas, sin pantallas reales.
+
+### A guide for newcomers to Spain
+
+**Nivel 1**
+
+> **A guide for newcomers to Spain** — Making a new start easier to follow.
+
+**Nivel 2**
+
+> Product Designer · UX strategy, content structure, UI, art direction · With product, business and content · Financial sector · Concept phase
+>
+> **Challenge**
+> Moving to a new country means two journeys at once: the paperwork to become a legal resident, and the personal one of building a life. The goal was a space on a bank's public website for people arriving in or living in Spain. It would help them through that change, and show how the bank could support each stage.
+>
+> The balance mattered. It had to feel like a guide people could trust, never like a sales brochure.
+>
+> **Direction**
+> *People before products.* We used AI to draft an initial map of who comes to Spain and why, then checked it with associations that support newcomers every day. That gave us four life moments: just arrived, here to study, already living here, and looking to invest.
+>
+> *One question to start.* The experience opens by asking: where are you right now? Each moment has its own page, written for that person's situation, and products appear only where they help. One flexible offer adapts to each stage.
+>
+> *Short, clear guidance.* Immigration paperwork is complex and personal, so we kept it brief: what each step involves and where to go next.
+>
+> *A way in for everyone.* Not everyone knows which moment fits them, so a main page guides each person to what they need.
+>
+> **Solution**
+> A hub and one page per life moment, connected by a single story. The interface uses only the bank's existing design system, so it could be built without new components. The image direction shows real people each audience can recognise themselves in: inclusive, natural and never forced.
+>
+> **Outcome**
+> A clear way to recognise each type of newcomer and offer the right help, through the right channel, at the right moment. For audiences with an existing offer, it opened a path to a long-term relationship. For the rest, it started a relationship built on their real concerns, financial or not. The project has since moved to another team.
+
+Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wireframe neutro y un mapa de momentos vitales. Nunca usar capturas del banco.
+
+### Oros Travel & Culture
+
+**Nivel 1**
+
+> **Oros Travel & Culture** — A family brand, ready to fly.
+
+**Nivel 2**
+
+> Brand restyle & website
+>
+> Oros designs tailor-made performance tours in Spain. After twenty years as a family business, it was ready for a new look. We built everything around one idea, fly and connect: Migra, a serif inspired by bird migration, warm illustrations, and an orange that feels like a welcome. The website shows how Oros plans each trip, personal and professional at the same time.
+>
+> [Visit the website →](https://orostravel.com/)
+
+### Mr Sunday
+
+**Nivel 1**
+
+> **Mr Sunday** — A logo with a filmmaker's warmth.
+
+**Nivel 2**
+
+> Brand identity
+>
+> A creative film studio in Madrid, now opening in Stockholm. The studio is built around its founder, a warm and open filmmaker, and the brand needed to show it. Starting from the Lima typeface, I adjusted the letters until they connected and balanced. The palette feels cheerful and close, like him.
+
+### Havaianas
+
+**Nivel 1**
+
+> **Havaianas** — Five years bringing Brazilian campaigns to Europe.
+
+**Nivel 2**
+
+> Campaign adaptation for EMEAI, 2017–2022
+>
+> I led the team adapting each Havaianas campaign for the EMEAI market: key visuals, retail spaces, final artwork, and motion for stores and social media. Knowing each campaign in depth let us protect the details that make it work in every format. When the brand renewed its identity in 2021, we also brought it to their Madrid headquarters.
+
+## Copy: Now
+
+**Nivel 1**
+
+> Conversation design · Designing with AI · Service design · Accessibility
+
+**Nivel 2**
+
+> Right now I'm designing how people talk to AI, and how AI fits into their real work. I use service design to see the whole experience, not only the screen. And I treat accessibility (WCAG) as part of every project from the start.
+
+## Copy: Contact
+
+> Let's talk.
+>
+> anaonadal@gmail.com · [LinkedIn](https://www.linkedin.com/in/anadal)
+
+Sin teléfono y sin CV en la web: solo email y LinkedIn.
+
+## Reglas que no se rompen
+
+- Ningún enlace a trabajo interno, en ninguna parte de la web.
+- Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
+- Las imágenes de Resa llevan el caption "Concept design".
+- No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
+- Sin teléfono ni CV en la web.
+
+## Backlog (no construir todavía)
+
+- Brand refresh para una empresa de iluminación: fuera por ahora.
+- Revisar el equilibrio de Keep it clean, que de momento tiene un solo caso.
+- Validar la ubicación de Kept / Cut con la web maquetada.

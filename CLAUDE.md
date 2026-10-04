@@ -56,12 +56,15 @@ Una one-page con los tres principios como eje, y una página ligera por caso de 
 **Orden de la home**
 
 1. Hero
-2. Kept / Cut (ubicación a validar al verlo maquetado)
-3. Principles
-4. How I work
-5. Evidence, agrupada por principio
-6. Now
-7. Contact
+2. Principles, con sus casos de estudio dentro (cada principio lleva sus proyectos)
+3. How I work
+4. Contact
+
+Los capítulos se numeran del 01 al 04. Kept / Cut, Evidence y Now ya no están en la web (su copy se conserva al final, en "Copy retirado de la web").
+
+**Orden de los principios:** Show the direction, Keep it compelling, Keep it clean.
+
+**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card, el caso se despliega debajo, dentro del mismo principio, con un solo caso abierto a la vez por principio.
 
 **Dos niveles de lectura**
 
@@ -79,7 +82,7 @@ Una one-page con los tres principios como eje, y una página ligera por caso de 
 | Tipo | Casos | Contenido |
 | --- | --- | --- |
 | Caso completo | Resa | Challenge, Direction, Solution, Outcome con imágenes "Concept design" |
-| Caso de proceso (NDA) | AI tools for corporate bankers, A guide for newcomers to Spain | Sin nombres ni pantallas; artefactos recreados en estilo neutro |
+| Caso de proceso (NDA) | AI tools for corporate bankers, A guide for newcomers to Spain | Sin nombres ni pantallas; miniatura de líneas en lugar de imagen y artefactos recreados en estilo neutro |
 | Pieza de craft | Oros, Mr Sunday, Havaianas | Una imagen potente y la decisión de detalle que la explica |
 
 ## Dirección visual (v1)
@@ -88,14 +91,16 @@ Versión sencilla para presentar ya: tipografía protagonista, retícula visible
 
 - **Tipografía:** DM Sans (Google Fonts). Jerarquía muy marcada: titulares enormes y ajustados, texto de lectura pequeño y limpio, etiquetas en mayúsculas pequeñas.
 - **Color:** blanco y negro. Fondo blanco roto, texto negro, gris solo para información secundaria.
-- **Retícula:** 12 columnas, líneas de la retícula visibles y muy finas en algunas secciones, como en un plano.
-- **Esquinas:** detalles de meta-información que hablan del modo de trabajo: versión (V1.0), estado ("In progress"), Madrid con hora local, número y nombre de la sección en curso ("02 — How I work").
-- **Imágenes abstractas:** composiciones de líneas finas, verticales y horizontales, con ritmo y pausas. Inspiradas en la arquitectura, nunca literales.
+- **Retícula:** 12 columnas, líneas de la retícula visibles y muy finas en algunas secciones, como en un plano. Negro al 3 % de opacidad y siempre en el fondo: las imágenes van por encima.
+- **Cabecera:** barra fija con fondo opaco (100 %). A la izquierda, Madrid con la hora local en directo; a la derecha, el número y nombre del capítulo en curso ("03 — How I work"). Al hacer clic en el capítulo se abre un menú con los capítulos para saltar de uno a otro dentro de la página. Sin versión, sin estado y sin nombre en la cabecera.
+- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. El hero es una flor hecha de líneas diagonales; las miniaturas de los casos sin imagen (Resa, AI tools, A guide for newcomers) usan el mismo estilo: puntos o trazos en diagonal con grosor variable. Son SVG trazados a partir de las referencias de Ana (`images/hero-flower.svg`, `images/generated/`).
 - **Imágenes de proyecto:** esquinas rectas, sin bordes redondeados ni sombras.
-- **Movimiento:** discreto. Las líneas se dibujan al entrar en pantalla y el nivel 2 se despliega con suavidad.
-- **Referencias:** clemenceguillemot.com (meta-información en esquinas, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
+- **Movimiento:** discreto. En la flor y en las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (las miniaturas lo hacen al entrar en pantalla). El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
+- **Referencias:** clemenceguillemot.com (meta-información, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
 
 ## Copy: Hero
+
+El texto de "About me" (Nivel 2) es siempre visible, con el mismo tamaño de letra que los títulos de los principios.
 
 **Nivel 1**
 
@@ -107,23 +112,19 @@ Versión sencilla para presentar ya: tipografía protagonista, retícula visible
 
 > For more than ten years I've designed brands and digital products. Today I also design how people talk to AI. I help teams bring order to complexity, choose the direction worth following, and make it beautiful enough to be noticed.
 
-## Copy: Kept / Cut
-
-> **Cut:** Endless mockups. Buzzwords. Decoration.
->
-> **Kept:** How I think. How I decide. How I work with a team.
-
 ## Copy: Principles
 
-Un solo nivel de lectura.
+Un solo nivel de lectura. En la web, los títulos de los principios van sin punto final (también "I turn noise into direction" y "Let's talk").
 
-> **Keep it clean.** In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.
->
 > **Show the direction.** When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.
 >
 > **Keep it compelling.** Beauty isn't decoration — it's what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.
+>
+> **Keep it clean.** In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.
 
 ## Copy: How I work
+
+En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1 siempre visible y el Nivel 2 al hacer clic, con un símbolo + que aparece al pasar el ratón. "Always" es un paso más de la lista. La frase "Most people see designers…" queda visible encima de los pasos.
 
 **Nivel 1**
 
@@ -161,16 +162,20 @@ Un solo nivel de lectura.
 > *Even a draft should be beautiful.* A rough idea presented with care earns the trust to develop the rest calmly.
 > *Build to last.* When everyone understands why each phase exists, what we create can grow and scale over time.
 
-## Copy: Evidence
+## Copy: Casos de estudio
 
-| Principio | Caso | Tipo | Carpeta de imágenes |
-| --- | --- | --- | --- |
-| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | — (artefactos recreados) |
-| Show the direction | Resa | Completo | images/resa |
-| Show the direction | AI tools for corporate bankers | Proceso (NDA) | — (artefactos recreados) |
-| Keep it compelling | Oros Travel & Culture | Craft | images/oros |
-| Keep it compelling | Mr Sunday | Craft | images/mr-sunday |
-| Keep it compelling | Havaianas | Craft | images/havaianas |
+Cada caso vive dentro de su principio.
+
+| Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
+| --- | --- | --- | --- | --- |
+| Show the direction | Resa | Completo | images/resa (pendiente de subir) | Brand strategy, UX/UI · 2025 |
+| Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
+| Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
+| Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
+| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction |
+
+En las cards va solo el tipo de proyecto, no la posición. Falta el año de AI tools y de A guide for newcomers.
 
 ### Resa
 
@@ -308,23 +313,13 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 >
 > I led the team adapting each Havaianas campaign for the EMEAI market: key visuals, retail spaces, final artwork, and motion for stores and social media. Knowing each campaign in depth let us protect the details that make it work in every format. When the brand renewed its identity in 2021, we also brought it to their Madrid headquarters.
 
-## Copy: Now
-
-**Nivel 1**
-
-> Conversation design · Designing with AI · Service design · Accessibility
-
-**Nivel 2**
-
-> Right now I'm designing how people talk to AI, and how AI fits into their real work. I use service design to see the whole experience, not only the screen. And I treat accessibility (WCAG) as part of every project from the start.
-
 ## Copy: Contact
 
-> Let's talk.
+> Let's talk
 >
 > anaonadal@gmail.com · [LinkedIn](https://www.linkedin.com/in/anadal)
 
-Sin teléfono y sin CV en la web: solo email y LinkedIn.
+Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie.
 
 ## Reglas que no se rompen
 
@@ -338,4 +333,23 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn.
 
 - Brand refresh para una empresa de iluminación: fuera por ahora.
 - Revisar el equilibrio de Keep it clean, que de momento tiene un solo caso.
-- Validar la ubicación de Kept / Cut con la web maquetada.
+
+## Copy retirado de la web
+
+Estas secciones se quitaron de la home. Su copy se conserva por si vuelven.
+
+### Kept / Cut
+
+> **Cut:** Endless mockups. Buzzwords. Decoration.
+>
+> **Kept:** How I think. How I decide. How I work with a team.
+
+### Now
+
+**Nivel 1**
+
+> Conversation design · Designing with AI · Service design · Accessibility
+
+**Nivel 2**
+
+> Right now I'm designing how people talk to AI, and how AI fits into their real work. I use service design to see the whole experience, not only the screen. And I treat accessibility (WCAG) as part of every project from the start.

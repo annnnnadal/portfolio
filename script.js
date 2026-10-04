@@ -1,8 +1,11 @@
 (function () {
   "use strict";
 
-  /* Level 2 disclosures: <button class="toggle" aria-controls="id"> + <div class="panel" id="id"> */
-  document.querySelectorAll(".toggle[aria-controls], .step-btn[aria-controls]").forEach(function (btn) {
+  /* Level 2 disclosures. A trigger is any button with aria-controls pointing to a .panel.
+     Triggers that share data-group behave like an accordion: one open at a time. */
+  var triggers = document.querySelectorAll(".toggle[aria-controls], .step-btn[aria-controls], .card-btn[aria-controls]");
+
+  triggers.forEach(function (btn) {
     var panel = document.getElementById(btn.getAttribute("aria-controls"));
     if (!panel) return;
     var text = btn.querySelector(".toggle-text");
@@ -15,10 +18,28 @@
       else panel.removeAttribute("data-open");
       if (text) text.textContent = open ? openLabel : closedLabel;
     }
+    btn._set = set;
 
     set(false);
     btn.addEventListener("click", function () {
-      set(btn.getAttribute("aria-expanded") !== "true");
+      var open = btn.getAttribute("aria-expanded") !== "true";
+      if (open && btn.dataset.group) {
+        triggers.forEach(function (other) {
+          if (other !== btn && other.dataset.group === btn.dataset.group && other._set) other._set(false);
+        });
+      }
+      set(open);
+    });
+  });
+
+  /* "Close case" button at the end of a case: closes it and returns to its card. */
+  document.querySelectorAll("[data-close]").forEach(function (closer) {
+    closer.addEventListener("click", function () {
+      var card = document.getElementById(closer.dataset.close);
+      if (!card) return;
+      if (card._set) card._set(false);
+      card.focus({ preventScroll: true });
+      card.scrollIntoView({ block: "center", behavior: "smooth" });
     });
   });
 

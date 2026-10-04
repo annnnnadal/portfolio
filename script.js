@@ -2,7 +2,7 @@
   "use strict";
 
   /* Level 2 disclosures: <button class="toggle" aria-controls="id"> + <div class="panel" id="id"> */
-  document.querySelectorAll(".toggle[aria-controls]").forEach(function (btn) {
+  document.querySelectorAll(".toggle[aria-controls], .step-btn[aria-controls]").forEach(function (btn) {
     var panel = document.getElementById(btn.getAttribute("aria-controls"));
     if (!panel) return;
     var text = btn.querySelector(".toggle-text");

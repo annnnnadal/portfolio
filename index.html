@@ -19,15 +19,25 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <div class="corners" aria-hidden="true">
-    <div class="corner bl">Madrid <span class="sep">/</span> <time id="clock">--:--:--</time></div>
-    <div class="corner br" id="section-label">01 — Hero</div>
-  </div>
+  <header class="topbar">
+    <p class="topbar-meta label">Madrid <span class="sep">/</span> <time id="clock" aria-hidden="true">--:--:--</time></p>
+    <div class="chapters">
+      <button class="chapter-btn label" type="button" aria-expanded="false" aria-controls="chapter-menu"><span class="sr-only">Chapters, current: </span><span id="section-label">01 — Hero</span><span class="chev" aria-hidden="true"></span></button>
+      <nav class="chapter-menu" id="chapter-menu" aria-label="Chapters">
+        <ul>
+          <li><a href="#hero">01 — Hero</a></li>
+          <li><a href="#principles">02 — Principles</a></li>
+          <li><a href="#how-i-work">03 — How I work</a></li>
+          <li><a href="#contact">04 — Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
   <main id="main">
 
     <!-- 01 Hero -->
-    <section class="section hero" data-label="01 — Hero" aria-labelledby="hero-title">
+    <section class="section hero" id="hero" data-label="01 — Hero" aria-labelledby="hero-title">
       <div class="gridlines" aria-hidden="true"><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span><span style="--i:4"></span><span style="--i:5"></span><span style="--i:6"></span><span style="--i:7"></span><span style="--i:8"></span><span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span></div>
       <div class="g">
         <p class="eyebrow label span-all"><strong>Ana Nadal</strong> — Product &amp; Brand Design Lead</p>
@@ -35,80 +45,41 @@
       </div>
       <div class="hero-row">
         <p class="about">For more than ten years I’ve designed brands and digital products. Today I also design how people talk to AI. I help teams bring order to complexity, choose the direction worth following, and make it beautiful enough to be noticed.</p>
-        <div class="hero-art"><img src="images/hero-flower.svg" width="1200" height="600" alt="" decoding="async"></div>
       </div>
+      <div class="hero-art"><img src="images/hero-flower.svg" width="790" height="1282" alt="" decoding="async"></div>
     </section>
 
     <!-- 02 Principles (with case studies) -->
-    <section class="section" data-label="02 — Principles" aria-labelledby="principles-title">
+    <section class="section" id="principles" data-label="02 — Principles" aria-labelledby="principles-title">
       <div class="gridlines" aria-hidden="true"><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span><span style="--i:4"></span><span style="--i:5"></span><span style="--i:6"></span><span style="--i:7"></span><span style="--i:8"></span><span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span></div>
       <div class="g">
         <h2 class="label span-all" id="principles-title">Principles</h2>
         <div class="principle span-all g" style="padding-inline:0">
           <p class="label span-side">01</p>
           <div class="span-main">
-            <h3 class="h3">Keep it clean</h3>
-            <p class="lead">In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.</p>
-          <ul class="cards">
-            <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-guide" aria-expanded="false" aria-controls="case-guide" data-group="clean">
-                <span class="card-thumb">
-                  <img src="images/generated/newcomers-guide.svg" width="1400" height="788" alt="" loading="lazy" decoding="async">
-                  
-                  <span class="icon" aria-hidden="true"></span>
-                </span>
-                <span class="card-info"><span class="card-title">A guide for newcomers to Spain</span><span class="card-meta label muted">Product Designer</span></span>
-              </button></h4>
-            </li>
-          </ul>
-          <div class="panel case-panel" id="case-guide" role="region" aria-labelledby="btn-guide" data-group="clean">
-            <div class="panel-inner">
-              <div class="case-detail">
-                <p class="lead case-lead">Making a new start easier to follow.</p>
-                <p class="meta label muted">Product Designer · UX strategy, content structure, UI, art direction · With product, business and content · Financial sector · Concept phase</p>
-                <div class="block"><h5 class="label">Challenge</h5>
-                  <p class="body">Moving to a new country means two journeys at once: the paperwork to become a legal resident, and the personal one of building a life. The goal was a space on a bank’s public website for people arriving in or living in Spain. It would help them through that change, and show how the bank could support each stage.</p>
-                  <p class="body">The balance mattered. It had to feel like a guide people could trust, never like a sales brochure.</p></div>
-                <div class="block"><h5 class="label">Direction</h5>
-                  <p class="body"><em>People before products.</em> We used AI to draft an initial map of who comes to Spain and why, then checked it with associations that support newcomers every day. That gave us four life moments: just arrived, here to study, already living here, and looking to invest.</p>
-                  <p class="body"><em>One question to start.</em> The experience opens by asking: where are you right now? Each moment has its own page, written for that person’s situation, and products appear only where they help. One flexible offer adapts to each stage.</p>
-                  <p class="body"><em>Short, clear guidance.</em> Immigration paperwork is complex and personal, so we kept it brief: what each step involves and where to go next.</p>
-                  <p class="body"><em>A way in for everyone.</em> Not everyone knows which moment fits them, so a main page guides each person to what they need.</p></div>
-                <div class="block"><h5 class="label">Solution</h5>
-                  <p class="body">A hub and one page per life moment, connected by a single story. The interface uses only the bank’s existing design system, so it could be built without new components. The image direction shows real people each audience can recognise themselves in: inclusive, natural and never forced.</p></div>
-                <div class="block"><h5 class="label">Outcome</h5>
-                  <p class="body">A clear way to recognise each type of newcomer and offer the right help, through the right channel, at the right moment. For audiences with an existing offer, it opened a path to a long-term relationship. For the rest, it started a relationship built on their real concerns, financial or not. The project has since moved to another team.</p></div>
-                <button class="toggle close-case" type="button" data-close="btn-guide"><span class="toggle-text">Close case</span><span class="icon" aria-hidden="true"></span></button>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="principle span-all g" style="padding-inline:0">
-          <p class="label span-side">02</p>
-          <div class="span-main">
             <h3 class="h3">Show the direction</h3>
             <p class="lead">When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.</p>
+          <h4 class="label cards-title">Case studies</h4>
           <ul class="cards">
             <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-resa" aria-expanded="false" aria-controls="case-resa" data-group="direction">
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-resa" aria-expanded="false" aria-controls="case-resa" data-group="direction">
                 <span class="card-thumb">
-                  <img src="images/generated/resa.svg" width="1400" height="788" alt="" loading="lazy" decoding="async">
+                  <img class="gen" data-anim="images/generated/resa.svg" width="1547" height="1160" alt="" decoding="async"><noscript><img class="gen" src="images/generated/resa.svg" width="1547" height="1160" alt=""></noscript>
                   
                   <span class="icon" aria-hidden="true"></span>
                 </span>
-                <span class="card-info"><span class="card-title">Resa</span><span class="card-meta label muted">Design Lead · 2025</span></span>
-              </button></h4>
+                <span class="card-info"><span class="card-title">Resa</span><span class="card-meta label muted">Brand strategy, UX/UI · 2025</span></span>
+              </button></h5>
             </li>
             <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-ai" aria-expanded="false" aria-controls="case-ai" data-group="direction">
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-ai" aria-expanded="false" aria-controls="case-ai" data-group="direction">
                 <span class="card-thumb">
-                  <img src="images/generated/ai-tools.svg" width="1400" height="788" alt="" loading="lazy" decoding="async">
+                  <img class="gen" data-anim="images/generated/ai-tools.svg" width="1585" height="1188" alt="" decoding="async"><noscript><img class="gen" src="images/generated/ai-tools.svg" width="1585" height="1188" alt=""></noscript>
                   <span class="wip"><span class="dot" aria-hidden="true"></span>WIP<span class="sr-only"> (work in progress)</span></span>
                   <span class="icon" aria-hidden="true"></span>
                 </span>
-                <span class="card-info"><span class="card-title">AI tools for corporate bankers</span><span class="card-meta label muted">Product Designer</span></span>
-              </button></h4>
+                <span class="card-info"><span class="card-title">AI tools for corporate bankers</span><span class="card-meta label muted">Conversation design, UX/UI</span></span>
+              </button></h5>
             </li>
           </ul>
           <div class="panel case-panel" id="case-resa" role="region" aria-labelledby="btn-resa" data-group="direction">
@@ -116,16 +87,16 @@
               <div class="case-detail">
                 <p class="lead case-lead">Two businesses, two brands, one website.</p>
                 <p class="meta label muted">Design Lead · Brand strategy, UX/UI · With SEO, content strategy, data and an external development team · 2025</p>
-                <div class="block"><h5 class="label">Challenge</h5>
+                <div class="block"><h6 class="label">Challenge</h6>
                   <p class="body">Resa runs university residences across Spain. Students stay for the academic year, and when rooms are free, travellers book them like a hotel. Each business had its own website and its own identity, and Resa wanted one.</p>
                   <p class="body">One website meant speaking to very different people: students choosing where to live, parents paying for it, and travellers looking for a place in the city. Some of those travellers didn’t know they were booking a student residence.</p>
                   <p class="body">Early on we saw a deeper need: the brand itself wasn’t unified. Before designing a website, we had to agree on who Resa was.</p></div>
-                <div class="block"><h5 class="label">Direction</h5>
+                <div class="block"><h6 class="label">Direction</h6>
                   <p class="body"><em>Brand first.</em> I proposed starting with a brand strategy workshop, with archetypes, visual references and positioning, so every screen would rest on a shared definition.</p>
                   <p class="body"><em>Community at the centre.</em> Competitors lead with services and locations. Resa’s residents talk about something else: activities that turn strangers into friends almost overnight. We put that at the heart of the story.</p>
                   <p class="body"><em>Clear for travellers.</em> We said openly that guests stay in a student residence. Clear expectations make for better stays.</p>
                   <p class="body"><em>Building on what they had.</em> The workshop pointed to a bold new brand. Seeing it on screen, the team preferred to evolve their identity, so the third concept kept Resa’s youthful character and refined its existing assets.</p></div>
-                <div class="block"><h5 class="label">Solution</h5>
+                <div class="block"><h6 class="label">Solution</h6>
                   <p class="body">A split-screen layout became the visual thread: two ways to stay, one brand. We rebuilt the palette as a fully accessible digital palette, aligned with the residences’ signage. We chose two open-source typefaces: Bricolage Grotesque for personality, and Outfit for easy reading on screen. Two photography styles: natural lifestyle images for life at Resa, and careful architectural shots for the spaces. A modern set of illustrations and icons replaced the old, more childish shapes.</p>
                   <p class="body">I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.</p></div>
                 <!-- TODO: /images/resa is empty. Add the Resa concept images here as an "Outcome" block
@@ -139,17 +110,17 @@
               <div class="case-detail">
                 <p class="lead case-lead">AI that saves time, while the banker keeps the final word.</p>
                 <p class="meta label muted">Product Designer, sole designer · Conversation design, UX/UI · With product, data, engineering, front-end, architecture and business · Financial sector · In progress</p>
-                <div class="block"><h5 class="label">Challenge</h5>
+                <div class="block"><h6 class="label">Challenge</h6>
                   <p class="body">Corporate bankers win on relationships. What they know about each client, and how they use it, is what makes a proposal work. A research team studied how bankers work today and where their time goes. Two tools came out of that work, and I design both: an AI assistant inside the bankers’ CRM, and a tool that drafts client presentations.</p>
                   <p class="body">Both share one question: how can AI save time without losing what makes a banker’s work valuable? An answer is only useful if it can be trusted, and a proposal only works if it sounds like the banker.</p></div>
-                <div class="block"><h5 class="label">Direction</h5>
+                <div class="block"><h6 class="label">Direction</h6>
                   <p class="body"><em>Reliable answers first.</em> The assistant works with sensitive internal information, so accurate, verified answers matter more than impressive ones. We designed what happens when it doesn’t know as carefully as the ideal answer: it says so clearly and offers a next step.</p>
                   <p class="body"><em>A voice that fits.</em> I defined the assistant’s personality, voice and tone for a banker’s day-to-day, within the bank’s guidelines. Professional and concise, and helpful like a good colleague.</p>
                   <p class="body"><em>Designed for the platform.</em> The assistant lives in the CRM’s chat module. I mapped which components the platform supports and brought the bank’s identity into them, so it feels at home in both.</p>
                   <p class="body"><em>The banker has the final word.</em> The presentation tool creates a first draft for each type of pitch. The banker then adjusts it through chat until it says exactly what they want their client to hear. Each response explains what changed, why, and what they can do next.</p></div>
-                <div class="block"><h5 class="label">How we work</h5>
+                <div class="block"><h6 class="label">How we work</h6>
                   <p class="body">We map each use case and its user flows to anticipate what bankers will need. Every step is agreed with front-end, data and the product owner. The presentation tool moves in phases: each prototype is reviewed with business, architecture, front-end, data and engineering, then tested with users as a simple prototype before anything is built.</p></div>
-                <div class="block"><h5 class="label">Status</h5>
+                <div class="block"><h6 class="label">Status</h6>
                   <p class="body">A pilot group of bankers is testing the assistant’s first version, and their feedback is shaping what comes next. The presentation tool reaches its first users in Q4 2026.</p></div>
                 <button class="toggle close-case" type="button" data-close="btn-ai"><span class="toggle-text">Close case</span><span class="icon" aria-hidden="true"></span></button>
               </div>
@@ -158,47 +129,48 @@
           </div>
         </div>
         <div class="principle span-all g" style="padding-inline:0">
-          <p class="label span-side">03</p>
+          <p class="label span-side">02</p>
           <div class="span-main">
             <h3 class="h3">Keep it compelling</h3>
             <p class="lead">Beauty isn’t decoration — it’s what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.</p>
+          <h4 class="label cards-title">Case studies</h4>
           <ul class="cards">
             <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-oros" aria-expanded="false" aria-controls="case-oros" data-group="compelling">
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-oros" aria-expanded="false" aria-controls="case-oros" data-group="compelling">
                 <span class="card-thumb">
                   <img src="images/oros/oros-identity-panel.webp" width="1400" height="788" alt="" loading="lazy" decoding="async">
                   
                   <span class="icon" aria-hidden="true"></span>
                 </span>
-                <span class="card-info"><span class="card-title">Oros Travel &amp; Culture</span><span class="card-meta label muted">Brand restyle &amp; website</span></span>
-              </button></h4>
+                <span class="card-info"><span class="card-title">Oros Travel &amp; Culture</span><span class="card-meta label muted">Brand restyle &amp; website · 2023</span></span>
+              </button></h5>
             </li>
             <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-sunday" aria-expanded="false" aria-controls="case-sunday" data-group="compelling">
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-sunday" aria-expanded="false" aria-controls="case-sunday" data-group="compelling">
                 <span class="card-thumb">
                   <img src="images/mr-sunday/mr-sunday-logo.webp" width="1400" height="788" alt="" loading="lazy" decoding="async">
                   
                   <span class="icon" aria-hidden="true"></span>
                 </span>
-                <span class="card-info"><span class="card-title">Mr Sunday</span><span class="card-meta label muted">Brand identity</span></span>
-              </button></h4>
+                <span class="card-info"><span class="card-title">Mr Sunday</span><span class="card-meta label muted">Brand identity · 2024</span></span>
+              </button></h5>
             </li>
             <li>
-              <h4 class="card-head"><button class="card-btn" type="button" id="btn-havaianas" aria-expanded="false" aria-controls="case-havaianas" data-group="compelling">
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-havaianas" aria-expanded="false" aria-controls="case-havaianas" data-group="compelling">
                 <span class="card-thumb">
                   <img src="images/havaianas/Havainas-promo-window-2.webp" width="1400" height="788" alt="" loading="lazy" decoding="async">
                   
                   <span class="icon" aria-hidden="true"></span>
                 </span>
                 <span class="card-info"><span class="card-title">Havaianas</span><span class="card-meta label muted">Campaign adaptation for EMEAI · 2017–2022</span></span>
-              </button></h4>
+              </button></h5>
             </li>
           </ul>
           <div class="panel case-panel" id="case-oros" role="region" aria-labelledby="btn-oros" data-group="compelling">
             <div class="panel-inner">
               <div class="case-detail">
                 <p class="lead case-lead">A family brand, ready to fly.</p>
-                <p class="meta label muted">Brand restyle &amp; website</p>
+                <p class="meta label muted">Brand restyle &amp; website · 2023</p>
                 <div class="block"><p class="body">Oros designs tailor-made performance tours in Spain. After twenty years as a family business, it was ready for a new look. We built everything around one idea, fly and connect: Migra, a serif inspired by bird migration, warm illustrations, and an orange that feels like a welcome. The website shows how Oros plans each trip, personal and professional at the same time.</p></div>
                 <p class="link-out body"><a href="https://orostravel.com/" target="_blank" rel="noopener">Visit the website →<span class="sr-only"> (opens in a new tab)</span></a></p>
                 <div class="wide figs">
@@ -226,7 +198,7 @@
             <div class="panel-inner">
               <div class="case-detail">
                 <p class="lead case-lead">A logo with a filmmaker’s warmth.</p>
-                <p class="meta label muted">Brand identity</p>
+                <p class="meta label muted">Brand identity · 2024</p>
                 <div class="block"><p class="body">A creative film studio in Madrid, now opening in Stockholm. The studio is built around its founder, a warm and open filmmaker, and the brand needed to show it. Starting from the Lima typeface, I adjusted the letters until they connected and balanced. The palette feels cheerful and close, like him.</p></div>
                 <div class="wide figs">
           <figure class="full">
@@ -269,11 +241,52 @@
           </div>
           </div>
         </div>
+        <div class="principle span-all g" style="padding-inline:0">
+          <p class="label span-side">03</p>
+          <div class="span-main">
+            <h3 class="h3">Keep it clean</h3>
+            <p class="lead">In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.</p>
+          <h4 class="label cards-title">Case studies</h4>
+          <ul class="cards">
+            <li>
+              <h5 class="card-head"><button class="card-btn" type="button" id="btn-guide" aria-expanded="false" aria-controls="case-guide" data-group="clean">
+                <span class="card-thumb">
+                  <img class="gen" data-anim="images/generated/newcomers-guide.svg" width="1890" height="1417" alt="" decoding="async"><noscript><img class="gen" src="images/generated/newcomers-guide.svg" width="1890" height="1417" alt=""></noscript>
+                  
+                  <span class="icon" aria-hidden="true"></span>
+                </span>
+                <span class="card-info"><span class="card-title">A guide for newcomers to Spain</span><span class="card-meta label muted">UX strategy, content structure, UI, art direction</span></span>
+              </button></h5>
+            </li>
+          </ul>
+          <div class="panel case-panel" id="case-guide" role="region" aria-labelledby="btn-guide" data-group="clean">
+            <div class="panel-inner">
+              <div class="case-detail">
+                <p class="lead case-lead">Making a new start easier to follow.</p>
+                <p class="meta label muted">Product Designer · UX strategy, content structure, UI, art direction · With product, business and content · Financial sector · Concept phase</p>
+                <div class="block"><h6 class="label">Challenge</h6>
+                  <p class="body">Moving to a new country means two journeys at once: the paperwork to become a legal resident, and the personal one of building a life. The goal was a space on a bank’s public website for people arriving in or living in Spain. It would help them through that change, and show how the bank could support each stage.</p>
+                  <p class="body">The balance mattered. It had to feel like a guide people could trust, never like a sales brochure.</p></div>
+                <div class="block"><h6 class="label">Direction</h6>
+                  <p class="body"><em>People before products.</em> We used AI to draft an initial map of who comes to Spain and why, then checked it with associations that support newcomers every day. That gave us four life moments: just arrived, here to study, already living here, and looking to invest.</p>
+                  <p class="body"><em>One question to start.</em> The experience opens by asking: where are you right now? Each moment has its own page, written for that person’s situation, and products appear only where they help. One flexible offer adapts to each stage.</p>
+                  <p class="body"><em>Short, clear guidance.</em> Immigration paperwork is complex and personal, so we kept it brief: what each step involves and where to go next.</p>
+                  <p class="body"><em>A way in for everyone.</em> Not everyone knows which moment fits them, so a main page guides each person to what they need.</p></div>
+                <div class="block"><h6 class="label">Solution</h6>
+                  <p class="body">A hub and one page per life moment, connected by a single story. The interface uses only the bank’s existing design system, so it could be built without new components. The image direction shows real people each audience can recognise themselves in: inclusive, natural and never forced.</p></div>
+                <div class="block"><h6 class="label">Outcome</h6>
+                  <p class="body">A clear way to recognise each type of newcomer and offer the right help, through the right channel, at the right moment. For audiences with an existing offer, it opened a path to a long-term relationship. For the rest, it started a relationship built on their real concerns, financial or not. The project has since moved to another team.</p></div>
+                <button class="toggle close-case" type="button" data-close="btn-guide"><span class="toggle-text">Close case</span><span class="icon" aria-hidden="true"></span></button>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- 03 How I work -->
-    <section class="section" data-label="03 — How I work" aria-labelledby="how-title">
+    <section class="section" id="how-i-work" data-label="03 — How I work" aria-labelledby="how-title">
       <div class="gridlines" aria-hidden="true"><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span><span style="--i:4"></span><span style="--i:5"></span><span style="--i:6"></span><span style="--i:7"></span><span style="--i:8"></span><span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span></div>
       <div class="g">
         <h2 class="h2 span-all" id="how-title">How I work</h2>
@@ -312,7 +325,7 @@
     </section>
 
     <!-- 04 Contact -->
-    <section class="section contact" data-label="04 — Contact" aria-labelledby="contact-title">
+    <section class="section contact" id="contact" data-label="04 — Contact" aria-labelledby="contact-title">
       <div class="gridlines" aria-hidden="true"><span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span><span style="--i:3"></span><span style="--i:4"></span><span style="--i:5"></span><span style="--i:6"></span><span style="--i:7"></span><span style="--i:8"></span><span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span></div>
       <div class="g">
         <h2 class="label span-side" id="contact-title">Contact</h2>
@@ -379,7 +392,6 @@
       <line class="h" x1="375" y1="24" x2="675" y2="24" style="--i:54"/>
       <line class="h" x1="375" y1="48" x2="750" y2="48" style="--i:55"/>
     </svg></div>
-      <p class="foot label muted">V1.0 · In progress</p>
     </section>
 
   </main>

@@ -113,16 +113,35 @@
     animated.forEach(startThumb);
   }
 
-  /* Short website video: plays muted on a loop while visible; with reduced motion it stays paused, with controls. */
-  var videos = document.querySelectorAll("video[data-autoplay]");
+  /* Short website video: no sound, so a single centred play / pause button.
+     It plays on a loop while visible; with reduced motion it waits for the button. */
   var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  videos.forEach(function (v) {
-    if (reduceMotion || !("IntersectionObserver" in window)) return;
+  document.querySelectorAll("video[data-autoplay]").forEach(function (v) {
+    var wrap = v.closest(".video-wrap");
+    var btn = wrap && wrap.querySelector(".video-toggle");
+    if (!btn) return;
+    var userPaused = false;
     v.removeAttribute("controls");
     v.muted = true;
+
+    function sync() {
+      var playing = !v.paused;
+      wrap.setAttribute("data-playing", String(playing));
+      btn.setAttribute("aria-label", playing ? "Pause video" : "Play video");
+    }
+    function play() { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(sync); }
+    v.addEventListener("play", sync);
+    v.addEventListener("pause", sync);
+    sync();
+
+    btn.addEventListener("click", function () {
+      if (v.paused) { userPaused = false; play(); } else { userPaused = true; v.pause(); }
+    });
+
+    if (reduceMotion || !("IntersectionObserver" in window)) { userPaused = true; return; }
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(function () { v.setAttribute("controls", ""); }); }
+        if (entry.isIntersecting) { if (!userPaused) play(); }
         else v.pause();
       });
     }, { threshold: 0.35 }).observe(v);

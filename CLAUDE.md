@@ -218,11 +218,11 @@ En las cards va solo el tipo de proyecto, no la posición. Falta el año de AI t
 > I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.
 >
 > **Outcome**
-> [Imagen resa-billboard y vídeo resa-web, de images/resa, cada uno con caption: *Concept design*]
+> [Imagen resa-billboard con caption: *Concept design*, y vídeo resa-web con caption: *Resa one web*, de images/resa]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-merchandising) lleva también el caption "Concept design".
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-merchandising) lleva también el caption "Concept design". El vídeo es la web real, no concept design, por eso su caption es "Resa one web".
 
-**Vídeo (resa-web):** se reproduce solo, sin sonido y en bucle, mientras está visible; con `prefers-reduced-motion` queda en pausa y con controles. Versiones optimizadas en mp4 y webm, con póster.
+**Vídeo (resa-web):** se reproduce solo, sin sonido y en bucle, mientras está visible. Como no tiene sonido, el único control es un botón circular en el centro para reproducir y pausar (aparece siempre en pausa y, al reproducir, al pasar el ratón o con el foco del teclado). Con `prefers-reduced-motion` queda en pausa hasta pulsar el botón. Versiones optimizadas en mp4 y webm, con póster.
 
 ### AI tools for corporate bankers
 
@@ -338,7 +338,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- Las imágenes de Resa llevan el caption "Concept design".
+- Las imágenes de Resa llevan el caption "Concept design". El vídeo de la web real lleva "Resa one web".
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

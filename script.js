@@ -1,9 +1,57 @@
 (function () {
   "use strict";
 
+  /* Page transitions between the homepage and the case study pages.
+     The thumbnail (or the "next project" image) and the case hero share a view-transition-name,
+     so the image grows into the hero when opening and shrinks back when closing.
+     Browsers without cross-document view transitions simply navigate. */
+  var VT = "case-hero";
+  function path(url) { return new URL(url, location.href).pathname.replace(/index\.html$/, ""); }
+  function isCase(p) { return /^\/case\/[^/]+\/?$/.test(p); }
+  function thumbFor(target) {
+    // Image on the current page that links to the given case page
+    var links = document.querySelectorAll("a[href]");
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      if (!a.matches(".card-btn, .next-link")) continue;
+      if (path(a.href).replace(/\/$/, "") === target.replace(/\/$/, "")) return a.querySelector(".card-thumb");
+    }
+    return null;
+  }
+  function clearNames() {
+    document.querySelectorAll(".card-thumb, .case-hero-fig").forEach(function (el) { el.style.viewTransitionName = ""; });
+  }
+
+  window.addEventListener("pageswap", function (e) {
+    if (!e.viewTransition || !e.activation || !e.activation.entry) return;
+    var to = path(e.activation.entry.url);
+    clearNames();
+    var hero = document.querySelector(".case-hero-fig");
+    if (isCase(to)) {
+      var thumb = thumbFor(to);              // homepage card or "next project"
+      if (!thumb) { e.viewTransition.skipTransition(); return; }
+      if (hero) hero.style.viewTransitionName = "none";
+      thumb.style.viewTransitionName = VT;
+    } else if (!hero) {
+      e.viewTransition.skipTransition();     // homepage to something else
+    }                                          // case page to homepage: the hero keeps its name
+  });
+
+  window.addEventListener("pagereveal", function (e) {
+    if (!e.viewTransition || !window.navigation || !navigation.activation || !navigation.activation.from) return;
+    var from = path(navigation.activation.from.url);
+    if (isCase(path(location.href))) return;   // a case page: its hero already has the name
+    if (!isCase(from)) return;
+    var thumb = thumbFor(from);                // back on the homepage: the card of the case we just left
+    if (!thumb) return;
+    thumb.scrollIntoView({ block: "center", behavior: "instant" });
+    thumb.style.viewTransitionName = VT;
+    e.viewTransition.finished.then(clearNames, clearNames);
+  });
+
   /* Level 2 disclosures. A trigger is any button with aria-controls pointing to a .panel.
      Triggers that share data-group behave like an accordion: one open at a time. */
-  var triggers = document.querySelectorAll(".toggle[aria-controls], .step-btn[aria-controls], .card-btn[aria-controls]");
+  var triggers = document.querySelectorAll(".toggle[aria-controls], .step-btn[aria-controls]");
 
   triggers.forEach(function (btn) {
     var panel = document.getElementById(btn.getAttribute("aria-controls"));
@@ -29,17 +77,6 @@
         });
       }
       set(open);
-    });
-  });
-
-  /* "Close case" button at the end of a case: closes it and returns to its card. */
-  document.querySelectorAll("[data-close]").forEach(function (closer) {
-    closer.addEventListener("click", function () {
-      var card = document.getElementById(closer.dataset.close);
-      if (!card) return;
-      if (card._set) card._set(false);
-      card.focus({ preventScroll: true });
-      card.scrollIntoView({ block: "center", behavior: "smooth" });
     });
   });
 

@@ -55,7 +55,7 @@ Una one-page con los tres principios como eje, y una página ligera por caso de 
 
 **Orden de la home**
 
-1. Hero
+1. About
 2. Principles, con sus casos de estudio dentro (cada principio lleva sus proyectos)
 3. How I work
 4. Contact
@@ -106,7 +106,7 @@ El texto de "About me" (Nivel 2) es siempre visible, con el mismo tamaño de let
 
 > **Ana Nadal** — Product & Brand Design Lead
 >
-> I turn noise into direction.
+> I turn noise into direction
 
 **Nivel 2**
 
@@ -116,11 +116,11 @@ El texto de "About me" (Nivel 2) es siempre visible, con el mismo tamaño de let
 
 Un solo nivel de lectura. En la web, los títulos de los principios van sin punto final (también "I turn noise into direction" y "Let's talk").
 
-> **Show the direction.** When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.
+> **Show the direction** When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.
 >
-> **Keep it compelling.** Beauty isn't decoration — it's what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.
+> **Keep it compelling** Beauty isn't decoration — it's what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.
 >
-> **Keep it clean.** In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.
+> **Keep it clean** In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.
 
 ## Copy: How I work
 
@@ -128,7 +128,7 @@ En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1
 
 **Nivel 1**
 
-> **Listen** — I start with questions that save time later.
+> **Listen** — Every project starts with listening.
 >
 > **Discover** — I get to know the brand, the people and what's already there, and share what I find.
 >

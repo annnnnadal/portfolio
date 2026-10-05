@@ -172,8 +172,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .icon::before { left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; }
 .icon::after  { top: 0; bottom: 0; left: calc(50% - 0.5px); width: 1px; }
-[aria-expanded="true"] > .icon::after,
-[aria-expanded="true"] .card-thumb > .icon::after { transform: scaleY(0); }
+[aria-expanded="true"] > .icon::after { transform: scaleY(0); }
 
 .panel { display: grid; grid-template-rows: 1fr; }
 .panel > .panel-inner { min-height: 0; overflow: hidden; }
@@ -223,7 +222,7 @@ a:hover { text-decoration-thickness: 2px; }
   margin-top: 0.75rem;
 }
 .card-btn {
-  display: block; width: 100%; padding: 0; background: none; border: 0;
+  display: block; text-decoration: none; width: 100%; padding: 0; background: none; border: 0;
   text-align: left; font: inherit; color: inherit; cursor: pointer;
 }
 .card-head { font: inherit; }
@@ -233,21 +232,10 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .card-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .card-thumb img.gen { object-fit: contain; padding: 2%; }
-.card-btn[aria-expanded="true"] .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
+.card-btn:hover .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
 .card-btn:focus-visible { outline: none; }
 .card-btn:focus-visible .card-thumb { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-.card-thumb > .icon {
-  position: absolute; top: 0; right: 0; width: 2.25rem; height: 2.25rem;
-  background: var(--bg); border-left: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
-  opacity: 0; transition: opacity 0.3s var(--ease); color: var(--ink);
-}
-.card-thumb > .icon::before { left: 0.75rem; right: 0.75rem; top: calc(50% - 0.5px); }
-.card-thumb > .icon::after { top: 0.75rem; bottom: 0.75rem; }
-.card-btn:hover .card-thumb > .icon,
-.card-btn:focus-visible .card-thumb > .icon,
-.card-btn[aria-expanded="true"] .card-thumb > .icon { opacity: 1; }
-@media (hover: none) { .card-thumb > .icon { opacity: 1; } }
 
 .card-info { display: flex; flex-direction: column; gap: 0.25rem; padding-top: 0.75rem; }
 .card-title { font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
@@ -264,17 +252,6 @@ a:hover { text-decoration-thickness: 2px; }
   animation: pulse 1.8s ease-out infinite;
 }
 @keyframes pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
-
-/* Case study opened inside its principle */
-.case-panel { margin-top: 0; }
-.case-detail { display: flex; flex-direction: column; gap: 1.5rem; padding: 2.5rem 0 1rem; max-width: 100%; }
-.case-detail .case-lead { max-width: 40ch; }
-.case-detail .block { max-width: 60ch; }
-.case-detail .block .label, .case-detail .block h6 { margin-bottom: 0.6rem; }
-.case-detail .block p + p { margin-top: 0.9em; }
-.case-detail em { font-style: italic; font-weight: 500; }
-.case-detail .close-case { align-self: flex-start; margin-top: 1rem; }
-html:not(.js) .close-case { display: none; }
 
 .figs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
 .figs figure { grid-column: span 6; }
@@ -294,6 +271,7 @@ html:not(.js) .close-case { display: none; }
 .step-btn > * { padding-left: var(--pad); padding-right: var(--pad); }
 .step-btn .name { grid-column: 1 / 7; }
 .step-btn .desc { grid-column: 7 / 12; }
+.step-btn .desc.lead { align-self: center; }
 .step-btn .icon {
   grid-column: 12 / 13; justify-self: end; align-self: center; margin-right: var(--pad); padding: 0;
   box-sizing: content-box; opacity: 0; transition: opacity 0.3s var(--ease);
@@ -360,6 +338,90 @@ html:not(.js) .close-case { display: none; }
   html { scroll-behavior: auto; }
   .js .panel, .js .panel[data-open], .js .panel > .panel-inner,
   .js .art line, .js .gridlines span, .icon::before, .icon::after, .chev, .chapter-menu,
-  .card-thumb > .icon, .step-btn .icon { transition: none !important; }
+  .step-btn .icon { transition: none !important; }
   .wip .dot::after { animation: none; opacity: 0; }
+}
+
+/* ---------- Case study pages ---------- */
+
+/* Colours inverted: black page, white text. */
+.case-page {
+  --bg: #0a0a0a;
+  --ink: #f5f5f2;
+  --muted: #a8a8a4;
+  --line: rgba(245, 245, 242, 0.18);
+  --line-strong: rgba(245, 245, 242, 0.9);
+  --grid: rgba(255, 255, 255, 0.03);
+}
+.case-page .gen { filter: invert(1); }
+
+/* "x" to close the case, top right of the header */
+.close-x { position: relative; display: block; width: 2.5rem; height: 2.5rem; margin-right: calc(var(--gutter) * -1); }
+.close-x span::before, .close-x span::after {
+  content: ""; position: absolute; left: calc(50% - 0.5rem); top: calc(50% - 0.5px);
+  width: 1rem; height: 1px; background: var(--ink); transition: transform 0.35s var(--ease);
+}
+.close-x span::before { transform: rotate(45deg); }
+.close-x span::after { transform: rotate(-45deg); }
+.close-x:hover span::before { transform: rotate(135deg); }
+.close-x:hover span::after { transform: rotate(45deg); }
+.close-x:focus-visible { outline-offset: -4px; }
+
+/* Hero image: the thumbnail from the homepage, full width */
+.case-hero-fig {
+  position: relative; height: clamp(18rem, 72vh, 52rem); overflow: hidden;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+  view-transition-name: case-hero;
+}
+.case-hero-fig img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
+.case-hero-fig img.gen { object-fit: contain; padding: 3% 0; }
+
+.case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
+.case-title {
+  font-weight: 500; font-size: clamp(2.5rem, 8vw, 7.5rem); line-height: 0.92; letter-spacing: -0.05em;
+  margin-bottom: 1.5rem;
+}
+.case-intro .case-lead {
+  font-size: clamp(1.5rem, 2.8vw, 2.5rem); line-height: 1.12; letter-spacing: -0.03em; max-width: 28ch;
+}
+.case-intro .meta { margin-top: 1.5rem; max-width: 70ch; }
+
+.case-content { padding-top: 0; }
+.case-row { border-top: 1px solid var(--line); padding-top: 1.5rem; padding-bottom: 1.5rem; row-gap: 0.75rem; }
+.case-row:first-of-type { border-top: 1px solid var(--line-strong); }
+.case-row .text p { font-size: 1rem; max-width: 60ch; }
+.case-row .text p + p { margin-top: 0.9em; }
+.case-row .text em { font-style: italic; font-weight: 500; }
+.case-row .link-out { padding-top: 0.25rem; }
+
+/* Direct access to the next project of the same principle */
+.case-next { padding: clamp(3rem, 6vw, 5rem) var(--gutter) clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line-strong); }
+.next-link {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1rem; align-items: end;
+  text-decoration: none; color: inherit;
+}
+.next-thumb { grid-column: 1 / 5; }
+.next-text { grid-column: 5 / -1; display: flex; flex-direction: column; gap: 0.75rem; padding-left: var(--pad); }
+.next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.5rem); line-height: 0.95; letter-spacing: -0.045em; }
+.next-title::after { content: " →"; display: inline-block; transition: transform 0.4s var(--ease); }
+.next-link:hover .next-title::after, .next-link:focus-visible .next-title::after { transform: translateX(0.2em); }
+.next-link:focus-visible { outline-offset: 6px; }
+
+/* ---------- Page transitions (View Transitions API) ---------- */
+
+@view-transition { navigation: auto; }
+
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.6s; animation-timing-function: var(--ease); }
+::view-transition-group(case-hero) { animation-duration: 0.75s; animation-timing-function: var(--ease); }
+::view-transition-old(case-hero), ::view-transition-new(case-hero) { height: 100%; object-fit: cover; overflow: clip; }
+
+@media (max-width: 860px) {
+  .case-row .span-side { margin-bottom: 0.25rem; }
+  .next-thumb { grid-column: 1 / -1; margin-bottom: 1rem; }
+  .next-text { grid-column: 1 / -1; padding-left: var(--pad); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .close-x span::before, .close-x span::after, .next-title::after { transition: none; }
 }

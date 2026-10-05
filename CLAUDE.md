@@ -60,11 +60,20 @@ Una one-page con los tres principios como eje, y una página ligera por caso de 
 3. How I work
 4. Contact
 
-Los capítulos se numeran del 01 al 04. Kept / Cut, Evidence y Now ya no están en la web (su copy se conserva al final, en "Copy retirado de la web").
+Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work y Contact (en el menú de la cabecera, "01 — About"). Kept / Cut, Evidence y Now ya no están en la web (su copy se conserva al final, en "Copy retirado de la web").
 
 **Orden de los principios:** Show the direction, Keep it compelling, Keep it clean.
 
-**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card, el caso se despliega debajo, dentro del mismo principio, con un solo caso abierto a la vez por principio.
+**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card se abre la página del caso (ver "Páginas de caso").
+
+**Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
+
+- **Colores invertidos:** la página del caso tiene fondo negro y texto blanco (la home es blanco roto y negro). Las miniaturas de líneas se invierten para verse en blanco.
+- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería.
+- **Estructura del texto:** principio, título, frase de Nivel 1, línea de datos y los bloques del caso (Challenge, Direction, Solution…), igual que en el brief.
+- **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, a la card del caso, con la misma transición a la inversa.
+- **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y la misma transición. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
+- **Transición:** View Transitions API entre documentos (`@view-transition`, eventos `pageswap` y `pagereveal`, con `view-transition-name: case-hero`). Sin soporte del navegador, o con `prefers-reduced-motion`, se navega sin animación.
 
 **Dos niveles de lectura**
 
@@ -124,7 +133,7 @@ Un solo nivel de lectura. En la web, los títulos de los principios van sin punt
 
 ## Copy: How I work
 
-En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1 siempre visible y el Nivel 2 al hacer clic, con un símbolo + que aparece al pasar el ratón. "Always" es un paso más de la lista. La frase "Most people see designers…" queda visible encima de los pasos.
+En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1 siempre visible y el Nivel 2 al hacer clic, con un símbolo + que aparece al pasar el ratón. "Always" es un paso más de la lista. La frase "How I take a project from the first conversation to the final design." queda visible encima de los pasos, y los textos del Nivel 1 de cada paso tienen el mismo tamaño que esa frase.
 
 **Nivel 1**
 
@@ -140,7 +149,7 @@ En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1
 
 **Nivel 2**
 
-> Most people see designers as the ones who make things look good. That part comes last.
+> How I take a project from the first conversation to the final design.
 >
 > **01 · Listen**
 > Every project starts with listening: what the project needs, and what the people behind it need too. Experience helps me ask the right questions from day one, and show where design can help long before anything is drawn.
@@ -164,7 +173,7 @@ En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1
 
 ## Copy: Casos de estudio
 
-Cada caso vive dentro de su principio.
+Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas de caso").
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |

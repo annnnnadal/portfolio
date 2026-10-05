@@ -113,6 +113,21 @@
     animated.forEach(startThumb);
   }
 
+  /* Short website video: plays muted on a loop while visible; with reduced motion it stays paused, with controls. */
+  var videos = document.querySelectorAll("video[data-autoplay]");
+  var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  videos.forEach(function (v) {
+    if (reduceMotion || !("IntersectionObserver" in window)) return;
+    v.removeAttribute("controls");
+    v.muted = true;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(function () { v.setAttribute("controls", ""); }); }
+        else v.pause();
+      });
+    }, { threshold: 0.35 }).observe(v);
+  });
+
   /* Header: current chapter + chapter menu. */
   var sectionLabel = document.getElementById("section-label");
   var sections = document.querySelectorAll("main section[data-label]");

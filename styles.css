@@ -425,3 +425,9 @@ a:hover { text-decoration-thickness: 2px; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .close-x span::before, .close-x span::after, .next-title::after { transition: none; }
 }
+
+/* ---------- Resa: link, caption and video ---------- */
+
+.case-visit { margin-top: 1.5rem; font-size: clamp(1.125rem, 1.6vw, 1.375rem); letter-spacing: -0.01em; }
+.hero-caption { position: absolute; left: 0; bottom: 0; padding: 0.5rem 0.75rem; background: var(--bg); }
+.figs video { display: block; width: 100%; height: auto; background: #111; border-radius: 0; box-shadow: none; }

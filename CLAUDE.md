@@ -102,7 +102,7 @@ Versión sencilla para presentar ya: tipografía protagonista, retícula visible
 - **Color:** blanco y negro. Fondo blanco roto, texto negro, gris solo para información secundaria.
 - **Retícula:** 12 columnas, líneas de la retícula visibles y muy finas en algunas secciones, como en un plano. Negro al 3 % de opacidad y siempre en el fondo: las imágenes van por encima.
 - **Cabecera:** barra fija con fondo opaco (100 %). A la izquierda, Madrid con la hora local en directo; a la derecha, el número y nombre del capítulo en curso ("03 — How I work"). Al hacer clic en el capítulo se abre un menú con los capítulos para saltar de uno a otro dentro de la página. Sin versión, sin estado y sin nombre en la cabecera.
-- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. El hero es una flor hecha de líneas diagonales; las miniaturas de los casos sin imagen (Resa, AI tools, A guide for newcomers) usan el mismo estilo: puntos o trazos en diagonal con grosor variable. Son SVG trazados a partir de las referencias de Ana (`images/hero-flower.svg`, `images/generated/`).
+- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. El hero es una flor hecha de líneas diagonales; las miniaturas de los casos sin imagen (AI tools, A guide for newcomers) usan el mismo estilo: puntos o trazos en diagonal con grosor variable. Son SVG trazados a partir de las referencias de Ana (`images/hero-flower.svg`, `images/generated/`).
 - **Imágenes de proyecto:** esquinas rectas, sin bordes redondeados ni sombras.
 - **Movimiento:** discreto. En la flor y en las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (las miniaturas lo hacen al entrar en pantalla). El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
 - **Referencias:** clemenceguillemot.com (meta-información, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
@@ -177,7 +177,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (pendiente de subir) | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-merchandising; Outcome: resa-billboard y resa-web, un vídeo) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
@@ -218,7 +218,11 @@ En las cards va solo el tipo de proyecto, no la posición. Falta el año de AI t
 > I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.
 >
 > **Outcome**
-> [Imágenes de images/resa con caption: *Concept design*]
+> [Imagen resa-billboard y vídeo resa-web, de images/resa, cada uno con caption: *Concept design*]
+
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-merchandising) lleva también el caption "Concept design".
+
+**Vídeo (resa-web):** se reproduce solo, sin sonido y en bucle, mientras está visible; con `prefers-reduced-motion` queda en pausa y con controles. Versiones optimizadas en mp4 y webm, con póster.
 
 ### AI tools for corporate bankers
 

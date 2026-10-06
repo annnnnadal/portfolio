@@ -458,3 +458,5 @@ html:not(.js) .video-toggle { display: none; }
 .video-toggle:focus-visible span { opacity: 1; }
 @media (hover: none) { .video-wrap[data-playing="true"] .video-toggle span { opacity: 0.7; } }
 @media (prefers-reduced-motion: reduce) { .video-toggle span { transition: none; } }
+
+.figs figcaption { overflow-wrap: anywhere; }

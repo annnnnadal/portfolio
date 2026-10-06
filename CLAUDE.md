@@ -77,14 +77,16 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 **Línea guía (solo en la home):** concepto "I turn noise into direction". Una línea de 1.5 px en #0A0A0A (el mismo negro de la web) que se dibuja con el scroll como un hilo que crece hacia abajo. Su extremo inferior va a la altura de la mitad del viewport. Implementación: `guide.js` (SVG + `requestAnimationFrame`, sin librerías), cargado solo en `index.html`. Las páginas de caso no la llevan. Todo el trazado, la flor y la figura final son #0A0A0A.
 
-- **Recorrido en escritorio:** en About baja por la antepenúltima línea vertical del grid empezando por la derecha. En el resto de la página va en vertical por la línea exterior del grid de cada extremo (derecha o izquierda, alternando por sección), para no chocar con ningún texto: Principles a la derecha, How I work a la izquierda, Contact a la derecha. El cambio de lado es un tramo horizontal superpuesto exactamente a la línea que hay bajo el título de la sección (Principles y How I work). En Contact no hay línea bajo el título, así que el giro va en el borde superior de la sección.
-- **Flor (`images/flower.svg`, en línea):** su base está arriba en el centro y se abre hacia abajo; no se rota. Cuelga de la línea bajo el título de Principles (su `#flower-baseline` se superpone a ella), a cuatro columnas de ancho y centrada en la línea guía. La línea llega a la base por arriba; con el scroll se dibujan de forma consecutiva los anillos (`#flower-rings`) y después el abanico (`#flower-fan`), cada grupo por `data-order`, con las dos mitades de cada círculo creciendo a la vez desde la base. Después la línea sigue hacia abajo por `#flower-axis`, gira hacia la línea exterior derecha y continúa.
-- **Figura final (`images/closing-wave.svg`, en línea, en el espacio de cierre `.finale`):** la línea llega al eje central de la figura por su extremo derecho. La figura se dibuja con el scroll, onda a onda en el orden de `data-order`, con cada barra creciendo desde el eje central. La página termina con aire bajo la figura para que el scroll alcance a dibujarla.
+- **Líneas verticales:** siempre la segunda línea del grid desde cada extremo: la segunda desde la derecha en About, How I work y Contact, y la segunda desde la izquierda en Principles.
+- **Recorrido en escritorio:** About (derecha) → flor → hacia la izquierda sobre la línea que subraya "Principles" → baja por la segunda línea desde la izquierda durante Principles → en How I work, hacia la derecha sobre la línea que hay bajo "How I take a project…" → baja por la segunda línea desde la derecha → Contact, también a la derecha. Los tramos horizontales van superpuestos exactamente a esas líneas.
+- **Línea bajo el titular:** el hero lleva una línea horizontal (1 px, ancho del grid) bajo "I turn noise into direction", como las que subrayan los títulos de las demás secciones. La flor cuelga de ella.
+- **Flor (`images/flower.svg`, en línea):** su base está arriba en el centro y se abre hacia abajo; no se rota. Ocupa las dos últimas columnas del grid, con su eje sobre la línea guía, y su `#flower-baseline` se superpone a la línea bajo el titular. La animación empieza con el primer scroll, dentro del hero: la línea llega a la base por arriba; con el scroll se dibujan de forma consecutiva los anillos (`#flower-rings`) y después el abanico (`#flower-fan`), cada grupo por `data-order`, con las dos mitades de cada círculo creciendo a la vez desde la base. Después la línea sigue hacia abajo por `#flower-axis` y continúa su recorrido.
+- **Contact (sticky):** al llegar al título "Contact", la sección se queda fija bajo la cabecera. El scroll solo sirve para que la línea siga bajando por la derecha hasta el eje central de `images/closing-wave.svg` y para dibujar la onda, de derecha a izquierda, onda a onda en el orden de `data-order`, con cada barra creciendo desde el eje. La onda queda justo debajo del email. La página termina cuando la onda está completa, sin espacio sobrante.
 - **Pausas:** mientras se dibuja la flor o un cambio de lado, el extremo se queda parado y el scroll sigue; después la línea acelera hasta recuperar la mitad del viewport.
 - **Vibración:** al acercar el cursor o el dedo, el tramo cercano se deforma y oscila como una cuerda pulsada, y se amortigua en menos de un segundo. La línea tiene `pointer-events: none`; la vibración se detecta con eventos de la ventana.
-- **Móvil (hasta 860 px):** la línea va por un margen lateral fijo, sin alternar de lado. La flor se queda en el hero, a ancho completo bajo el texto: la línea se desvía a su eje en el hueco sobre ella, y después vuelve al margen sobre la línea bajo el título de Principles.
-- **`prefers-reduced-motion`:** línea, flor y figura completas, estáticas y sin vibración.
-- **Pendiente de decidir (no tocar el layout sin avisar):** en escritorio la flor cae sobre la frase del primer principle (Show the direction). En About y Contact no existe la línea bajo el título.
+- **Móvil (hasta 860 px):** la línea va por un margen lateral fijo, sin alternar de lado. La flor se queda a ancho completo bajo el texto de About: la línea se desvía a su eje en el hueco sobre ella y vuelve al margen sobre la línea bajo el título de Principles. Contact es igual de fijo (sticky).
+- **`prefers-reduced-motion`:** línea, flor y onda completas, estáticas y sin vibración; Contact sin recorrido extra.
+- **Pendiente de decidir (no tocar el layout sin avisar):** la vertical izquierda atraviesa el título "How I work" al bajar hasta la línea donde gira.
 
 **Dos niveles de lectura**
 
@@ -352,7 +354,7 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 >
 > anaonadal@gmail.com · [LinkedIn](https://www.linkedin.com/in/anadal)
 
-Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie. Al final de la página, la línea guía llega a la figura de la onda.
+Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie. Contact es una sección fija (sticky) donde la línea guía llega a la figura de la onda.
 
 ## Reglas que no se rompen
 
@@ -366,7 +368,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Brand refresh para una empresa de iluminación: fuera por ahora.
 - Revisar el equilibrio de Keep it clean, que de momento tiene un solo caso.
-- Decidir dónde cuelga la flor para que no cruce el texto de Principles, y si About y Contact llevan una línea bajo el título.
+- Decidir cómo evitar que la línea guía cruce el título "How I work".
 
 ## Copy retirado de la web
 

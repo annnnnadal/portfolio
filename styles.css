@@ -193,22 +193,22 @@ a:hover { text-decoration-thickness: 2px; }
 .hero > .g { flex: none; }
 .hero .eyebrow { margin-bottom: clamp(1.5rem, 4vw, 3.5rem); }
 .hero-row {
-  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: end;
-  margin-top: clamp(1.5rem, 4vw, 3rem);
+  position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--line-strong);                  /* the line under the headline: the flower hangs from it */
 }
-.hero-row .about { grid-column: 1 / 8; padding: 0 var(--pad); }
+.hero-row .about { grid-column: 1 / 8; padding: 1.25rem var(--pad) 0; }
 /* Flower (images/flower.svg, inline). Its base is the top centre and it opens downwards.
-   Desktop: guide.js hangs it from the line under the "Principles" title (its #flower-baseline overlaps that line),
-   four columns wide, centred on the guide line. Mobile: full width in the hero, under the About text. */
+   Desktop: it hangs from the line under the headline (its #flower-baseline overlaps that line), in the last two
+   columns, so its axis sits on the second grid line from the right, where the guide line runs.
+   Mobile: full width, under the About text. */
 .hero-flower { grid-column: 1 / -1; margin-top: 2rem; color: #0A0A0A; pointer-events: none; }
 .hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 6); }
 #flower-baseline { stroke-width: calc(var(--fsw, 6) * 0.6667); }   /* 1 px, like the grid line it overlaps */
 #flower-axis { stroke: none; }                                      /* the guide line itself runs along the axis */
 .js .hero-flower path, .js .closing-wave path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
 @media (min-width: 861px) {
-  .hero-row > .hero-flower { grid-column: 9 / -1; align-self: end; margin: 0; }          /* no-JS fallback */
-  .principle { position: relative; }
-  .principle > .hero-flower { position: absolute; top: -0.6px; right: 0; width: 33.3333%; margin: 0; padding: 0; z-index: 2; }
+  .hero-flower { position: absolute; top: -0.6px; right: 0; width: calc(100% / 6); margin: 0; z-index: 2; }
 }
 /* "About me": always visible, same size as the principle headings. */
 .about {
@@ -293,11 +293,17 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- 04 Contact ---------- */
 
-.contact .display { margin-bottom: 2rem; }
+.contact .display { margin-bottom: 1.25rem; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; }
-.contact { padding-bottom: 0; }
-.finale { padding-top: 3rem; }   /* guide.js sets its height so the scroll can draw the wave */
-.closing-wave { display: block; width: 100%; height: auto; overflow: visible; }
+/* Contact is a stage that stays pinned (sticky) under the header while the scroll draws the guide line and the wave.
+   guide.js gives the section its extra height; it ends exactly when the wave is complete. */
+.contact { padding: 0; }
+.contact > .contact-stage {
+  position: sticky; top: 2.5rem; height: calc(100svh - 2.5rem); overflow: hidden;
+  display: flex; flex-direction: column; padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 2rem;
+}
+.finale { position: relative; flex: 1 1 auto; min-height: 6rem; margin: 2rem calc(100% / 12) 0 0; }   /* the wave ends on the second grid line from the right */
+.closing-wave { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
 /* ---------- Abstract line compositions (SVG) ---------- */
 
@@ -313,7 +319,8 @@ a:hover { text-decoration-thickness: 2px; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero > .g { order: 1; }
   .hero > .hero-row { order: 3; }
-  .hero-row .about { grid-column: 1 / -1; margin-top: 1.5rem; }
+  .hero-row .about { grid-column: 1 / -1; }
+  .finale { margin-right: 0; }
 
   .step-btn .name { grid-column: 1 / 11; }
   .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }
@@ -466,3 +473,5 @@ html:not(.js) .video-toggle { display: none; }
 }
 .guide path { fill: none; stroke: #0A0A0A; stroke-width: 1.5; stroke-linejoin: miter; }
 .guide path { stroke-linecap: square; }       /* square caps fill the 90° corners */
+.guide-local { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 55; }
+.guide-local path { fill: none; stroke: #0A0A0A; stroke-width: 1.5; stroke-linecap: square; }

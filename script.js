@@ -81,7 +81,7 @@
   });
 
   /* Lines draw in when they enter the viewport. */
-  var drawn = document.querySelectorAll(".art, .gridlines");
+  var drawn = document.querySelectorAll(".gridlines");
   if ("IntersectionObserver" in window) {
     var drawObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {

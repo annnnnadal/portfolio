@@ -197,12 +197,13 @@ a:hover { text-decoration-thickness: 2px; }
   margin-top: clamp(1.5rem, 4vw, 3rem);
 }
 .hero-row .about { grid-column: 1 / 8; padding: 0 var(--pad); }
-/* Flower, top right next to the headline */
-.hero > .hero-art {
-  position: absolute; top: clamp(3rem, 5vw, 4.5rem); right: var(--gutter);
-  width: calc((100% - 2 * var(--gutter)) / 3); height: min(70vh, 48vw);
-}
-.hero-art img { width: 100%; height: 100%; object-fit: contain; }
+/* Flower: bottom right of the hero, four columns wide, centred on the guide line's grid column.
+   guide.js lines its base up with the baseline of the About text. */
+.hero-flower { grid-column: 9 / -1; align-self: end; color: #000; }
+.hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 3); }
+.js .hero-flower path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
+#flower-axis { stroke: none; }   /* the guide line itself runs along the axis */
+.baseline-probe { display: inline-block; width: 0; height: 0; }
 /* "About me": always visible, same size as the principle headings. */
 .about {
   font-size: clamp(1.5rem, 2.8vw, 2.5rem);
@@ -288,20 +289,10 @@ a:hover { text-decoration-thickness: 2px; }
 
 .contact .display { margin-bottom: 2rem; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; }
-.contact .art { height: 6rem; margin-top: 4rem; }
-.foot { margin-top: 2rem; }
+.contact { padding-bottom: 0; }
+.finale { height: max(80svh, 22rem); }   /* the guide line opens into vertical stripes here */
 
 /* ---------- Abstract line compositions (SVG) ---------- */
-
-.art { width: 100%; }
-.art svg { width: 100%; height: 100%; overflow: visible; }
-.art line { stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; transform-box: fill-box; }
-.art line.v, .art line.h { transform-origin: 0 0; }
-.art line.thin { stroke: var(--muted); }
-.js .art line.v { transform: scaleY(0); }
-.js .art line.h { transform: scaleX(0); }
-.js .art line { transition: transform 1.5s var(--ease); transition-delay: calc(var(--i) * 28ms); }
-.js .art.in line { transform: none; }
 
 /* ---------- Responsive ---------- */
 
@@ -314,9 +305,9 @@ a:hover { text-decoration-thickness: 2px; }
 
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero > .g { order: 1; }
-  .hero > .hero-art { position: relative; order: 2; top: auto; right: auto; width: 100%; height: 20rem; margin-top: 1.5rem; }
   .hero > .hero-row { order: 3; }
   .hero-row .about { grid-column: 1 / -1; margin-top: 1.5rem; }
+  .hero-flower { grid-column: 1 / -1; margin-top: 2rem; margin-bottom: 0 !important; }
 
   .step-btn .name { grid-column: 1 / 11; }
   .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }
@@ -337,7 +328,7 @@ a:hover { text-decoration-thickness: 2px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .panel, .js .panel[data-open], .js .panel > .panel-inner,
-  .js .art line, .js .gridlines span, .icon::before, .icon::after, .chev, .chapter-menu,
+  .js .gridlines span, .icon::before, .icon::after, .chev, .chapter-menu,
   .step-btn .icon { transition: none !important; }
   .wip .dot::after { animation: none; opacity: 0; }
 }
@@ -460,3 +451,13 @@ html:not(.js) .video-toggle { display: none; }
 @media (prefers-reduced-motion: reduce) { .video-toggle span { transition: none; } }
 
 .figs figcaption { overflow-wrap: anywhere; }
+
+/* ---------- Guide line (home only) ---------- */
+
+.guide {
+  position: absolute; top: 0; left: 0; z-index: 55; overflow: visible;
+  pointer-events: none;                       /* the line never blocks clicks; guide.js listens on the window */
+}
+.guide path, .guide line { fill: none; stroke: #000; stroke-width: 1.5; stroke-linejoin: miter; }
+.guide path { stroke-linecap: square; }       /* square caps fill the 90° corners */
+.guide .stripe { stroke-width: 1; stroke-linecap: butt; }

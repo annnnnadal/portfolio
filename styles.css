@@ -195,20 +195,17 @@ a:hover { text-decoration-thickness: 2px; }
 .hero-row {
   position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
   margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  border-top: 1px solid var(--line-strong);                  /* the line under the headline: the flower hangs from it */
 }
 .hero-row .about { grid-column: 1 / 8; padding: 1.25rem var(--pad) 0; }
 /* Flower (images/flower.svg, inline). Its base is the top centre and it opens downwards.
-   Desktop: it hangs from the line under the headline (its #flower-baseline overlaps that line), in the last two
-   columns, so its axis sits on the second grid line from the right, where the guide line runs.
+   Desktop: four columns wide, in the last four columns, so its axis sits on the third grid line from the right, where the guide line runs.
    Mobile: full width, under the About text. */
 .hero-flower { grid-column: 1 / -1; margin-top: 2rem; color: #0A0A0A; pointer-events: none; }
 .hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 6); }
-#flower-baseline { stroke-width: calc(var(--fsw, 6) * 0.6667); }   /* 1 px, like the grid line it overlaps */
 #flower-axis { stroke: none; }                                      /* the guide line itself runs along the axis */
 .js .hero-flower path, .js .closing-wave path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
 @media (min-width: 861px) {
-  .hero-flower { position: absolute; top: -0.6px; right: 0; width: calc(100% / 6); margin: 0; z-index: 2; }
+  .hero-flower { position: absolute; top: 0; left: calc(100% * 2 / 3); width: calc(100% / 3); margin: 0; z-index: 2; }
 }
 /* "About me": always visible, same size as the principle headings. */
 .about {

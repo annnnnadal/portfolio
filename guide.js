@@ -2,8 +2,8 @@
    A thread (#0A0A0A, 1.5 px) grows down the home page as you scroll. Its lower end sits at the middle of the viewport.
 
    Route (desktop)
-   - About: down the second grid line from the right, to the flower. The flower hangs from the line under the headline
-     (its #flower-baseline overlaps it). The thread reaches the base from above and, from the first scroll, the rings and then
+   - About: down the third grid line from the right, which is the axis of the flower. The flower is four columns wide, centred on that line,
+     with no baseline. The thread reaches the base from above and, from the first scroll, the rings and then
      the fan draw themselves; the thread then goes on down #flower-axis.
    - It goes left over the line under "Principles", down the second grid line from the left, and at "How I work" goes right over
      the line under "How I take a project…", then down the second grid line from the right. Contact stays on the right.
@@ -112,10 +112,10 @@
     var flowerD = clamp(g.vh * 0.3, 160, 320);
 
     if (!g.mobile) {
-      v(g.xRight, 0, g.yBase);                               // About, down to the base of the flower
+      v(g.xAxis, 0, g.yBase);                                // About: the flower's axis, third grid line from the right
       s.push({ t: "f", y: g.yBase, D: flowerD });
-      v(g.xRight, g.yBase, g.yPrinciples);                   // on down the axis
-      j(g.yPrinciples, g.xRight, g.xLeft);                   // left, over the line under "Principles"
+      v(g.xAxis, g.yBase, g.yPrinciples);                    // on down the axis
+      j(g.yPrinciples, g.xAxis, g.xLeft);                   // left, over the line under "Principles"
       v(g.xLeft, g.yPrinciples, g.yHow);                     // second grid line from the left
       j(g.yHow, g.xLeft, g.xRight);                          // right, over the line under "How I take a project…"
       v(g.xRight, g.yHow, g.yContact);                       // second grid line from the right, into Contact
@@ -201,9 +201,8 @@
   }
 
   function collect() {
-    // flower: the baseline first, then the rings, then the fan, each group by data-order
-    flowerItems = [[document.getElementById("flower-baseline")]]
-      .concat(groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
+    // flower: the rings, then the fan, each group by data-order
+    flowerItems = [].concat(groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
 
     // wave: each wave is a group of bars; bars are ranked from the end where the thread arrives (right)
     waveGroups = groupsOf("#closing-wave .wave").map(function (bars) {

@@ -1,15 +1,16 @@
 /* Guide line — "I turn noise into direction".
-   A thread (#0044FF, 1.5 px) grows down the home page as you scroll. Its lower end sits at the middle of the viewport.
+   A thread (#0044FF, 3 px) grows down the home page as you scroll. Its lower end sits at the middle of the viewport.
 
    Route (desktop)
    - About: down the third grid line from the right, which is the axis of the flower. The flower (base at the bottom, opening upwards) is four
      columns wide and its central stem is the thread itself. The thread comes down the stem to the base; then About stays
-     still (sticky) while the base line, the rings and the fan draw themselves with the scroll. Once the flower is complete About
-     is released and the thread goes on down to Principles.
-   - It goes left over the line under "Principles", down the second grid line from the left, and at "How I work" goes right over
-     the line under "How I take a project…", then down the second grid line from the right. Contact stays on the right.
-   - Contact is a stage that stays pinned (sticky). Scrolling there only lets the thread go on down to the central axis of
-     images/closing-wave.svg and draw the wave, from right to left, wave by wave. The page ends when the wave is complete.
+     still (sticky) while the base line, the rings and the fan draw themselves with the scroll. Once the flower is complete
+     About is released and the thread goes on down to the line under "Principles".
+   - There it turns left, over that line, to the first grid line (the left edge of the grid) and goes down it, through
+     Principles, How I work and Contact, with no more changes of side.
+   - Contact is a stage that stays pinned (sticky). The thread arrives at the left end of the wave, where the 3 px line of
+     images/closing-wave.svg starts, and from there the scroll draws the wave from left to right. The page ends when it is complete.
+   Mobile: a fixed margin (the right edge of the grid) instead of the left edge; the wave is mirrored and draws right to left.
    Pointer or finger near the thread plucks it like a guitar string.
 
    Plain SVG + requestAnimationFrame. Home only. */
@@ -34,7 +35,7 @@
 
   var pin = { on: false, T: 0 }, svg = null, heroG = null, heroDy = 0, localSvg = null, geo = null, stages = [], segs = [], localSeg = null, table = null, plucks = [];
   var dirty = true, rafId = 0, lastFlower = -1, lastWave = -1;
-  var flowerItems = [], waveGroups = [];
+  var flowerItems = [], waveLines = [], waveStartY = 154;
 
   /* ---------- helpers ---------- */
 
@@ -51,20 +52,20 @@
   /* ---------- 1. measure the page ---------- */
 
   function scaleFlowerStroke() {
-    // keep the flower's lines at 1.5 px whatever its size
+    // 1 px whatever its size
     var svgEl = flower.querySelector("svg");
     var scale = svgEl.getBoundingClientRect().width / 1000;
-    svgEl.style.setProperty("--fsw", scale ? (1.5 / scale).toFixed(3) : "6");
+    svgEl.style.setProperty("--fsw", scale ? (1 / scale).toFixed(3) : "2");   // keep the flower's lines at 1 px (the heavy ones are 2.5x)
   }
 
   /* Contact: where the thread must arrive (the axis of the wave, inside the stage) and how much extra scroll the pinned
      stage needs so the thread can go down to it and the wave can draw. */
   function measureContact() {
     var vh = window.innerHeight;
+    stage.style.top = Math.min(40, vh - stage.offsetHeight) + "px";   // pinned under the header; a tall stage is pinned by its bottom
     var sr = stage.getBoundingClientRect(), fr = finale.getBoundingClientRect();
-    var figH = Math.min(fr.height, fr.width * (360 / 1200));      // the figure is top-aligned, right under the email
     var headerH = parseFloat(getComputedStyle(stage).top) || 0;
-    var axis = (fr.top - sr.top) + figH / 2;                       // central axis, relative to the stage
+    var axis = (fr.top - sr.top) + waveStartY;                     // where the 3 px line of the wave starts, relative to the stage
     var wavePx = clamp(vh * 0.45, 240, 480);                       // scroll spent drawing the wave
     var uAxis = axis - (vh / 2 - headerH);                         // scroll (since the pin starts) when the thread reaches the axis
     return {
@@ -117,9 +118,8 @@
 
     geo = {
       vw: vw, vh: vh, docH: docH, mobile: mobile,
-      xRight: left + 11 * colW,                              // second grid line from the right
-      xLeft: left + colW,                                    // second grid line from the left
-      xMargin: vw - left / 2,                                // mobile: fixed margin
+      xLeft: left,                                           // the first grid line: the left edge of the grid
+      xMargin: left + grid.width,                            // mobile: fixed margin, the right edge of the grid
       xAxis: ar.left + ar.width / 2 + sx,
       yBase: ar.bottom + sy - dispNow + T,                   // base of the flower: bottom centre, where the stem ends
       yAxisEnd: ar.bottom + sy,
@@ -145,11 +145,9 @@
       v(g.xAxis, 0, g.yBase);                                // About: the flower's axis, third grid line from the right
       s.push({ t: "f", y: g.yBase, D: flowerD });
       v(g.xAxis, g.yBase, g.yPrinciples);                    // on down the axis
-      j(g.yPrinciples, g.xAxis, g.xLeft);                   // left, over the line under "Principles"
-      v(g.xLeft, g.yPrinciples, g.yHow);                     // second grid line from the left
-      j(g.yHow, g.xLeft, g.xRight);                          // right, over the line under "How I take a project…"
-      v(g.xRight, g.yHow, g.yContact);                       // second grid line from the right, into Contact
-      g.xEnd = g.xRight;
+      j(g.yPrinciples, g.xAxis, g.xLeft);                    // left, over the line under "Principles"
+      v(g.xLeft, g.yPrinciples, g.yContact);                 // down the first grid line, to Contact
+      g.xEnd = g.xLeft;
     } else {
       var yJ = g.flowerTop - 18;                             // in the gap above the flower
       v(g.xMargin, 0, yJ);
@@ -237,12 +235,30 @@
     // flower: the base line, then the rings, then the fan, each group by data-order
     flowerItems = [].concat(groupsOf("#flower-ground .ground"), groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
 
-    // wave: each wave is a group of bars; bars are ranked from the end where the thread arrives (right)
-    waveGroups = groupsOf("#closing-wave .wave").map(function (bars) {
-      var items = bars.map(function (b) { return { el: b, x: parseFloat(b.getAttribute("d").slice(1)) }; });
-      items.sort(function (a, b) { return b.x - a.x; });
-      return items;
-    });
+    // wave: five lines, each made of two paths drawn from the left. The 3 px line (order 1) goes first; it is the
+    // continuation of the thread. With non-scaling strokes the dashes are measured in screen pixels, so the length of
+    // each path is measured on screen and every path gets a table x -> length drawn.
+    var wsvg = wave.getBoundingClientRect(), sx = wsvg.width / 1360;
+    waveLines = Array.prototype.slice.call(wave.querySelectorAll(".wline"))
+      .sort(function (a, b) { return a.getAttribute("data-order") - b.getAttribute("data-order"); })
+      .map(function (g) {
+        return Array.prototype.slice.call(g.querySelectorAll("path")).map(function (path) {
+          var Lu = path.getTotalLength(), N = 320, xs = [], ls = [], px = 0, py = 0, acc = 0, maxX = -1e9;
+          for (var i = 0; i <= N; i++) {
+            var pt = path.getPointAtLength(Lu * i / N);
+            if (i) acc += Math.hypot((pt.x - px) * sx, pt.y - py);
+            px = pt.x; py = pt.y; maxX = Math.max(maxX, pt.x);
+            xs.push(maxX); ls.push(acc);
+          }
+          return { el: path, L: acc, xs: xs, ls: ls };
+        });
+      });
+    var first = waveLines[0] && waveLines[0][0];
+    if (first) {                                             // y of the 3 px line where it enters the grid (x = 0)
+      var pa = first.el, Lq = pa.getTotalLength(), lo = 0, hi = Lq;
+      for (var it = 0; it < 30; it++) { var mid = (lo + hi) / 2; if (pa.getPointAtLength(mid).x < 0) lo = mid; else hi = mid; }
+      waveStartY = pa.getPointAtLength(hi).y;
+    }
   }
 
   function setPath(path, t) {
@@ -259,14 +275,24 @@
     }
   }
 
+  function lengthAtX(item, X) {
+    var xs = item.xs, lo = 0, hi = xs.length - 1;
+    if (X <= xs[0]) return 0;
+    if (X >= xs[hi]) return item.L;
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (xs[mid] <= X) lo = mid; else hi = mid; }
+    var t = (X - xs[lo]) / ((xs[hi] - xs[lo]) || 1);
+    return item.ls[lo] + t * (item.ls[hi] - item.ls[lo]);
+  }
+
   function drawWave(q) {
-    var n = waveGroups.length, ov = 0.15;
-    var d = 1 / (1 + (n - 1) * (1 - ov));                    // wave after wave, in data-order
-    for (var w = 0; w < n; w++) {
-      var g = clamp((q - w * (1 - ov) * d) / d, 0, 1), bars = waveGroups[w];
-      for (var i = 0; i < bars.length; i++) {
-        var t = ease((g - (i / bars.length) * 0.55) / 0.45); // right to left; every bar grows from the central axis
-        setPath(bars[i].el, t);
+    var n = waveLines.length, stag = 0.07;                   // each line starts a little after the previous one
+    for (var k = 0; k < n; k++) {
+      var X = ease((q - k * stag) / (1 - (n - 1) * stag)) * 1360;   // where the head of this line is, in the wave's own x
+      for (var i = 0; i < waveLines[k].length; i++) {
+        var it = waveLines[k][i], drawn = lengthAtX(it, X);
+        it.el.style.strokeDasharray = it.L.toFixed(1) + " " + (it.L + 5).toFixed(1);
+        it.el.style.strokeDashoffset = (it.L - drawn).toFixed(1);
+        it.el.style.visibility = (X <= 0.5 || drawn <= 0.5) ? "hidden" : "visible";   // nothing shows before the head enters the grid
       }
     }
   }
@@ -400,6 +426,7 @@
   function setup() {
     plucks = [];
     scaleFlowerStroke();
+    collect();                                               // the wave is measured on screen before the layout of Contact
     pin = measurePin();
     var loc = measureContact();
     // the section is as tall as the pinned stage plus the scroll the wave needs; the page ends when the wave is complete
@@ -411,7 +438,6 @@
     table = simulate();
     build();
     lastFlower = -1; lastWave = -1;
-    collect();
     dirty = false;
     render(reduceMQ.matches);                                // drawn straight away, so a relayout never blinks; reduced motion: complete and still
   }

@@ -86,7 +86,7 @@
   var parallax = [];
   var motionOK = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   document.querySelectorAll(".card-btn .card-thumb img").forEach(function (img) { parallax.push({ img: img, box: img.parentNode, y: null }); });
-  var PX = { scale: 1.12, shift: 0.05 };           // shift: share of the frame height, each way
+  var PX = { scale: 1.3, shift: 0.12 };            // shift: share of the frame height, each way (scale leaves 0.15 spare on each side)
   function updateParallax() {
     var vh = window.innerHeight;
     parallax.forEach(function (it) {

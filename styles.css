@@ -204,10 +204,11 @@ a:hover { text-decoration-thickness: 2px; }
    Desktop: four columns wide, in the last four columns, so its axis sits on the third grid line from the right, where the guide line runs.
    Mobile: full width, under the About text. */
 .hero-flower { grid-column: 1 / -1; margin-top: 2rem; color: var(--ink); pointer-events: none; }
-.hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 3); }
-.hero-flower .heavy { stroke-width: calc(var(--fsw, 3) * 2); }   /* the heavier arcs and the base line of the drawing */
+.hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 1); }   /* 1 px: rings and fan (guide.js keeps it at 1 px at any size) */
+.hero-flower .heavy { stroke-width: calc(var(--fsw, 1) * 2.5); }   /* 2.5 px: the base line and the heavy arcs next to the base */
 #flower-axis { stroke: none; }                                      /* the guide line itself runs along the axis */
-.js .hero-flower path, .js .closing-wave path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
+.js .hero-flower path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
+.js .closing-wave path { visibility: hidden; }   /* guide.js draws the wave with the scroll */
 @media (min-width: 861px) {
   .hero-flower { position: absolute; top: 0; left: calc(100% * 2 / 3); width: calc(100% / 3); margin: 0; z-index: 2; }
 }
@@ -270,7 +271,8 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- 03 How I work ---------- */
 
-.steps > li { border-top: 1px solid var(--line-strong); }
+.steps > li { --bt: 1px; border-top: var(--bt) solid var(--line-strong); }
+.steps > li:first-child { --bt: 0px; }   /* the list starts without a line */
 .step { font-weight: inherit; }
 .step-btn {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: baseline;
@@ -295,21 +297,44 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- 04 Contact ---------- */
 
-.contact .display { margin-bottom: 1.25rem; }
-.contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; margin-left: -0.05em; }
 /* Contact is a stage that stays pinned (sticky) under the header while the scroll draws the guide line and the wave.
    guide.js gives the section its extra height; it ends exactly when the wave is complete. */
 .contact { padding: 0; }
 .contact > .contact-stage {
-  position: sticky; top: 2.5rem; height: calc(100svh - 2.5rem); overflow: hidden;
-  display: flex; flex-direction: column; padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 2rem;
+  position: sticky; top: 2.5rem; min-height: calc(100svh - 2.5rem); overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 40px;
 }
-.finale { position: relative; flex: 1 1 auto; min-height: 6rem; margin: 2rem calc(100% / 12) 0 0; }   /* the wave ends on the second grid line from the right */
-.closing-wave { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* "Let's talk" and the links start on the grid line of column 4 (text indented only by the glyph's own side bearing);
+   "Let's talk" sits 64 px below the label, the links 165 px below the start of "Let's talk". */
+.contact .g > .span-main { padding-left: 0; margin-top: 64px; }
+.contact .display { min-height: 165px; margin: 0 0 0 -0.065em; }
+.finale { position: relative; height: 170px; margin: 230px 0 0; }   /* the wave: the grid's full width, 230 px under the links */
+.closing-wave { display: block; width: 100%; height: 170px; overflow: hidden; }
+.foot {
+  display: flex; justify-content: space-between; align-items: flex-end; margin-top: 28px;
+  position: relative; z-index: 1;
+}
+.foot-left { display: flex; align-items: center; gap: 16px; height: 56px; }
+.foot-left img { display: block; flex: none; }
+.foot-text, .foot-pill {
+  margin: 0; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.5;
+}
+.foot-right { display: flex; align-items: center; gap: 19px; height: 23px; }
+.foot-right img { display: block; flex: none; }
+.foot-pill { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 54px; height: 23px; border: 1px solid var(--ink); border-radius: 12px; line-height: 1; }
+/* Static ornament between Principles and How I work */
+.section > .semicircles { position: absolute; right: var(--gutter); top: calc(100% - 46px); z-index: 2; pointer-events: none; }
 
 /* ---------- Abstract line compositions (SVG) ---------- */
 
 /* ---------- Responsive ---------- */
+
+@media (min-width: 861px) {
+  .step-btn { min-height: calc(102px - var(--bt)); padding: 20px 0 0; align-items: start; }   /* every closed step is 102 px tall; text 21 px under the line */
+  .steps > li:first-child .step-btn { padding-top: 21px; }
+}
 
 @media (max-width: 860px) {
   .span-side, .span-main { grid-column: 1 / -1; }
@@ -322,7 +347,11 @@ a:hover { text-decoration-thickness: 2px; }
   .hero > .g { order: 1; }
   .hero > .hero-row { order: 3; }
   .hero-row .about { grid-column: 1 / -1; }
-  .finale { margin-right: 0; }
+  .finale { margin-top: 3rem; }
+  .closing-wave { transform: scaleX(-1); }   /* the thread reaches the wave from the right margin */
+  .contact .display { min-height: 0; }
+  .contact .g > .span-main { margin-top: 0; padding-left: var(--pad); }
+  .foot { flex-wrap: wrap; row-gap: 1rem; }
 
   .step-btn .name { grid-column: 1 / 11; }
   .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }
@@ -473,7 +502,7 @@ html:not(.js) .video-toggle { display: none; }
   position: absolute; top: 0; left: 0; z-index: 55; overflow: visible;
   pointer-events: none;                       /* the line never blocks clicks; guide.js listens on the window */
 }
-.guide path { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: miter; }
+.guide path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: miter; }
 .guide path { stroke-linecap: square; }       /* square caps fill the 90° corners */
 .guide-local { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 55; }
-.guide-local path { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: square; }
+.guide-local path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: square; }

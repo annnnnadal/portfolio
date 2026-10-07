@@ -64,6 +64,8 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 **Orden de los principios:** Show the direction, Keep it compelling, Keep it clean.
 
+**Parallax en las miniaturas:** la imagen de cada card es un poco mayor que su marco y se desplaza suavemente al hacer scroll (`script.js`); no en `prefers-reduced-motion`, y se resetea antes de la transición a la página del caso.
+
 **Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card se abre la página del caso (ver "Páginas de caso").
 
 **Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
@@ -74,6 +76,19 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 - **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, a la card del caso, con la misma transición a la inversa.
 - **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y la misma transición. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
 - **Transición:** View Transitions API entre documentos (`@view-transition`, eventos `pageswap` y `pagereveal`, con `view-transition-name: case-hero`). Sin soporte del navegador, o con `prefers-reduced-motion`, se navega sin animación.
+
+**Línea guía (solo en la home):** concepto "I turn noise into direction". Una línea de 1.5 px en #0044FF (el color de la web) que se dibuja con el scroll como un hilo que crece hacia abajo. Su extremo inferior va a la altura de la mitad del viewport. Implementación: `guide.js` (SVG + `requestAnimationFrame`, sin librerías), cargado solo en `index.html`. Las páginas de caso no la llevan. Todo el trazado, la flor y la figura final son #0044FF.
+
+- **Líneas verticales:** About, la tercera línea del grid desde la derecha (el eje de la flor); Principles, la segunda desde la izquierda; How I work y Contact, la segunda desde la derecha.
+- **Recorrido en escritorio:** About (tercera línea desde la derecha) → flor → hacia la izquierda sobre la línea que subraya "Principles" → baja por la segunda línea desde la izquierda durante Principles → en How I work, hacia la derecha sobre la línea que hay bajo "How I take a project…" → baja por la segunda línea desde la derecha → Contact, también a la derecha. Los tramos horizontales van superpuestos exactamente a esas líneas.
+- **Flor (`images/flower.svg`, en línea):** volteada: su base está abajo y se abre hacia arriba; el tallo recto central es la propia línea guía. Ocupa cuatro columnas de ancho, en las cuatro últimas, con su eje sobre la tercera línea del grid desde la derecha (la antepenúltima). Tiene su propia línea base, que no pasa del ancho del dibujo. La línea baja por el tallo hasta la base; entonces, con el scroll, se dibujan de forma consecutiva la base (desde el centro hacia los lados), los anillos (`#flower-rings`) y después el abanico (`#flower-fan`), cada grupo por `data-order`, con las dos mitades creciendo a la vez desde la base. Después la línea sigue hacia abajo, hasta Principles, y continúa su recorrido.
+- **Contact (sticky):** al llegar al título "Contact", la sección se queda fija bajo la cabecera. El scroll solo sirve para que la línea siga bajando por la derecha hasta el eje central de `images/closing-wave.svg` y para dibujar la onda, de derecha a izquierda, onda a onda en el orden de `data-order`, con cada barra creciendo desde el eje. La onda queda justo debajo del email. La página termina cuando la onda está completa, sin espacio sobrante.
+- **About fijo mientras se forma la flor:** con el scroll, About se queda quieto (sticky) mientras la línea baja por el tallo y se dibuja la flor entera; cuando está completa, About se suelta y la página sigue hacia Principles. En `prefers-reduced-motion` no se fija.
+- **Pausas:** mientras se dibuja un cambio de lado o un cambio de lado, el extremo se queda parado y el scroll sigue; después la línea acelera hasta recuperar la mitad del viewport.
+- **Vibración:** al acercar el cursor o el dedo, el tramo cercano se deforma y oscila como una cuerda pulsada, y se amortigua en menos de un segundo. La línea tiene `pointer-events: none`; la vibración se detecta con eventos de la ventana.
+- **Móvil (hasta 860 px):** la línea va por un margen lateral fijo, sin alternar de lado. La flor se queda a ancho completo bajo el texto de About: la línea se desvía a su eje en el hueco sobre ella y vuelve al margen sobre la línea bajo el título de Principles. Contact es igual de fijo (sticky).
+- **`prefers-reduced-motion`:** línea, flor y onda completas, estáticas y sin vibración; Contact sin recorrido extra.
+- **Decidido:** la vertical izquierda puede cruzar el título "How I work".
 
 **Dos niveles de lectura**
 
@@ -96,15 +111,15 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 ## Dirección visual (v1)
 
-Versión sencilla para presentar ya: tipografía protagonista, retícula visible y líneas finas, en blanco y negro.
+Versión sencilla para presentar ya: tipografía protagonista, retícula visible y líneas finas, en azul #0044FF sobre blanco roto.
 
 - **Tipografía:** DM Sans (Google Fonts). Jerarquía muy marcada: titulares enormes y ajustados, texto de lectura pequeño y limpio, etiquetas en mayúsculas pequeñas.
-- **Color:** blanco y negro. Fondo blanco roto, texto negro, gris solo para información secundaria.
+- **Color:** fondo blanco roto y todo lo demás en azul #0044FF: texto, líneas, retícula y figuras SVG. Las páginas de caso son negro con blanco.
 - **Retícula:** 12 columnas, líneas de la retícula visibles y muy finas en algunas secciones, como en un plano. Negro al 3 % de opacidad y siempre en el fondo: las imágenes van por encima.
 - **Cabecera:** barra fija con fondo opaco (100 %). A la izquierda, Madrid con la hora local en directo; a la derecha, el número y nombre del capítulo en curso ("03 — How I work"). Al hacer clic en el capítulo se abre un menú con los capítulos para saltar de uno a otro dentro de la página. Sin versión, sin estado y sin nombre en la cabecera.
-- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. El hero es una flor hecha de líneas diagonales; las miniaturas de los casos sin imagen (AI tools, A guide for newcomers) usan el mismo estilo: puntos o trazos en diagonal con grosor variable. Son SVG trazados a partir de las referencias de Ana (`images/hero-flower.svg`, `images/generated/`).
+- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. La flor de círculos y arcos de `images/flower.svg` y la onda de barras de `images/closing-wave.svg` van en línea (todo es trazo; ver "Línea guía"). Las miniaturas de los casos sin imagen (AI tools, A guide for newcomers) son composiciones de puntos o trazos en diagonal con grosor variable, SVG trazados a partir de las referencias de Ana (`images/generated/`).
 - **Imágenes de proyecto:** esquinas rectas, sin bordes redondeados ni sombras.
-- **Movimiento:** discreto. En la flor y en las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (las miniaturas lo hacen al entrar en pantalla). El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
+- **Movimiento:** discreto. En las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (lo hacen al entrar en pantalla). La flor y la línea guía se dibujan con el scroll. El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
 - **Referencias:** clemenceguillemot.com (meta-información, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
 
 ## Copy: Hero
@@ -177,14 +192,14 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-merchandising; Outcome: resa-billboard y resa-web, un vídeo) | Brand strategy, UX/UI · 2025 |
-| Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI |
+| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-concept-merchandising; Outcome: billboard, web desktop y mobile, en imágenes y vídeos) | Brand strategy, UX/UI · 2025 |
+| Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
 | Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
-| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction |
+| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction · 2026 |
 
-En las cards va solo el tipo de proyecto, no la posición. Falta el año de AI tools y de A guide for newcomers.
+En las cards va solo el tipo de proyecto, no la posición.
 
 ### Resa
 
@@ -218,11 +233,20 @@ En las cards va solo el tipo de proyecto, no la posición. Falta el año de AI t
 > I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.
 >
 > **Outcome**
-> [Imagen resa-billboard con caption: *Concept design*, y vídeo resa-web con caption: *Resa one web*, de images/resa]
+> [Imágenes y vídeos de images/resa, mezclados, cada uno con su nombre de archivo como caption]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-merchandising) lleva también el caption "Concept design". El vídeo es la web real, no concept design, por eso su caption es "Resa one web".
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-concept-merchandising) lleva el caption "Concept design".
 
-**Vídeo (resa-web):** se reproduce solo, sin sonido y en bucle, mientras está visible. Como no tiene sonido, el único control es un botón circular en el centro para reproducir y pausar (aparece siempre en pausa y, al reproducir, al pasar el ratón o con el foco del teclado). Con `prefers-reduced-motion` queda en pausa hasta pulsar el botón. Versiones optimizadas en mp4 y webm, con póster.
+**Outcome (images/resa):** mezcla imágenes y vídeos. Cuando dos piezas tienen la misma proporción van juntas en la misma línea; el resto, a todo el ancho de la columna. Orden actual:
+
+1. `resa-concept-billboard` (imagen, a todo el ancho)
+2. `resa-web-desktop-concept-homepage-hero` (imagen) y `resa-web-desktop-homepage-hero` (vídeo), en la misma línea
+3. `resa-web-desktop-homepage-gallery` (vídeo, a todo el ancho)
+4. `resa-concept-web-mobile-students-page` (imagen) y `resa-concept-web-mobile-students-page-hero` (vídeo), en la misma línea
+
+**Caption:** el nombre del archivo de cada imagen o vídeo, sin extensión.
+
+**Vídeos:** se reproducen solos, sin sonido y en bucle, mientras están visibles; si el usuario pausa uno, no se reanuda solo. Como no tienen sonido, el único control es un botón circular en el centro para reproducir y pausar (aparece siempre en pausa y, al reproducir, al pasar el ratón o con el foco del teclado). Con `prefers-reduced-motion` quedan en pausa hasta pulsar el botón. Cada vídeo se optimiza para web (mp4 y webm sin audio, con póster en WebP, sufijo `-web`); los originales se conservan en la carpeta.
 
 ### AI tools for corporate bankers
 
@@ -332,13 +356,13 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 >
 > anaonadal@gmail.com · [LinkedIn](https://www.linkedin.com/in/anadal)
 
-Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie.
+Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie. Contact es una sección fija (sticky) donde la línea guía llega a la figura de la onda.
 
 ## Reglas que no se rompen
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- Las imágenes de Resa llevan el caption "Concept design". El vídeo de la web real lleva "Resa one web".
+- La imagen hero de Resa lleva el caption "Concept design". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo.
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

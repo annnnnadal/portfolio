@@ -1,10 +1,10 @@
 /* Guide line — "I turn noise into direction".
-   A thread (#0A0A0A, 1.5 px) grows down the home page as you scroll. Its lower end sits at the middle of the viewport.
+   A thread (#0044FF, 1.5 px) grows down the home page as you scroll. Its lower end sits at the middle of the viewport.
 
    Route (desktop)
-   - About: down the third grid line from the right, which is the axis of the flower. The flower is four columns wide, centred on that line,
-     with no baseline. The thread reaches the base from above and, from the first scroll, the rings and then
-     the fan draw themselves; the thread then goes on down #flower-axis.
+   - About: down the third grid line from the right, which is the axis of the flower. The flower (base at the bottom, opening upwards) is four
+     columns wide and its central stem is the thread itself. The thread comes down the stem to the base; then the base line, the
+     rings and the fan draw themselves; the thread then goes on down to Principles.
    - It goes left over the line under "Principles", down the second grid line from the left, and at "How I work" goes right over
      the line under "How I take a project…", then down the second grid line from the right. Contact stays on the right.
    - Contact is a stage that stays pinned (sticky). Scrolling there only lets the thread go on down to the central axis of
@@ -51,7 +51,7 @@
   function scaleFlowerStroke() {
     // keep the flower's lines at 1.5 px whatever its size
     var svgEl = flower.querySelector("svg");
-    var scale = svgEl.getBoundingClientRect().width / 2006;
+    var scale = svgEl.getBoundingClientRect().width / 1000;
     svgEl.style.setProperty("--fsw", scale ? (1.5 / scale).toFixed(3) : "6");
   }
 
@@ -91,9 +91,9 @@
       xLeft: left + colW,                                    // second grid line from the left
       xMargin: vw - left / 2,                                // mobile: fixed margin
       xAxis: ar.left + ar.width / 2 + sx,
-      yBase: ar.top + sy,                                    // base of the flower: top centre
+      yBase: ar.bottom + sy,                                 // base of the flower: bottom centre, where the stem ends
       yAxisEnd: ar.bottom + sy,
-      flowerTop: fr.top + sy,
+      flowerTop: ar.top + sy,                                // top of the stem
       yPrinciples: r(document.querySelector("#principles .principle")).top + sy + 0.5,   // the line under "Principles"
       yHow: r(document.querySelector("#how-i-work .steps > li")).top + sy + 0.5,         // the line under "How I take a project…"
       yContact: r(contact).top + sy                          // where the pinned Contact stage begins
@@ -201,8 +201,8 @@
   }
 
   function collect() {
-    // flower: the rings, then the fan, each group by data-order
-    flowerItems = [].concat(groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
+    // flower: the base line, then the rings, then the fan, each group by data-order
+    flowerItems = [].concat(groupsOf("#flower-ground .ground"), groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
 
     // wave: each wave is a group of bars; bars are ranked from the end where the thread arrives (right)
     waveGroups = groupsOf("#closing-wave .wave").map(function (bars) {

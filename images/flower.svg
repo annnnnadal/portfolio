@@ -6,7 +6,7 @@
 <g mask="url(#mask0_16_289)">
 <path d="M0 499.626H1000" stroke="#0044FF" stroke-width="0.498504" stroke-linecap="round"/>
 <path d="M0 499.626H1000" stroke="#0044FF" stroke-width="7.97607" stroke-linecap="round"/>
-<path d="M500 500V250.748" stroke="#0044FF" stroke-width="1.49551" stroke-linecap="round"/>
+<path d="M500 500L500 -75" stroke="#0044FF" stroke-width="1.49551" stroke-linecap="round"/>
 <path d="M500 500C494.05 500 488.344 497.637 484.137 493.43C479.931 489.223 477.567 483.517 477.567 477.567C477.567 471.618 479.931 465.912 484.137 461.705C488.344 457.498 494.05 455.135 500 455.135" stroke="#0044FF" stroke-width="1.49551" stroke-linecap="round"/>
 <path d="M477.567 477.567C477.567 483.517 479.931 489.223 484.137 493.43C488.344 497.637 494.05 500 500 500" stroke="#0044FF" stroke-width="4" stroke-linecap="square"/>
 <path d="M500 500C505.947 500 511.655 497.637 515.862 493.43C520.07 489.223 522.433 483.517 522.433 477.567C522.433 471.618 520.07 465.912 515.862 461.705C511.655 457.498 505.947 455.135 500 455.135" stroke="#0044FF" stroke-width="1.49551" stroke-linecap="round"/>

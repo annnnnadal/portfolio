@@ -191,6 +191,9 @@ a:hover { text-decoration-thickness: 2px; }
 
 .hero { padding-top: clamp(3.5rem, 7vw, 6rem); padding-bottom: clamp(3rem, 6vw, 5rem); display: flex; flex-direction: column; }
 .hero > .g { flex: none; }
+/* While the flower forms, About stays still (guide.js sets the wrapper height and the sticky offset). */
+.hero-pin { position: relative; }
+.hero-pin.is-pinned > .hero { position: sticky; min-height: 100svh; }
 .hero .eyebrow { margin-bottom: clamp(1.5rem, 4vw, 3.5rem); }
 .hero-row {
   position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -236,6 +239,7 @@ a:hover { text-decoration-thickness: 2px; }
   border: 1px solid var(--line-strong); background: var(--bg);
 }
 .card-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
+.js .card-btn .card-thumb img { will-change: transform; }   /* small parallax on scroll (script.js) */
 .card-thumb img.gen { object-fit: contain; padding: 2%; }
 .card-btn:hover .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
 .card-btn:focus-visible { outline: none; }

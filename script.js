@@ -32,6 +32,7 @@
       if (!thumb) { e.viewTransition.skipTransition(); return; }
       if (hero) hero.style.viewTransitionName = "none";
       thumb.style.viewTransitionName = VT;
+      resetParallax(thumb.querySelector("img"));
     } else if (!hero) {
       e.viewTransition.skipTransition();     // homepage to something else
     }                                          // case page to homepage: the hero keeps its name
@@ -79,6 +80,42 @@
       set(open);
     });
   });
+
+  /* Case study thumbnails: a small parallax. The image is a little larger than its frame and drifts
+     as the card crosses the viewport. Not with reduced motion; reset just before a page transition. */
+  var parallax = [];
+  var motionOK = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  document.querySelectorAll(".card-btn .card-thumb img").forEach(function (img) { parallax.push({ img: img, box: img.parentNode, y: null }); });
+  var PX = { scale: 1.12, shift: 0.05 };           // shift: share of the frame height, each way
+  function updateParallax() {
+    var vh = window.innerHeight;
+    parallax.forEach(function (it) {
+      var r = it.box.getBoundingClientRect();
+      if (r.bottom < -50 || r.top > vh + 50) return;
+      var p = clamp01(((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2), -1, 1);   // -1 entering from below ... 1 leaving at the top
+      var y = Math.round(-p * PX.shift * r.height * 10) / 10;
+      if (y === it.y) return;
+      it.y = y;
+      it.img.style.transform = "translate3d(0," + y + "px,0) scale(" + PX.scale + ")";
+    });
+  }
+  function clamp01(v, a, b) { return v < a ? a : v > b ? b : v; }
+  var pxTick = false;
+  function onScrollParallax() {
+    if (pxTick) return;
+    pxTick = true;
+    requestAnimationFrame(function () { pxTick = false; updateParallax(); });
+  }
+  if (motionOK && parallax.length) {
+    window.addEventListener("scroll", onScrollParallax, { passive: true });
+    window.addEventListener("resize", onScrollParallax);
+    updateParallax();
+  }
+  function resetParallax(img) {
+    if (!img) return;
+    img.style.transform = "";
+    parallax.forEach(function (it) { if (it.img === img) it.y = null; });
+  }
 
   /* Lines draw in when they enter the viewport. */
   var drawn = document.querySelectorAll(".gridlines");

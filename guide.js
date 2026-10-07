@@ -3,8 +3,9 @@
 
    Route (desktop)
    - About: down the third grid line from the right, which is the axis of the flower. The flower (base at the bottom, opening upwards) is four
-     columns wide and its central stem is the thread itself. The thread comes down the stem to the base; then the base line, the
-     rings and the fan draw themselves; the thread then goes on down to Principles.
+     columns wide and its central stem is the thread itself. The thread comes down the stem to the base; then About stays
+     still (sticky) while the base line, the rings and the fan draw themselves with the scroll. Once the flower is complete About
+     is released and the thread goes on down to Principles.
    - It goes left over the line under "Principles", down the second grid line from the left, and at "How I work" goes right over
      the line under "How I take a project…", then down the second grid line from the right. Contact stays on the right.
    - Contact is a stage that stays pinned (sticky). Scrolling there only lets the thread go on down to the central axis of
@@ -16,12 +17,13 @@
   "use strict";
 
   var hero = document.getElementById("hero");
+  var pinWrap = document.getElementById("hero-pin");
   var flower = document.querySelector(".hero-flower");
   var contact = document.getElementById("contact");
   var stage = document.querySelector(".contact-stage");
   var finale = document.querySelector(".finale");
   var wave = document.getElementById("closing-wave");
-  if (!hero || !flower || !contact || !stage || !finale || !wave || !document.createElementNS) return;
+  if (!hero || !pinWrap || !flower || !contact || !stage || !finale || !wave || !document.createElementNS) return;
 
   var NS = "http://www.w3.org/2000/svg";
   var mobileMQ = window.matchMedia("(max-width: 860px)");
@@ -30,7 +32,7 @@
   var CATCH_UP = 3;          // after a pause (flower, side change) the thread runs 3x the scroll speed until it is back at mid-viewport
   var PLUCK = { tau: 0.2, freq: 9, speed: 1100, reach: 110, window: 300 };   // damped well under 1 s
 
-  var svg = null, localSvg = null, geo = null, stages = [], segs = [], localSeg = null, table = null, plucks = [];
+  var pin = { on: false, T: 0 }, svg = null, heroG = null, heroDy = 0, localSvg = null, geo = null, stages = [], segs = [], localSeg = null, table = null, plucks = [];
   var dirty = true, rafId = 0, lastFlower = -1, lastWave = -1;
   var flowerItems = [], waveGroups = [];
 
@@ -71,6 +73,32 @@
     };
   }
 
+  /* About stays pinned while the flower draws. Everything is expressed in "released" coordinates: the hero's own
+     points are shifted down by T (the pinned scroll), which is where they end up once About is released.
+       sPin  scroll where About gets pinned: as late as possible, with its bottom still covering the viewport
+       y0    where the thread's end is by then (mid-viewport); sr = what is left of the stem down to the base
+       T     scroll spent pinned: the rest of the stem, then the flower drawing */
+  function measurePin() {
+    var sy = window.pageYOffset || 0, vh = window.innerHeight;
+    var on = !reduceMQ.matches;
+    pinWrap.classList.toggle("is-pinned", on);
+    pinWrap.style.height = ""; hero.style.top = "";
+    var wr = pinWrap.getBoundingClientRect();
+    var heroTop = wr.top + sy, H = hero.offsetHeight;
+    var base = flower.querySelector("#flower-axis").getBoundingClientRect().bottom + sy;   // hero not displaced: no height or offset set
+    var pin = { on: on, T: 0, sPin: 0, y0: 0, sr: 0, Df: 0, H: H, heroTop: heroTop, base: base };
+    if (on) {
+      pin.Df = clamp(vh * 0.3, 160, 320);
+      pin.sPin = Math.max(0, Math.min(heroTop + H - vh, base - vh / 2));
+      pin.y0 = pin.sPin + vh / 2;
+      pin.sr = Math.max(0, base - pin.y0);
+      pin.T = pin.sr + pin.Df;
+      pinWrap.style.height = Math.round(H + pin.T) + "px";
+      hero.style.top = (heroTop - pin.sPin).toFixed(1) + "px";
+    }
+    return pin;
+  }
+
   function measure() {
     var sx = window.pageXOffset || 0, sy = window.pageYOffset || 0;
     var root = document.documentElement;
@@ -82,6 +110,8 @@
     var grid = r(hero.querySelector(".gridlines"));
     var left = grid.left + sx, colW = grid.width / 12;
     var mobile = mobileMQ.matches;
+    var T = pin.T;
+    var dispNow = pin.on ? hero.getBoundingClientRect().top - pinWrap.getBoundingClientRect().top : 0;   // sticky displacement right now
     var ar = r(document.getElementById("flower-axis"));
     var fr = r(flower.querySelector("svg"));
 
@@ -91,9 +121,9 @@
       xLeft: left + colW,                                    // second grid line from the left
       xMargin: vw - left / 2,                                // mobile: fixed margin
       xAxis: ar.left + ar.width / 2 + sx,
-      yBase: ar.bottom + sy,                                 // base of the flower: bottom centre, where the stem ends
+      yBase: ar.bottom + sy - dispNow + T,                   // base of the flower: bottom centre, where the stem ends
       yAxisEnd: ar.bottom + sy,
-      flowerTop: ar.top + sy,                                // top of the stem
+      flowerTop: ar.top + sy - dispNow + T,                  // top of the stem
       yPrinciples: r(document.querySelector("#principles .principle")).top + sy + 0.5,   // the line under "Principles"
       yHow: r(document.querySelector("#how-i-work .steps > li")).top + sy + 0.5,         // the line under "How I take a project…"
       yContact: r(contact).top + sy                          // where the pinned Contact stage begins
@@ -109,7 +139,7 @@
       var len = Math.abs(x1 - x0);
       if (len > 1) s.push({ t: "j", y: y, x0: x0, x1: x1, len: len, D: clamp(len * 0.25, 70, 220) });
     }
-    var flowerD = clamp(g.vh * 0.3, 160, 320);
+    var flowerD = pin.on ? 1e-6 : clamp(g.vh * 0.3, 160, 320);   // pinned: the flower is driven by the pinned scroll, not by the table
 
     if (!g.mobile) {
       v(g.xAxis, 0, g.yBase);                                // About: the flower's axis, third grid line from the right
@@ -131,6 +161,7 @@
       v(g.xMargin, g.yPrinciples, g.yContact);
       g.xEnd = g.xMargin;
     }
+    for (var k = 0; k < s.length && s[k].t !== "f"; k++) s[k].hero = true;   // these move with About while it is pinned
     return s;
   }
 
@@ -180,7 +211,9 @@
     svg.style.width = geo.vw + "px";
     svg.style.height = geo.docH + "px";
     svg.setAttribute("viewBox", "0 0 " + geo.vw + " " + geo.docH);
-    stages.forEach(function (st) { if (st.t === "v" || st.t === "j") makeSeg(st, svg); });
+    heroG = el("g", {});
+    svg.appendChild(heroG);
+    stages.forEach(function (st) { if (st.t === "v" || st.t === "j") makeSeg(st, st.hero ? heroG : svg); });
     document.body.appendChild(svg);
 
     // inside the pinned Contact stage: the last stretch, down to the axis of the wave
@@ -250,13 +283,25 @@
 
   function render(all) {
     var sy = window.pageYOffset || 0, L = geo.loc;
-    var cur, val, flowerP = 0, f;
+    var cur, val, flowerP = 0, f, q = 0;
 
     if (all) { cur = stages.length; val = 1; }
     else {
-      var m = clamp(Math.round(sy + geo.vh / 2), 0, table.n - 1);
+      var m;
+      if (pin.on) {
+        // about pinned: before it, after it, and in between (the end runs down the stem, then the flower draws)
+        q = clamp(sy - pin.sPin, 0, pin.T);
+        if (sy < pin.sPin) m = sy + geo.vh / 2 + pin.T;
+        else if (sy < pin.sPin + pin.T) m = pin.y0 + pin.T + Math.min(q, pin.sr);
+        else m = Math.max(sy + geo.vh / 2, geo.yBase);
+      } else m = sy + geo.vh / 2;
+      m = clamp(Math.round(m), 0, table.n - 1);
       cur = table.si[m]; val = table.val[m];
     }
+    if (pin.on) {
+      heroDy = all ? 0 : q - pin.T;
+      heroG.setAttribute("transform", "translate(0 " + num(heroDy) + ")");
+    } else heroDy = 0;
     for (var i = 0; i < stages.length; i++) {
       var st = stages[i];
       f = (i < cur || all) ? 1 : i > cur ? 0 : -1;
@@ -264,6 +309,7 @@
       else if (st.t === "j") setSeg(st, f < 0 ? val : f);
       else flowerP = f < 0 ? val : f;
     }
+    if (pin.on && !all) flowerP = clamp((q - pin.sr) / pin.Df, 0, 1);
 
     // Contact: u = scroll since the stage got pinned. The thread's end is at mid-viewport, which in the stage is u + vh/2 - header.
     var u = sy - (geo.yContact - L.headerH);
@@ -292,7 +338,7 @@
       if (st.f <= 0) continue;
       // the Contact stretch lives inside the pinned stage, so it uses stage coordinates
       var px = st.local ? e.clientX - stageRect.left : e.clientX + sx;
-      var py = st.local ? e.clientY - stageRect.top : e.clientY + sy;
+      var py = st.local ? e.clientY - stageRect.top : e.clientY + sy - (st.hero ? heroDy : 0);
       var a, d;
       if (st.t === "v") { a = py - st.y0; d = px - st.x; }
       else { a = (px - st.x0) * (st.x1 >= st.x0 ? 1 : -1); d = py - st.y; }
@@ -354,6 +400,7 @@
   function setup() {
     plucks = [];
     scaleFlowerStroke();
+    pin = measurePin();
     var loc = measureContact();
     // the section is as tall as the pinned stage plus the scroll the wave needs; the page ends when the wave is complete
     contact.style.height = loc.travel ? Math.round(loc.stageH + loc.travel) + "px" : "";

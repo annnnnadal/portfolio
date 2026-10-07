@@ -200,6 +200,8 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 En las cards va solo el tipo de proyecto, no la posición.
 
+**Imágenes de las páginas de caso:** cada página muestra todas las imágenes de su carpeta (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). La primera es el hero y el resto van en la galería, de dos en dos, y las muy anchas o sueltas (banner de LinkedIn, tarjetas de Oros, sala de reuniones de Havaianas) a todo el ancho (`figure.full`). Al añadir una imagen a una carpeta, hay que añadirla también a su página.
+
 ### Resa
 
 **Nivel 1**

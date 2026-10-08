@@ -347,11 +347,11 @@ a:hover { text-decoration-thickness: 2px; }
   .hero > .g { order: 1; }
   .hero > .hero-row { order: 3; }
   .hero-row .about { grid-column: 1 / -1; }
-  .finale { margin-top: 3rem; }
-  .closing-wave { transform: scaleX(-1); }   /* the thread reaches the wave from the right margin */
+  .finale { margin-top: 3rem; height: 110px; }   /* the wave keeps its proportions and shows only its left part (xMinYMid slice) */
+  .closing-wave { height: 110px; }
   .contact .display { min-height: 0; }
   .contact .g > .span-main { margin-top: 0; padding-left: var(--pad); }
-  .foot { flex-wrap: wrap; row-gap: 1rem; }
+  .foot { flex-direction: column; align-items: flex-start; gap: 16px; }   /* heads block, then the © 2026 chip, left aligned */
 
   .step-btn .name { grid-column: 1 / 11; }
   .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }

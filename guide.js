@@ -10,7 +10,10 @@
      Principles, How I work and Contact, with no more changes of side.
    - Contact is a stage that stays pinned (sticky). The thread arrives at the left end of the wave, where the 3 px line of
      images/closing-wave.svg starts, and from there the scroll draws the wave from left to right. The page ends when it is complete.
-   Mobile: a fixed margin (the right edge of the grid) instead of the left edge; the wave is mirrored and draws right to left.
+   Mobile: the thread starts at the flower itself (no stem): the base line, the rings and the fan draw first (About pinned), then
+   the thread leaves the left end of the base line, over it, and goes down the left edge of the grid to the left end of the
+   wave, which draws left to right as on desktop (cropped on the right, 110 px tall, same proportions).
+   Performance: nothing in the scroll loop reads the DOM; layout is measured once on load and on real resizes (debounced).
    Pointer or finger near the thread plucks it like a guitar string.
 
    Plain SVG + requestAnimationFrame. Home only. */
@@ -35,7 +38,7 @@
 
   var pin = { on: false, T: 0 }, svg = null, heroG = null, heroDy = 0, localSvg = null, geo = null, stages = [], segs = [], localSeg = null, table = null, plucks = [];
   var dirty = true, rafId = 0, lastFlower = -1, lastWave = -1;
-  var flowerItems = [], waveLines = [], waveStartY = 154;
+  var flowerItems = [], waveLines = [], waveStartY = 154, waveXMax = 1360;
 
   /* ---------- helpers ---------- */
 
@@ -90,9 +93,16 @@
     var pin = { on: on, T: 0, sPin: 0, y0: 0, sr: 0, Df: 0, H: H, heroTop: heroTop, base: base };
     if (on) {
       pin.Df = clamp(vh * 0.3, 160, 320);
-      pin.sPin = Math.max(0, Math.min(heroTop + H - vh, base - vh / 2));
-      pin.y0 = pin.sPin + vh / 2;
-      pin.sr = Math.max(0, base - pin.y0);
+      if (mobileMQ.matches) {
+        // no stem on mobile: About is pinned as soon as the whole flower is in view (from the first scroll if it already is)
+        pin.sPin = clamp(base + 24 - vh, 0, Math.max(0, heroTop + H - vh));
+        pin.y0 = pin.sPin + vh / 2;
+        pin.sr = 0;
+      } else {
+        pin.sPin = Math.max(0, Math.min(heroTop + H - vh, base - vh / 2));
+        pin.y0 = pin.sPin + vh / 2;
+        pin.sr = Math.max(0, base - pin.y0);
+      }
       pin.T = pin.sr + pin.Df;
       pinWrap.style.height = Math.round(H + pin.T) + "px";
       hero.style.top = (heroTop - pin.sPin).toFixed(1) + "px";
@@ -119,7 +129,6 @@
     geo = {
       vw: vw, vh: vh, docH: docH, mobile: mobile,
       xLeft: left,                                           // the first grid line: the left edge of the grid
-      xMargin: left + grid.width,                            // mobile: fixed margin, the right edge of the grid
       xAxis: ar.left + ar.width / 2 + sx,
       yBase: ar.bottom + sy - dispNow + T,                   // base of the flower: bottom centre, where the stem ends
       yAxisEnd: ar.bottom + sy,
@@ -149,15 +158,12 @@
       v(g.xLeft, g.yPrinciples, g.yContact);                 // down the first grid line, to Contact
       g.xEnd = g.xLeft;
     } else {
-      var yJ = g.flowerTop - 18;                             // in the gap above the flower
-      v(g.xMargin, 0, yJ);
-      j(yJ, g.xMargin, g.xAxis);
-      v(g.xAxis, yJ, g.yBase);
+      // the thread starts at the flower: an invisible stem holds the later stages until the base is reached
+      if (g.yBase > 1) s.push({ t: "v", invisible: true, x: g.xAxis, y0: 0, y1: g.yBase, len: g.yBase });
       s.push({ t: "f", y: g.yBase, D: flowerD });
-      v(g.xAxis, g.yBase, g.yPrinciples);
-      j(g.yPrinciples, g.xAxis, g.xMargin);                  // over the line under "Principles"
-      v(g.xMargin, g.yPrinciples, g.yContact);
-      g.xEnd = g.xMargin;
+      j(g.yBase, g.xAxis, g.xLeft);                          // out of the base line's left end, over it
+      v(g.xLeft, g.yBase, g.yContact);                       // down the left edge of the grid, to Contact
+      g.xEnd = g.xLeft;
     }
     for (var k = 0; k < s.length && s[k].t !== "f"; k++) s[k].hero = true;   // these move with About while it is pinned
     return s;
@@ -168,7 +174,7 @@
   function simulate() {
     var n = Math.ceil(geo.mMax || (geo.docH - geo.vh / 2)) + 1;
     var si = new Int16Array(n), val = new Float32Array(n);
-    var s = 0, yEnd = stages[0].y0, p = 0;
+    var s = 0, yEnd = stages[0].y0 || 0, p = 0;
 
     for (var m = 0; m < n; m++) {
       if (s < stages.length) {
@@ -211,7 +217,7 @@
     svg.setAttribute("viewBox", "0 0 " + geo.vw + " " + geo.docH);
     heroG = el("g", {});
     svg.appendChild(heroG);
-    stages.forEach(function (st) { if (st.t === "v" || st.t === "j") makeSeg(st, st.hero ? heroG : svg); });
+    stages.forEach(function (st) { if ((st.t === "v" || st.t === "j") && !st.invisible) makeSeg(st, st.hero ? heroG : svg); });
     document.body.appendChild(svg);
 
     // inside the pinned Contact stage: the last stretch, down to the axis of the wave
@@ -220,7 +226,7 @@
     makeSeg(localSeg, localSvg);
     stage.appendChild(localSvg);
 
-    segs = stages.filter(function (st) { return st.t === "v" || st.t === "j"; }).concat([localSeg]);
+    segs = stages.filter(function (st) { return (st.t === "v" || st.t === "j") && !st.invisible; }).concat([localSeg]);
   }
 
   /* ---------- 5. flower and closing wave ---------- */
@@ -236,29 +242,54 @@
     flowerItems = [].concat(groupsOf("#flower-ground .ground"), groupsOf("#flower-rings .ring"), groupsOf("#flower-fan .petal"));
 
     // wave: five lines, each made of two paths drawn from the left. The 3 px line (order 1) goes first; it is the
-    // continuation of the thread. With non-scaling strokes the dashes are measured in screen pixels, so the length of
-    // each path is measured on screen and every path gets a table x -> length drawn.
-    var wsvg = wave.getBoundingClientRect(), sx = wsvg.width / 1360;
+    // continuation of the thread. With non-scaling strokes the dashes are measured in screen pixels, so every path gets a
+    // table x -> length drawn, computed on screen scale. The paths are sampled from their own data (no DOM measuring:
+    // getPointAtLength on these long curves cost ~0.5 s).
+    var mobile = mobileMQ.matches, wr = wave.getBoundingClientRect(), VW = 1360, VH = 170;
+    wave.setAttribute("preserveAspectRatio", mobile ? "xMinYMid slice" : "none");
+    var sx, sy, oy = 0;
+    if (mobile) { sx = sy = Math.max(wr.width / VW, wr.height / VH); oy = (wr.height - VH * sy) / 2; }
+    else { sx = wr.width / VW; sy = wr.height / VH; }
+    waveXMax = Math.min(VW, wr.width / sx);
     waveLines = Array.prototype.slice.call(wave.querySelectorAll(".wline"))
       .sort(function (a, b) { return a.getAttribute("data-order") - b.getAttribute("data-order"); })
       .map(function (g) {
         return Array.prototype.slice.call(g.querySelectorAll("path")).map(function (path) {
-          var Lu = path.getTotalLength(), N = 320, xs = [], ls = [], px = 0, py = 0, acc = 0, maxX = -1e9;
-          for (var i = 0; i <= N; i++) {
-            var pt = path.getPointAtLength(Lu * i / N);
-            if (i) acc += Math.hypot((pt.x - px) * sx, pt.y - py);
-            px = pt.x; py = pt.y; maxX = Math.max(maxX, pt.x);
-            xs.push(maxX); ls.push(acc);
+          var pts = path.__pts || (path.__pts = samplePath(path.getAttribute("d")));
+          var n = pts.length / 2, xs = new Float32Array(n), ys = new Float32Array(n), ls = new Float32Array(n), maxX = -1e9, acc = 0;
+          for (var i = 0; i < n; i++) {
+            var x = pts[2 * i], y = pts[2 * i + 1];
+            if (i) acc += Math.hypot((x - pts[2 * i - 2]) * sx, (y - pts[2 * i - 1]) * sy);
+            maxX = Math.max(maxX, x);
+            xs[i] = maxX; ys[i] = y; ls[i] = acc;
           }
-          return { el: path, L: acc, xs: xs, ls: ls };
+          return { el: path, L: acc, xs: xs, ys: ys, ls: ls, n: n };
         });
       });
     var first = waveLines[0] && waveLines[0][0];
-    if (first) {                                             // y of the 3 px line where it enters the grid (x = 0)
-      var pa = first.el, Lq = pa.getTotalLength(), lo = 0, hi = Lq;
-      for (var it = 0; it < 30; it++) { var mid = (lo + hi) / 2; if (pa.getPointAtLength(mid).x < 0) lo = mid; else hi = mid; }
-      waveStartY = pa.getPointAtLength(hi).y;
+    if (first) {                                             // where the 3 px line enters the grid (x = 0), on screen, in the wave's box
+      var k = 0;
+      while (k < first.n - 1 && first.xs[k] < 0) k++;
+      waveStartY = oy + first.ys[k] * sy;
     }
+  }
+
+  // Bezier path data (absolute M, C, L) -> flat list of points
+  function samplePath(d) {
+    var t = d.match(/[MCL]|-?\d*\.?\d+/g), pts = [], i = 0, cx = 0, cy = 0, cmd = "";
+    while (i < t.length) {
+      if (/[MCL]/.test(t[i])) cmd = t[i++];
+      if (cmd === "M" || cmd === "L") { cx = +t[i]; cy = +t[i + 1]; i += 2; pts.push(cx, cy); }
+      else if (cmd === "C") {
+        var x1 = +t[i], y1 = +t[i + 1], x2 = +t[i + 2], y2 = +t[i + 3], x3 = +t[i + 4], y3 = +t[i + 5]; i += 6;
+        for (var k = 1; k <= 8; k++) {
+          var u = k / 8, v = 1 - u, a = v * v * v, b = 3 * v * v * u, c = 3 * v * u * u, e = u * u * u;
+          pts.push(a * cx + b * x1 + c * x2 + e * x3, a * cy + b * y1 + c * y2 + e * y3);
+        }
+        cx = x3; cy = y3;
+      } else i++;
+    }
+    return pts;
   }
 
   function setPath(path, t) {
@@ -287,7 +318,7 @@
   function drawWave(q) {
     var n = waveLines.length, stag = 0.07;                   // each line starts a little after the previous one
     for (var k = 0; k < n; k++) {
-      var X = ease((q - k * stag) / (1 - (n - 1) * stag)) * 1360;   // where the head of this line is, in the wave's own x
+      var X = ease((q - k * stag) / (1 - (n - 1) * stag)) * waveXMax;   // where the head of this line is, in the wave's own x
       for (var i = 0; i < waveLines[k].length; i++) {
         var it = waveLines[k][i], drawn = lengthAtX(it, X);
         it.el.style.strokeDasharray = it.L.toFixed(1) + " " + (it.L + 5).toFixed(1);
@@ -331,7 +362,7 @@
     for (var i = 0; i < stages.length; i++) {
       var st = stages[i];
       f = (i < cur || all) ? 1 : i > cur ? 0 : -1;
-      if (st.t === "v") setSeg(st, f < 0 ? (val - st.y0) / st.len : f);
+      if (st.t === "v") { if (!st.invisible) setSeg(st, f < 0 ? (val - st.y0) / st.len : f); }
       else if (st.t === "j") setSeg(st, f < 0 ? val : f);
       else flowerP = f < 0 ? val : f;
     }
@@ -353,7 +384,7 @@
   function onPointer(e) {
     if (!svg || reduceMQ.matches) return;
     var sx = window.pageXOffset || 0, sy = window.pageYOffset || 0;
-    var stageRect = stage.getBoundingClientRect();
+    var stageRect = null;
     var touch = e.pointerType === "touch";
     var R = touch ? 44 : 28, now = performance.now();
     var speed = onPointer.t ? Math.hypot(e.clientX - onPointer.x, e.clientY - onPointer.y) / Math.max(1, now - onPointer.t) : 0;
@@ -363,6 +394,7 @@
       var st = segs[i];
       if (st.f <= 0) continue;
       // the Contact stretch lives inside the pinned stage, so it uses stage coordinates
+      if (st.local && !stageRect) stageRect = stage.getBoundingClientRect();   // only when that stretch is on screen
       var px = st.local ? e.clientX - stageRect.left : e.clientX + sx;
       var py = st.local ? e.clientY - stageRect.top : e.clientY + sy - (st.hero ? heroDy : 0);
       var a, d;
@@ -439,25 +471,38 @@
     build();
     lastFlower = -1; lastWave = -1;
     dirty = false;
+    lastW = window.innerWidth; lastH = window.innerHeight; lastBodyH = document.body.offsetHeight;
     render(reduceMQ.matches);                                // drawn straight away, so a relayout never blinks; reduced motion: complete and still
   }
 
-  var pending = false;
-  function resetup() {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(function () { pending = false; setup(); });
+  // Layout is measured on load and on real changes only, debounced: opening a step animates the page height for half a
+  // second, and on mobile the browser bars change the viewport height while scrolling; none of that should re-measure.
+  var timer = 0, lastW = window.innerWidth, lastH = window.innerHeight, lastBodyH = 0;
+  function resetup(delay) {
+    clearTimeout(timer);
+    timer = setTimeout(function () { timer = 0; setup(); }, delay === undefined ? 120 : delay);
+  }
+  function onResize() {
+    var w = window.innerWidth, h = window.innerHeight;
+    if (w === lastW && Math.abs(h - lastH) < 120) return;     // browser bars / keyboard: ignore
+    lastW = w; lastH = h;
+    resetup();
   }
 
   window.addEventListener("scroll", function () { if (!reduceMQ.matches) { dirty = true; schedule(); } }, { passive: true });
   window.addEventListener("pointermove", onPointer, { passive: true });
   window.addEventListener("pointerdown", onPointer, { passive: true });
-  window.addEventListener("resize", resetup);
-  window.addEventListener("load", resetup);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resetup);
-  if (window.ResizeObserver) new ResizeObserver(resetup).observe(document.body);   // sections open and close
+  window.addEventListener("resize", onResize);
+  window.addEventListener("load", function () { resetup(0); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { resetup(0); });
+  if (window.ResizeObserver) new ResizeObserver(function () {   // sections open and close
+    var h = document.body.offsetHeight;
+    if (Math.abs(h - lastBodyH) < 2) return;                  // our own layout settling
+    resetup();
+  }).observe(document.body);
   [mobileMQ, reduceMQ].forEach(function (mq) {
-    if (mq.addEventListener) mq.addEventListener("change", resetup); else if (mq.addListener) mq.addListener(resetup);
+    var f = function () { resetup(0); };
+    if (mq.addEventListener) mq.addEventListener("change", f); else if (mq.addListener) mq.addListener(f);
   });
 
   setup();

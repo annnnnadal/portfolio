@@ -71,7 +71,7 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 **Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
 
 - **Colores invertidos:** la página del caso tiene fondo negro y texto blanco (la home es blanco roto y negro). Las miniaturas de líneas se invierten para verse en blanco.
-- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería. Por defecto la imagen llena el marco (`object-fit: cover`); en Resa va entera y centrada (`object-fit: contain`, clase `fit`), tanto en la card de la home como en el hero y en la miniatura de "siguiente proyecto", sobre el color de fondo de cada página. Las imágenes `fit` no llevan parallax, porque el zoom las recortaría.
+- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería. Por defecto la imagen llena el marco (`object-fit: cover`); también en Resa (`resa-mockup-hero`, 1602×1395): llena el marco, recortada. La miniatura de Resa (`resa-mockup-thumb`, 1600×1200) llena la card, con parallax, y es la misma en la home y en el acceso "siguiente proyecto". La clase `fit` (`object-fit: contain`, imagen entera y centrada sobre el fondo de la página) existe para cuando haga falta; ninguna imagen la usa ahora, y las que la usen no llevan parallax, porque el zoom las recortaría.
 - **Estructura del texto:** principio, título, frase de Nivel 1, línea de datos y los bloques del caso (Challenge, Direction, Solution…), igual que en el brief.
 - **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, a la card del caso, con la misma transición a la inversa.
 - **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y la misma transición. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
@@ -106,7 +106,7 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 | Tipo | Casos | Contenido |
 | --- | --- | --- |
-| Caso completo | Resa | Challenge, Direction, Solution, Outcome con imágenes "Concept design" |
+| Caso completo | Resa | Challenge, Direction, Solution, Outcome con imágenes y vídeos |
 | Caso de proceso (NDA) | AI tools for corporate bankers, A guide for newcomers to Spain | Sin nombres ni pantallas; miniatura de líneas en lugar de imagen y artefactos recreados en estilo neutro |
 | Pieza de craft | Oros, Mr Sunday, Havaianas | Una imagen potente y la decisión de detalle que la explica |
 
@@ -193,7 +193,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-web-desktop-concept-homepage-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; hero: resa-mockup-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
@@ -238,17 +238,17 @@ En las cards va solo el tipo de proyecto, no la posición.
 > **Outcome**
 > [Imágenes y vídeos de images/resa, mezclados, cada uno con su nombre de archivo como caption]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-web-desktop-concept-homepage-hero) lleva el caption "Concept design".
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-mockup-hero) lleva el caption "Concept mockup".
 
 **Outcome (images/resa):** mezcla imágenes y vídeos. Cuando dos piezas tienen la misma proporción van juntas en la misma línea; el resto, a todo el ancho de la columna. Orden actual:
 
 1. `resa-concept-billboard` (imagen, a todo el ancho)
 2. `resa-concept-merchandising` (imagen, a todo el ancho)
-3. `resa-web-desktop-homepage-hero` (vídeo, a todo el ancho)
+3. `resa-web-desktop-concept-homepage-hero` (imagen) y `resa-web-desktop-homepage-hero` (vídeo), en la misma línea
 4. `resa-web-desktop-homepage-gallery` (vídeo, a todo el ancho)
 5. `resa-concept-web-mobile-students-page` (imagen) y `resa-concept-web-mobile-students-page-hero` (vídeo), en la misma línea
 
-La imagen del hero no se repite en el Outcome.
+Las imágenes del hero y de la miniatura (`resa-mockup-hero`, `resa-mockup-thumb`) no se repiten en el Outcome.
 
 **Caption:** el nombre del archivo de cada imagen o vídeo, sin extensión y sin guiones (los guiones se sustituyen por espacios; p. ej. "resa concept billboard").
 
@@ -374,7 +374,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- La imagen hero de Resa lleva el caption "Concept design". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
+- La imagen hero de Resa lleva el caption "Concept mockup". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

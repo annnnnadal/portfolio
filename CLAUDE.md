@@ -193,7 +193,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-concept-merchandising; Outcome: billboard, web desktop y mobile, en imágenes y vídeos) | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (thumbnail y hero: resa-web-desktop-concept-homepage-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
@@ -238,16 +238,19 @@ En las cards va solo el tipo de proyecto, no la posición.
 > **Outcome**
 > [Imágenes y vídeos de images/resa, mezclados, cada uno con su nombre de archivo como caption]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-concept-merchandising) lleva el caption "Concept design".
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-web-desktop-concept-homepage-hero) lleva el caption "Concept design".
 
 **Outcome (images/resa):** mezcla imágenes y vídeos. Cuando dos piezas tienen la misma proporción van juntas en la misma línea; el resto, a todo el ancho de la columna. Orden actual:
 
 1. `resa-concept-billboard` (imagen, a todo el ancho)
-2. `resa-web-desktop-concept-homepage-hero` (imagen) y `resa-web-desktop-homepage-hero` (vídeo), en la misma línea
-3. `resa-web-desktop-homepage-gallery` (vídeo, a todo el ancho)
-4. `resa-concept-web-mobile-students-page` (imagen) y `resa-concept-web-mobile-students-page-hero` (vídeo), en la misma línea
+2. `resa-concept-merchandising` (imagen, a todo el ancho)
+3. `resa-web-desktop-homepage-hero` (vídeo, a todo el ancho)
+4. `resa-web-desktop-homepage-gallery` (vídeo, a todo el ancho)
+5. `resa-concept-web-mobile-students-page` (imagen) y `resa-concept-web-mobile-students-page-hero` (vídeo), en la misma línea
 
-**Caption:** el nombre del archivo de cada imagen o vídeo, sin extensión.
+La imagen del hero no se repite en el Outcome.
+
+**Caption:** el nombre del archivo de cada imagen o vídeo, sin extensión y sin guiones (los guiones se sustituyen por espacios; p. ej. "resa concept billboard").
 
 **Vídeos:** se reproducen solos, sin sonido y en bucle, mientras están visibles; si el usuario pausa uno, no se reanuda solo. Como no tienen sonido, el único control es un botón circular en el centro para reproducir y pausar (aparece siempre en pausa y, al reproducir, al pasar el ratón o con el foco del teclado). Con `prefers-reduced-motion` quedan en pausa hasta pulsar el botón. Cada vídeo se optimiza para web (mp4 y webm sin audio, con póster en WebP, sufijo `-web`); los originales se conservan en la carpeta.
 
@@ -371,7 +374,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- La imagen hero de Resa lleva el caption "Concept design". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo.
+- La imagen hero de Resa lleva el caption "Concept design". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

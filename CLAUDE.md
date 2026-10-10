@@ -71,7 +71,7 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 **Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
 
 - **Colores invertidos:** la página del caso tiene fondo negro y texto blanco (la home es blanco roto y negro). Las miniaturas de líneas se invierten para verse en blanco.
-- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería. Por defecto la imagen llena el marco (`object-fit: cover`); en el hero de Resa (`resa-mockup-hero`, 1602×1395) va entera y centrada sobre el fondo negro de la página (`object-fit: contain`, clase `fit`). La miniatura de Resa (`resa-mockup-thumb`, 1600×1200) se comporta como las demás: llena la card, con parallax, y es la misma en la home y en el acceso "siguiente proyecto". Las imágenes con clase `fit` no llevan parallax, porque el zoom las recortaría.
+- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería. Por defecto la imagen llena el marco (`object-fit: cover`); también en Resa (`resa-mockup-hero`, 1602×1395): llena el marco, recortada. La miniatura de Resa (`resa-mockup-thumb`, 1600×1200) llena la card, con parallax, y es la misma en la home y en el acceso "siguiente proyecto". La clase `fit` (`object-fit: contain`, imagen entera y centrada sobre el fondo de la página) existe para cuando haga falta; ninguna imagen la usa ahora, y las que la usen no llevan parallax, porque el zoom las recortaría.
 - **Estructura del texto:** principio, título, frase de Nivel 1, línea de datos y los bloques del caso (Challenge, Direction, Solution…), igual que en el brief.
 - **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, a la card del caso, con la misma transición a la inversa.
 - **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y la misma transición. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
@@ -238,7 +238,7 @@ En las cards va solo el tipo de proyecto, no la posición.
 > **Outcome**
 > [Imágenes y vídeos de images/resa, mezclados, cada uno con su nombre de archivo como caption]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-mockup-hero) no lleva caption: muestra la web publicada.
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-mockup-hero) lleva el caption "Concept mockup".
 
 **Outcome (images/resa):** mezcla imágenes y vídeos. Cuando dos piezas tienen la misma proporción van juntas en la misma línea; el resto, a todo el ancho de la columna. Orden actual:
 
@@ -374,7 +374,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- La imagen hero de Resa no lleva caption. El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
+- La imagen hero de Resa lleva el caption "Concept mockup". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

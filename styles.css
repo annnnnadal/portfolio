@@ -410,6 +410,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .case-hero-fig img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .case-hero-fig img.gen { object-fit: contain; padding: 3% 0; }
+.case-hero-fig img.fit { object-fit: contain; }   /* shown whole and centred on the page background (Resa) */
 
 .case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
 .case-title {

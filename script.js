@@ -82,10 +82,10 @@
   });
 
   /* Case study thumbnails: a small parallax. The image is a little larger than its frame and drifts
-     as the card crosses the viewport. Not with reduced motion; reset just before a page transition. */
+     as the card crosses the viewport. Not on images shown whole (.fit), and not with reduced motion; reset just before a page transition. */
   var parallax = [];
   var motionOK = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
-  document.querySelectorAll(".card-btn .card-thumb img").forEach(function (img) { parallax.push({ img: img, box: img.parentNode, y: null }); });
+  document.querySelectorAll(".card-btn .card-thumb img:not(.fit)").forEach(function (img) { parallax.push({ img: img, box: img.parentNode, y: null }); });
   var PX = { scale: 1.3, shift: 0.12 };            // shift: share of the frame height, each way (scale leaves 0.15 spare on each side)
   function updateParallax() {
     var vh = window.innerHeight;

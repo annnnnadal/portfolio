@@ -242,6 +242,7 @@ a:hover { text-decoration-thickness: 2px; }
 .card-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .js .card-btn .card-thumb img { will-change: transform; }   /* small parallax on scroll (script.js) */
 .card-thumb img.gen { object-fit: contain; padding: 2%; }
+.card-thumb img.fit { object-fit: contain; }   /* whole image, centred on the background (Resa) */
 .card-btn:hover .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
 .card-btn:focus-visible { outline: none; }
 .card-btn:focus-visible .card-thumb { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -410,6 +411,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .case-hero-fig img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .case-hero-fig img.gen { object-fit: contain; padding: 3% 0; }
+.case-hero-fig img.fit { object-fit: contain; }   /* shown whole and centred on the page background (Resa) */
 
 .case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
 .case-title {

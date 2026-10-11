@@ -195,14 +195,16 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 | --- | --- | --- | --- | --- |
 | Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; hero: resa-mockup-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
-| Keep it compelling | Oros Travel & Culture | Craft | images/oros | Brand restyle & website · 2023 |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail y hero: oros-poster; galería: el resto) | Brand restyle & website · 2023 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
 | Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
 | Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction · 2026 |
 
 En las cards va solo el tipo de proyecto, no la posición.
 
-**Imágenes de las páginas de caso:** cada página muestra todas las imágenes de su carpeta (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). La primera es el hero y el resto van en la galería, de dos en dos, y las muy anchas o sueltas (banner de LinkedIn, tarjetas de Oros, sala de reuniones de Havaianas) a todo el ancho (`figure.full`). Al añadir una imagen a una carpeta, hay que añadirla también a su página.
+**Imágenes de las páginas de caso:** cada página muestra todas las imágenes de su carpeta (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). La primera es el hero y el resto van en la galería, de dos en dos, y las muy anchas o sueltas (banner de LinkedIn, panel de identidad de Oros, sala de reuniones de Havaianas) a todo el ancho (`figure.full`). Al añadir una imagen a una carpeta, hay que añadirla también a su página. La imagen del hero y de la miniatura no se repite en la galería.
+
+**Oros:** hero y miniatura de la home (y del acceso "siguiente proyecto" de Havaianas): `oros-poster`. Galería, en este orden, con caption (el nombre del archivo sin "oros" y sin guiones): `oros-identity-panel` ("identity panel", a todo el ancho), `oros-website` ("website") y `oros-business-cards` ("business cards") en la misma línea, y `oros-stickers` ("stickers") y `oros-tote-bag` ("tote bag") en la misma línea.
 
 ### Resa
 

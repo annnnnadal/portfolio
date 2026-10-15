@@ -429,6 +429,7 @@ a:hover { text-decoration-thickness: 2px; }
 .case-row .text p { font-size: 1rem; max-width: 60ch; }
 .case-row .text p + p { margin-top: 0.9em; }
 .case-row .text em { font-style: italic; font-weight: 500; }
+.case-row .outcome-text { margin-bottom: 2rem; }   /* text above the Outcome images */
 .case-row .link-out { padding-top: 0.25rem; }
 
 /* Direct access to the next project of the same principle */

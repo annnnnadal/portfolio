@@ -106,9 +106,9 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 | Tipo | Casos | Contenido |
 | --- | --- | --- |
-| Caso completo | Resa | Challenge, Direction, Solution, Outcome con imágenes y vídeos |
+| Caso completo | Resa, Oros | Challenge, Direction, Solution, Outcome con imágenes (y vídeos en Resa) |
 | Caso de proceso (NDA) | AI tools for corporate bankers, A guide for newcomers to Spain | Sin nombres ni pantallas; miniatura de líneas en lugar de imagen y artefactos recreados en estilo neutro |
-| Pieza de craft | Oros, Mr Sunday, Havaianas | Una imagen potente y la decisión de detalle que la explica |
+| Pieza de craft | Mr Sunday, Havaianas | Una imagen potente y la decisión de detalle que la explica |
 
 ## Dirección visual (v1)
 
@@ -195,7 +195,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 | --- | --- | --- | --- | --- |
 | Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; hero: resa-mockup-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
-| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail y hero: oros-poster; galería: el resto) | Brand restyle & website · 2023 |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail y hero: oros-poster; galería: el resto) | Brand identity & website · 2021 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
 | Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
 | Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction · 2026 |
@@ -328,11 +328,32 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 
 **Nivel 2**
 
-> Brand restyle & website
+> Brand Designer, co-lead · Brand identity, web design, art direction · With the creative director, an illustrator, a copywriter and an external development team · 2021
 >
-> Oros designs tailor-made performance tours in Spain. After twenty years as a family business, it was ready for a new look. We built everything around one idea, fly and connect: Migra, a serif inspired by bird migration, warm illustrations, and an orange that feels like a welcome. The website shows how Oros plans each trip, personal and professional at the same time.
+> **Challenge**
+> Oros designs tailor-made performance tours in Spain for orchestras, bands and choirs, mostly from the United States, but also from Latin America and Europe. After twenty years working alongside his parents, Nacho took over the family business and added a word to its name: culture.
 >
-> [Visit the website →](https://orostravel.com/)
+> That word explains how Oros works. A tour is more than a concert: groups play with local musicians, discover the food and get to know the places they visit, so every trip builds a bond between two countries. The old identity didn't show any of this, and it's exactly what sets Oros apart.
+>
+> **Direction**
+> *Fly and connect.* The whole identity grew from one idea: travelling to meet others. Migra, a serif inspired by bird migration, carries it into every piece.
+>
+> *Warmth over formality.* We presented two concepts, and the team chose the one built on orange: the energy, warmth and joy people associate with Spain.
+>
+> *Close, like the team.* There's no bureaucracy at Oros. Nacho and his team listen to what each group wants and plan the trip down to the last detail, in direct contact. Illustration brought that same closeness to the brand.
+>
+> *Real moments.* Photography stays at the centre of the story, and many of the photos are Nacho's own.
+>
+> **Solution**
+> I co-led the new identity with the studio's creative director: visual system, personality and tone of voice. I passed the concept and illustration style to the illustrator, and worked with an external copywriter on the texts. We designed the website in-house and supervised its development with an external team.
+>
+> From the identity came everything else: a series of concert posters, brochures, business cards, tote bags and merchandise. After the launch, I kept designing every new piece the team needed.
+>
+> **Outcome**
+> The relationship continues today: Oros still uses the identity, and the studio keeps creating new pieces with it.
+> [Imágenes de images/oros, cada una con su caption]
+
+**Enlace:** bajo la línea de datos, [Visit the website →](https://orostravel.com/) (se abre en pestaña nueva). La página sigue la estructura de Resa: principio, título, frase de Nivel 1, línea de datos, enlace, Challenge, Direction, Solution y Outcome (con el texto del Outcome sobre las imágenes).
 
 ### Mr Sunday
 

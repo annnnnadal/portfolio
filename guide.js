@@ -455,6 +455,21 @@
 
   /* ---------- 9. start / rebuild ---------- */
 
+  /* Arriving from a case page (or from a link with #principle-…), the page must show that principle. The pinned About and
+     the Contact stage add height above it while the layout is measured, so the target is re-aligned after each measure
+     until the person scrolls or a couple of seconds pass. */
+  var aligning = !!(window.__alignTo || (location.hash.length > 1 && document.getElementById(location.hash.slice(1))));
+  function alignArrival() {
+    if (!aligning) return;
+    var t = window.__alignTo || document.getElementById(location.hash.slice(1));
+    if (t) t.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+  if (aligning) {
+    var stopAlign = function () { aligning = false; };
+    ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (n) { window.addEventListener(n, stopAlign, { once: true, passive: true }); });
+    setTimeout(stopAlign, 2500);
+  }
+
   function setup() {
     plucks = [];
     scaleFlowerStroke();
@@ -472,6 +487,7 @@
     lastFlower = -1; lastWave = -1;
     dirty = false;
     lastW = window.innerWidth; lastH = window.innerHeight; lastBodyH = document.body.offsetHeight;
+    alignArrival();
     render(reduceMQ.matches);                                // drawn straight away, so a relayout never blinks; reduced motion: complete and still
   }
 

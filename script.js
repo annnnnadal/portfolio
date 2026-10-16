@@ -45,7 +45,9 @@
     if (!isCase(from)) return;
     var thumb = thumbFor(from);                // back on the homepage: the card of the case we just left
     if (!thumb) return;
-    thumb.scrollIntoView({ block: "center", behavior: "instant" });
+    var pr = thumb.closest(".principle");      // show the principle the case belongs to (guide.js keeps it aligned once the layout settles)
+    if (pr) { window.__alignTo = pr; pr.scrollIntoView({ block: "start", behavior: "instant" }); }
+    else thumb.scrollIntoView({ block: "center", behavior: "instant" });
     thumb.style.viewTransitionName = VT;
     e.viewTransition.finished.then(clearNames, clearNames);
   });

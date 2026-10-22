@@ -64,18 +64,21 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 **Orden de los principios:** Show the direction, Keep it compelling, Keep it clean.
 
-**Parallax en las miniaturas:** la imagen de cada card es un 30 % mayor que su marco (`scale: 1.3`) y se desplaza un 12 % de la altura del marco en cada sentido (`shift: 0.12`, constante `PX` de `script.js`) mientras la card cruza el viewport, sin dejar bordes vacíos. No se aplica con `prefers-reduced-motion`, y se resetea antes de la transición a la página del caso.
+**Parallax en las miniaturas:** la imagen de cada card es un 30 % mayor que su marco (`scale: 1.3`) y se desplaza un 12 % de la altura del marco en cada sentido (`shift: 0.12`, constante `PX` de `script.js`) mientras la card cruza el viewport, sin dejar bordes vacíos. No se aplica con `prefers-reduced-motion`.
 
-**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card se abre la página del caso (ver "Páginas de caso").
+**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card se abre la página del caso (ver "Páginas de caso"), con un fundido de toda la página.
 
 **Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
 
 - **Colores invertidos:** la página del caso tiene fondo negro y texto blanco (la home es blanco roto y negro). Las miniaturas de líneas se invierten para verse en blanco.
-- **Imagen hero:** la miniatura de la card se convierte, con una transición suave, en la imagen hero de la página a todo el ancho. Es la misma imagen; no se repite en la galería. Por defecto la imagen llena el marco (`object-fit: cover`); también en Resa (`resa-mockup-hero`, 1602×1395): llena el marco, recortada. La miniatura de Resa (`resa-mockup-thumb`, 1600×1200) llena la card, con parallax, y es la misma en la home y en el acceso "siguiente proyecto". La clase `fit` (`object-fit: contain`, imagen entera y centrada sobre el fondo de la página) existe para cuando haga falta; ninguna imagen la usa ahora, y las que la usen no llevan parallax, porque el zoom las recortaría.
+- **Sin imagen hero:** las páginas de caso no tienen hero. El texto ocupa la página y hace scroll normal.
+- **Galería fija abajo:** las imágenes del caso van en una galería horizontal (`section.case-gallery`, `position: sticky; bottom: 0`), al final del `<article>`, siempre visible mientras se lee. Como va en el flujo tras el texto, el último párrafo nunca queda tapado. Miniaturas cuadradas, todas iguales, con la imagen recortada (`object-fit: cover`): 1/3 del alto de la ventana en escritorio y 22 % en móvil, separadas 1rem, sin bordes redondeados ni sombras, sobre el fondo de la página. Scroll horizontal con rueda (la rueda vertical se convierte en horizontal sobre la galería), trackpad, arrastre con el ratón y swipe; sin barra visible y con `scroll-snap` suave. Los vídeos se ven con su póster y un pequeño icono de play. Lazy loading. En móvil, un botón pequeño ("Hide images" / "Show images") pliega y despliega la galería. Orden: primero la imagen que antes era el hero y después las del antiguo Outcome, en el orden de siempre. Los casos NDA (AI tools y A guide for newcomers) no tienen galería ni imágenes.
+- **Visor:** al hacer clic en una miniatura se abre un `<dialog>` modal (`aria-modal`, foco atrapado, botones con etiqueta): la imagen centrada, con su proporción, lo más grande posible sin recortes (máximo 90 % del ancho y del alto, caption incluido), sobre la página difuminada (`::backdrop` con `backdrop-filter: blur` y una capa semitransparente del color de fondo). Flechas a izquierda y derecha, teclas ← → y swipe en móvil. Debajo, el caption y el contador ("2 / 6"). Se cierra con la X de arriba a la derecha, con Esc o con un clic fuera de la imagen, y el foco vuelve a la miniatura. Los vídeos se reproducen dentro del visor (sin sonido, en bucle) con el botón redondo de play/pausa; con `prefers-reduced-motion` empiezan en pausa y no hay animación de apertura ni de cambio de imagen. Todo está en `script.js`; las miniaturas llevan los datos del visor en atributos `data-` (`data-full`, `data-caption`, `data-width`, `data-height`, `data-alt` y, en vídeos, `data-video`).
+- **Captions (en el visor):** el nombre del archivo sin extensión y sin guiones. En Oros, Mr Sunday y Havaianas, sin el prefijo de la marca ("identity panel", "typo", "promo window 1"…). La primera imagen de Resa (`resa-mockup-hero`) lleva "Concept mockup".
 - **Estructura del texto:** principio, título, frase de Nivel 1, línea de datos y los bloques del caso (Challenge, Direction, Solution…), igual que en el brief.
-- **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, al principio al que pertenece el caso (no al inicio de la home), con la misma transición a la inversa. Se abra el caso desde la home, desde otro caso ("siguiente proyecto") o desde un enlace directo, la "x" lleva siempre a su principio: Resa y AI tools a `/#principle-direction` (Show the direction), Oros, Mr Sunday y Havaianas a `/#principle-compelling` (Keep it compelling) y Newcomers a `/#principle-clean` (Keep it clean); el principio queda con su regla superior justo bajo la cabecera y sus cards a la vista. La home tiene esos tres `id` y `guide.js` vuelve a alinear el destino tras medir el layout (el About fijo y Contact añaden altura por encima) hasta que la persona hace scroll o pasan 2,5 s. Funciona también sin View Transitions.
-- **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y la misma transición. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
-- **Transición:** View Transitions API entre documentos (`@view-transition`, eventos `pageswap` y `pagereveal`, con `view-transition-name: case-hero`). Sin soporte del navegador, o con `prefers-reduced-motion`, se navega sin animación.
+- **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, al principio al que pertenece el caso (no al inicio de la home), con el mismo fundido. Se abra el caso desde la home, desde otro caso ("siguiente proyecto") o desde un enlace directo, la "x" lleva siempre a su principio: Resa y AI tools a `/#principle-direction` (Show the direction), Oros, Mr Sunday y Havaianas a `/#principle-compelling` (Keep it compelling) y Newcomers a `/#principle-clean` (Keep it clean); el principio queda con su regla superior justo bajo la cabecera y sus cards a la vista. La home tiene esos tres `id` y `guide.js` vuelve a alinear el destino tras medir el layout (el About fijo y Contact añaden altura por encima) hasta que la persona hace scroll o pasan 2,5 s. Funciona también sin View Transitions.
+- **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y el mismo fundido. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
+- **Transición:** un fundido suave de toda la página, de unos 250 ms, en los dos sentidos (home ↔ caso y caso ↔ caso), con View Transitions entre documentos (`@view-transition { navigation: auto }`, solo CSS). Sin soporte del navegador, o con `prefers-reduced-motion`, se navega sin animación.
 
 **Línea guía (solo en la home):** concepto "I turn noise into direction". Una línea de 3 px en #0044FF (el color de la web; el resto de líneas de la web son de 1 px, salvo los grosores propios de cada SVG) que se dibuja con el scroll como un hilo que crece hacia abajo. Su extremo inferior va a la altura de la mitad del viewport. Implementación: `guide.js` (SVG + `requestAnimationFrame`, sin librerías), cargado solo en `index.html`. Las páginas de caso no la llevan. Todo el trazado, la flor y la figura final son #0044FF.
 
@@ -99,7 +102,7 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 **Experiencia**
 
 - Web dinámica con imágenes abstractas. Nada literal: la casa no se dibuja.
-- Transiciones entre home y caso que parezcan la misma página: la imagen hero se queda fija o solo cambia de escala (View Transitions API).
+- Transiciones entre home y caso con un fundido suave de toda la página (View Transitions API).
 - Carga rápida, responsive en cualquier dispositivo, accesible (WCAG AA como mínimo).
 
 **Profundidad por tipo de caso**
@@ -193,18 +196,22 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; hero: resa-mockup-hero; Outcome: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; galería: el resto de imágenes y vídeos de la carpeta) | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
-| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail y hero: oros-poster; galería: el resto) | Brand identity & website · 2021 |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail: oros-poster; galería: todas) | Brand identity & website · 2021 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
 | Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
 | Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction · 2026 |
 
 En las cards va solo el tipo de proyecto, no la posición.
 
-**Imágenes de las páginas de caso:** cada página muestra todas las imágenes de su carpeta (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). La primera es el hero y el resto van en la galería, de dos en dos, y las muy anchas o sueltas (banner de LinkedIn, panel de identidad de Oros, sala de reuniones de Havaianas) a todo el ancho (`figure.full`). Al añadir una imagen a una carpeta, hay que añadirla también a su página. La imagen del hero y de la miniatura no se repite en la galería.
+**Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-mockup-thumb`, que no está en la galería; en los demás casos la miniatura es también la primera imagen de la galería.
 
-**Oros:** hero y miniatura de la home (y del acceso "siguiente proyecto" de Havaianas): `oros-poster`. Galería, en este orden, con caption (el nombre del archivo sin "oros" y sin guiones): `oros-identity-panel` ("identity panel", a todo el ancho), `oros-website` ("website") y `oros-business-cards` ("business cards") en la misma línea, y `oros-stickers` ("stickers") y `oros-tote-bag` ("tote bag") en la misma línea.
+**Galerías actuales:**
+- **Resa (8):** `resa-mockup-hero` ("Concept mockup"), `resa-concept-billboard`, `resa-concept-merchandising`, `resa-web-desktop-concept-homepage-hero`, `resa-web-desktop-homepage-hero` (vídeo), `resa-web-desktop-homepage-gallery` (vídeo), `resa-concept-web-mobile-students-page`, `resa-concept-web-mobile-students-page-hero` (vídeo).
+- **Oros (6):** `oros-poster`, `oros-identity-panel`, `oros-website`, `oros-business-cards`, `oros-stickers`, `oros-tote-bag`.
+- **Mr Sunday (5):** `mr-sunday-logo`, `mr-sunday-typo`, `mr-sunday-color-palette`, `mr-sunday-linkedin-banner`, `mr-sunday-linkedin`.
+- **Havaianas (6):** `Havainas-promo-window-2`, `Havainas-promo`, `Havainas-promo-window-1`, `havainas-caravan`, `havainas-office`, `havainas-office-lockers`.
 
 ### Resa
 
@@ -238,23 +245,13 @@ En las cards va solo el tipo de proyecto, no la posición.
 > I led the design direction for a multidisciplinary team. SEO shaped a narrative built to convert, content strategy defined one tone of voice for every audience, and data tagged the whole architecture so results could be measured. Everything was documented for the external development team.
 >
 > **Outcome**
-> [Imágenes y vídeos de images/resa, mezclados, cada uno con su nombre de archivo como caption]
+> [Imágenes y vídeos de images/resa, en la galería fija]
 
-**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva). La imagen hero (resa-mockup-hero) lleva el caption "Concept mockup".
+**Enlace:** al inicio de la página, bajo los datos del caso, va el enlace a la web, que es el proyecto principal: [Visit the website →](https://resa.es/) (se abre en pestaña nueva).
 
-**Outcome (images/resa):** mezcla imágenes y vídeos. Cuando dos piezas tienen la misma proporción van juntas en la misma línea; el resto, a todo el ancho de la columna. Orden actual:
+**Imágenes (images/resa):** en la galería fija de abajo (ver "Galerías actuales"). La página no tiene bloque Outcome: sus imágenes y vídeos están en la galería.
 
-1. `resa-concept-billboard` (imagen, a todo el ancho)
-2. `resa-concept-merchandising` (imagen, a todo el ancho)
-3. `resa-web-desktop-concept-homepage-hero` (imagen) y `resa-web-desktop-homepage-hero` (vídeo), en la misma línea
-4. `resa-web-desktop-homepage-gallery` (vídeo, a todo el ancho)
-5. `resa-concept-web-mobile-students-page` (imagen) y `resa-concept-web-mobile-students-page-hero` (vídeo), en la misma línea
-
-Las imágenes del hero y de la miniatura (`resa-mockup-hero`, `resa-mockup-thumb`) no se repiten en el Outcome.
-
-**Caption:** el nombre del archivo de cada imagen o vídeo, sin extensión y sin guiones (los guiones se sustituyen por espacios; p. ej. "resa concept billboard").
-
-**Vídeos:** se reproducen solos, sin sonido y en bucle, mientras están visibles; si el usuario pausa uno, no se reanuda solo. Como no tienen sonido, el único control es un botón circular en el centro para reproducir y pausar (aparece siempre en pausa y, al reproducir, al pasar el ratón o con el foco del teclado). Con `prefers-reduced-motion` quedan en pausa hasta pulsar el botón. Cada vídeo se optimiza para web (mp4 y webm sin audio, con póster en WebP, sufijo `-web`); los originales se conservan en la carpeta.
+**Vídeos:** en la galería se ven con su póster y un icono de play; se reproducen en el visor, sin sonido y en bucle, con un botón circular en el centro para reproducir y pausar. Con `prefers-reduced-motion` quedan en pausa hasta pulsar el botón. Cada vídeo está optimizado para web (mp4 y webm sin audio, con póster en WebP, sufijo `-web`); los originales se conservan en la carpeta.
 
 ### AI tools for corporate bankers
 
@@ -351,9 +348,9 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 >
 > **Outcome**
 > The relationship continues today: Oros still uses the identity, and the studio keeps creating new pieces with it.
-> [Imágenes de images/oros, cada una con su caption]
+> [Imágenes de images/oros, en la galería fija]
 
-**Enlace:** bajo la línea de datos, [Visit the website →](https://orostravel.com/) (se abre en pestaña nueva). La página sigue la estructura de Resa: principio, título, frase de Nivel 1, línea de datos, enlace, Challenge, Direction, Solution y Outcome (con el texto del Outcome sobre las imágenes).
+**Enlace:** bajo la línea de datos, [Visit the website →](https://orostravel.com/) (se abre en pestaña nueva). La página sigue la estructura de Resa: principio, título, frase de Nivel 1, línea de datos, enlace, Challenge, Direction, Solution y Outcome (solo texto; las imágenes van en la galería fija).
 
 ### Mr Sunday
 
@@ -397,7 +394,7 @@ Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión n
 
 - Ningún enlace a trabajo interno, en ninguna parte de la web.
 - Proyectos no publicados: sin nombre de empresa, sin pantallas reales ni datos. Solo artefactos recreados en estilo neutro.
-- La imagen hero de Resa lleva el caption "Concept mockup". El resto de imágenes y vídeos de Resa llevan como caption el nombre del archivo, sin extensión y sin guiones.
+- En la galería de Resa, `resa-mockup-hero` lleva el caption "Concept mockup"; el resto de imágenes y vídeos llevan como caption el nombre del archivo, sin extensión y sin guiones.
 - No se usan imágenes con marca de agua ni moodboards con trabajo de terceros.
 - Sin teléfono ni CV en la web.
 

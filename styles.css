@@ -403,15 +403,6 @@ a:hover { text-decoration-thickness: 2px; }
 .close-x:hover span::after { transform: rotate(45deg); }
 .close-x:focus-visible { outline-offset: -4px; }
 
-/* Hero image: the thumbnail from the homepage, full width */
-.case-hero-fig {
-  position: relative; height: clamp(18rem, 72vh, 52rem); overflow: hidden;
-  background: var(--bg); border-bottom: 1px solid var(--line);
-  view-transition-name: case-hero;
-}
-.case-hero-fig img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
-.case-hero-fig img.gen { object-fit: contain; padding: 3% 0; }
-.case-hero-fig img.fit { object-fit: contain; }   /* shown whole and centred on the page background (Resa) */
 
 .case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
 .case-title {
@@ -445,13 +436,105 @@ a:hover { text-decoration-thickness: 2px; }
 .next-link:hover .next-title::after, .next-link:focus-visible .next-title::after { transform: translateX(0.2em); }
 .next-link:focus-visible { outline-offset: 6px; }
 
+/* ---------- Case gallery (sticky at the bottom) and viewer ---------- */
+
+.case-content { padding-bottom: 2rem; }   /* the gallery follows the text in the flow, so the last paragraph is never covered */
+.case-gallery {
+  --thumb: calc(100svh / 3);
+  position: sticky; bottom: 0; z-index: 20;
+  padding: 1rem 0; background: var(--bg); border-top: 1px solid var(--line);
+}
+.gallery-track {
+  display: flex; gap: 1rem; margin: 0; padding: 0 var(--gutter); list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter);
+  scrollbar-width: none; cursor: grab;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.gallery-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.gallery-track > li { flex: none; scroll-snap-align: start; }
+.gallery-item {
+  position: relative; display: block; width: var(--thumb); height: var(--thumb); padding: 0; border: 0;
+  background: var(--bg); cursor: zoom-in;
+}
+.gallery-track.is-dragging .gallery-item { cursor: grabbing; }
+.gallery-item img {
+  display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none;
+  pointer-events: none; user-select: none; -webkit-user-drag: none;
+}
+.gallery-item:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+/* videos: the poster with a small play icon */
+.gallery-play {
+  position: absolute; left: 0.75rem; bottom: 0.75rem; width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--ink);
+}
+.gallery-play::before {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 0.6rem; height: 0.7rem; background: var(--ink);
+  transform: translate(-35%, -50%); clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.gallery-toggle { display: none; }
+
+@media (max-width: 860px) {
+  .case-gallery { --thumb: 22svh; padding-top: 0.5rem; }
+  .gallery-toggle {
+    display: block; margin: 0 var(--gutter) 0.5rem auto; padding: 0.4rem 0; background: none; border: 0;
+    color: var(--ink); cursor: pointer; min-height: 2rem;
+  }
+  .gallery-toggle-text::after { content: " ↓"; }
+  .case-gallery.is-folded .gallery-toggle-text::after { content: " ↑"; }
+  .case-gallery.is-folded .gallery-track { display: none; }
+  .case-gallery.is-folded { padding-bottom: 0.25rem; }
+}
+
+html.viewer-open { overflow: hidden; }
+.viewer {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; background: transparent; color: var(--ink); overflow: hidden;
+}
+.viewer::backdrop {
+  background: rgba(10, 10, 10, 0.72);
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.viewer-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.viewer-figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+/* as large as possible without cropping: at most 90 % of the width and of the height (caption included) */
+.viewer-media { width: min(90vw, calc((90vh - 2.25rem) * var(--aspect, 1.5))); aspect-ratio: var(--ratio, 3 / 2); }
+.viewer-media img, .viewer-media video, .viewer-media .video-wrap { display: block; width: 100%; height: 100%; object-fit: contain; }
+.viewer-meta { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; min-height: 1.5rem; }
+.viewer-caption { overflow-wrap: anywhere; }
+.viewer-count { flex: none; font-variant-numeric: tabular-nums; }
+.viewer-btn {
+  position: absolute; display: block; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid var(--ink); border-radius: 50%;
+  background: var(--bg); color: var(--ink); cursor: pointer;
+}
+.viewer-btn span::before, .viewer-btn span::after { content: ""; position: absolute; left: 50%; top: 50%; background: var(--ink); }
+.viewer-prev { left: var(--gutter); top: calc(50% - 1.375rem); }
+.viewer-next { right: var(--gutter); top: calc(50% - 1.375rem); }
+.viewer-prev span::before, .viewer-next span::before {
+  width: 0.6rem; height: 0.6rem; background: none; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink);
+}
+.viewer-prev span::before { transform: translate(-30%, -50%) rotate(-45deg); }
+.viewer-next span::before { transform: translate(-70%, -50%) rotate(135deg); }
+.viewer-close { right: var(--gutter); top: 1rem; }
+.viewer-close span::before, .viewer-close span::after { width: 1rem; height: 1px; margin-left: -0.5rem; }
+.viewer-close span::before { transform: rotate(45deg); }
+.viewer-close span::after { transform: rotate(-45deg); }
+.viewer-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (max-width: 860px) {
+  .viewer-prev, .viewer-next { top: auto; bottom: 1rem; }
+}
+/* opening and changing image: a short fade (none with reduced motion) */
+.viewer[open]:not(.no-motion) { animation: viewer-in 0.25s ease; }
+.viewer:not(.no-motion) .viewer-media.is-in { animation: viewer-in 0.25s ease; }
+@keyframes viewer-in { from { opacity: 0; } to { opacity: 1; } }
+
 /* ---------- Page transitions (View Transitions API) ---------- */
 
 @view-transition { navigation: auto; }
 
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.6s; animation-timing-function: var(--ease); }
-::view-transition-group(case-hero) { animation-duration: 0.75s; animation-timing-function: var(--ease); }
-::view-transition-old(case-hero), ::view-transition-new(case-hero) { height: 100%; object-fit: cover; overflow: clip; }
+/* A soft cross-fade of the whole page, both ways (home ↔ case, case ↔ case) */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 250ms; animation-timing-function: ease; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
 
 @media (max-width: 860px) {
   .case-row .span-side { margin-bottom: 0.25rem; }
@@ -467,7 +550,6 @@ a:hover { text-decoration-thickness: 2px; }
 /* ---------- Resa: link, caption and video ---------- */
 
 .case-visit { margin-top: 1.5rem; font-size: clamp(1.125rem, 1.6vw, 1.375rem); letter-spacing: -0.01em; }
-.hero-caption { position: absolute; left: 0; bottom: 0; padding: 0.5rem 0.75rem; background: var(--bg); }
 .figs video { display: block; width: 100%; height: auto; background: #111; border-radius: 0; box-shadow: none; }
 
 /* Video: one centred play / pause button (no sound, so nothing else is needed) */

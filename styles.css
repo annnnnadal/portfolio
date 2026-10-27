@@ -416,9 +416,10 @@ a:hover { text-decoration-thickness: 2px; }
 
 .case-content { padding-top: 0; }
 .case-row { border-top: 1px solid var(--line); padding-top: 1.5rem; padding-bottom: 1.5rem; row-gap: 0.75rem; }
+.case-row > .span-side { align-self: start; }   /* the label box is only as tall as the label (the images use the space below it) */
 .case-row:first-of-type { border-top: 1px solid var(--line-strong); }
 .case-row .text p { font-size: 1rem; max-width: 60ch; }
-.case-row .text p + p { margin-top: 0.9em; }
+.case-row .text p + p, .case-row .text .constellation + p { margin-top: 0.9em; }
 .case-row .text em { font-style: italic; font-weight: 500; }
 .case-row .outcome-text { margin-bottom: 2rem; }   /* text above the Outcome images */
 .case-row .link-out { padding-top: 0.25rem; }
@@ -436,7 +437,7 @@ a:hover { text-decoration-thickness: 2px; }
 .next-link:hover .next-title::after, .next-link:focus-visible .next-title::after { transform: translateX(0.2em); }
 .next-link:focus-visible { outline-offset: 6px; }
 
-/* ---------- Case gallery (sticky at the bottom) and viewer ---------- */
+/* ---------- Case gallery: Expanded and Strip views, and viewer ---------- */
 
 .case-content { padding-bottom: 2rem; }   /* the gallery follows the text in the flow, so the last paragraph is never covered */
 .case-gallery {
@@ -453,12 +454,12 @@ a:hover { text-decoration-thickness: 2px; }
 .gallery-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
 .gallery-track > li { flex: none; scroll-snap-align: start; }
 .gallery-item {
-  position: relative; display: block; width: var(--thumb); height: var(--thumb); padding: 0; border: 0;
+  position: relative; display: block; width: auto; height: var(--thumb); padding: 0; border: 0;
   background: var(--bg); cursor: zoom-in;
 }
 .gallery-track.is-dragging .gallery-item { cursor: grabbing; }
 .gallery-item img {
-  display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none;
+  display: block; width: auto; max-width: none; height: 100%; border-radius: 0; box-shadow: none;   /* each image keeps its proportions */
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
 .gallery-item:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
@@ -483,6 +484,55 @@ a:hover { text-decoration-thickness: 2px; }
   .case-gallery.is-folded .gallery-toggle-text::after { content: " ↑"; }
   .case-gallery.is-folded .gallery-track { display: none; }
   .case-gallery.is-folded { padding-bottom: 0.25rem; }
+}
+
+/* Expanded view (default): the strip is hidden and the images float beside the text (script.js places them) */
+.view-expanded .case-gallery { display: none; }
+.view-strip .constellation, html:not(.js) .constellation { display: none; }
+.constellation { position: static; grid-column: 1 / -1; }
+.float {
+  position: absolute; z-index: 2; display: block; padding: 0; border: 0; background: none; cursor: zoom-in;
+}
+.float-s { z-index: 1; }
+.float-l { z-index: 3; }                             /* larger images sit in front */
+.float:focus-visible { outline: none; }
+.float-card { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; will-change: transform; }
+.float-enter {
+  position: relative; display: block; width: 100%; height: 100%; background: #161616;
+  opacity: 0; transform: translateY(calc(var(--from, 1) * 48px)) scale(0.96);
+  transition: opacity 0.7s var(--ease), transform 0.9s var(--ease); transition-delay: calc(var(--k, 0) * 80ms);
+}
+.float.is-in .float-enter { opacity: 1; transform: none; }
+.float:focus-visible .float-enter { outline: 2px solid var(--ink); outline-offset: 4px; }
+.float img, .float video { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
+
+/* View toggle, fixed bottom right; above the strip while the strip is shown */
+.view-toggle {
+  position: fixed; right: var(--gutter); bottom: 1rem; z-index: 30;
+  display: flex; border: 1px solid var(--ink); background: var(--bg);
+}
+.view-strip .view-toggle { bottom: calc(var(--strip-h, 0px) + 0.75rem); }
+.view-toggle button {
+  font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--ink); background: var(--bg);
+  border: 0; padding: 0.55rem 0.8rem; min-height: 2.25rem; cursor: pointer;
+}
+.view-toggle button + button { border-left: 1px solid var(--ink); }
+.view-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.view-toggle button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; position: relative; z-index: 1; }
+
+@media (max-width: 860px) {
+  /* Bands between paragraphs: images in the flow, alternating sides, slightly overlapping */
+  .constellation { grid-column: 1 / -1; display: flex; flex-direction: column; padding: calc(1.5rem + 20px) 0; }
+  .view-strip .constellation { display: none; }
+  .float { position: relative; flex: none; }
+  .float:nth-child(odd) { align-self: flex-start; margin-left: calc(var(--pad) * -1); }
+  .float:nth-child(even) { align-self: flex-end; margin-right: calc(var(--pad) * -1); }
+  .float + .float { margin-top: -6vw; }
+  .text > .constellation { margin: 0.9em calc(var(--pad) * -1) 0; }
+  .view-expanded .text > .constellation + p { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-enter { opacity: 1; transform: none; transition: none; }
 }
 
 html.viewer-open { overflow: hidden; }

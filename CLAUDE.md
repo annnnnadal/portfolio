@@ -200,7 +200,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail: resa-mockup-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (thumbnail: resa-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI · 2025 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail: oros-poster; galería: todas) | Brand identity & website · 2021 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
@@ -209,7 +209,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 En las cards va solo el tipo de proyecto, no la posición.
 
-**Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (salvo Resa, que usa una selección) (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-mockup-thumb`, que no está en la galería; en los demás casos la miniatura es también la primera imagen de la galería.
+**Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (salvo Resa, que usa una selección) (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-thumb` (1600×1200), que no está en la galería (`resa-mockup-thumb` se conserva sin usar); en los demás casos la miniatura es también la primera imagen de la galería.
 
 **Galerías actuales:**
 - **Resa (19), en orden de lectura, de visor y de la tira**, con su sección, su caption y su colocación en Expanded:
@@ -218,7 +218,6 @@ En las cards va solo el tipo de proyecto, no la posición.
   - Solution, párrafo 1: 11 `resa-web-pages` ("The live site: home, students and travellers"; grande, derecha, arriba de la banda), 12 `resa-web-menu-laptop` ("One menu, two audiences"; grande, izquierda, más abajo), 13 `resa-concept-web-mobile-students-page` ("The students page on mobile"; pequeña, vertical, sobre la esquina inferior derecha del portátil, delante, esquinas de 8 px).
   - Solution, párrafo 2: 14 vídeo `resa-web-desktop-homepage-hero` ("Scrolling the homepage"; grande, derecha), 15 vídeo `resa-concept-web-mobile-students-page-hero` ("Scrolling the students page on mobile"; mediana vertical, izquierda, con su borde superior a media altura del vídeo 14, esquinas de 8 px), 16 vídeo `resa-web-desktop-homepage-gallery` ("The photo gallery on the homepage"; mediana, derecha, bajo el 14 solapándolo un poco), 17 `resa-booking-flow` ("Booking in four steps"; grande, centro-izquierda, bajo el vídeo móvil, casi plana), 18 `resa-booking-summary` ("Step 2: the summary travels with you"; grande, derecha, sobre la esquina inferior derecha del 17, casi plana, delante), 19 `resa-booking-moments` ("The last step, in Resa’s voice"; mediana, izquierda, bajo el 17).
   - Fuera de la galería (los archivos se conservan): `resa-mockup-hero`, `resa-web-colour-modules`, `resa-brand-applications`, `resa-web-menu`, `resa-concept-merchandising` y `resa-web-desktop-concept-homepage-hero`.
-  - Pendiente: `resa-thumb.webp` (1600×1200) como miniatura de la card en lugar de `resa-mockup-thumb`, en cuanto se suba.
 - **Oros (6):** `oros-poster`, `oros-identity-panel`, `oros-website`, `oros-business-cards`, `oros-stickers`, `oros-tote-bag`.
 - **Mr Sunday (5):** `mr-sunday-logo`, `mr-sunday-typo`, `mr-sunday-color-palette`, `mr-sunday-linkedin-banner`, `mr-sunday-linkedin`.
 - **Havaianas (6):** `Havainas-promo-window-2`, `Havainas-promo`, `Havainas-promo-window-1`, `havainas-caravan`, `havainas-office`, `havainas-office-lockers`.

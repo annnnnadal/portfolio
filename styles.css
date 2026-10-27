@@ -505,6 +505,9 @@ a:hover { text-decoration-thickness: 2px; }
 .float.is-in .float-enter { opacity: 1; transform: none; }
 .float:focus-visible .float-enter { outline: 2px solid var(--ink); outline-offset: 4px; }
 .float img, .float video { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; user-select: none; }
+/* Mobile screens (data-screen): 8px corners in both views and in the viewer; everything else stays square */
+.float.is-screen .float-enter, .gallery-item[data-screen] img, .viewer-media.is-screen img, .viewer-media.is-screen .video-wrap { border-radius: 8px; overflow: hidden; }
+.float.is-screen:focus-visible .float-enter { outline-offset: 4px; }
 
 /* View toggle, fixed bottom right; above the strip while the strip is shown */
 .view-toggle {
@@ -522,12 +525,15 @@ a:hover { text-decoration-thickness: 2px; }
 
 @media (max-width: 860px) {
   /* Bands between paragraphs: images in the flow, alternating sides, slightly overlapping */
-  .constellation { grid-column: 1 / -1; display: flex; flex-direction: column; padding: calc(1.5rem + 20px) 0; }
+  /* 48 px to the text and 96 px to the next section's rule, plus the (halved) drift */
+  .constellation { grid-column: 1 / -1; display: flex; flex-direction: column; padding: 68px 0; }
+  .case-row > .constellation { padding-bottom: 92px; }
   .view-strip .constellation { display: none; }
   .float { position: relative; flex: none; }
   .float:nth-child(odd) { align-self: flex-start; margin-left: calc(var(--pad) * -1); }
   .float:nth-child(even) { align-self: flex-end; margin-right: calc(var(--pad) * -1); }
-  .float + .float { margin-top: -6vw; }
+  .float + .float { margin-top: 32px; }
+  .float + .float.has-over { margin-top: -6vw; }   /* only the overlaps that are meant */
   .text > .constellation { margin: 0.9em calc(var(--pad) * -1) 0; }
   .view-expanded .text > .constellation + p { margin-top: 0; }
 }

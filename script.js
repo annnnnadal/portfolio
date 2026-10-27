@@ -154,11 +154,14 @@
 
     /* ----- Expanded view: constellations ----- */
 
-    var SIZE = { l: 34, m: 26, s: 20 };                 // width in vw
+    var SIZE = { l: 34, m: 24, s: 16 };                 // width in vw
     var DEPTH = { l: 1, m: 0.7, s: 0.45 };              // drift and stacking: larger is closer
     var MOBILE_W = { l: 85, m: 78, s: 70 };             // width in vw on mobile
     var MOBILE_H = { l: 66, m: 60, s: 54 };             // height in svh for tall images on mobile
-    var GAP = 24;                                       // minimum clearance between an image and any text
+    var GAP_TEXT = 48;                                  // image ↔ text, labels and section rules
+    var GAP_IMG = 32;                                   // between images that don't overlap on purpose
+    var GAP_END = 96;                                   // last image of a band ↔ the next section's rule
+    var DRIFT = 40;                                     // vertical scroll drift, scaled by depth
     // Placements for pages without hand-tuned data (x, y in % of the row width)
     var AUTO = [
       { x: 69, y: 0, size: "m", rx: 4, ry: -7, rz: 1.5 },
@@ -207,17 +210,19 @@
           size: SIZE[d.size] ? d.size : auto.size,
           rx: num(d.rx, auto.rx), ry: num(d.ry, auto.ry), rz: num(d.rz, auto.rz),
           ar: (+d.width || 4) / (+d.height || 3),
-          sign: k % 2 ? -1 : 1, cy: 0, near: false, video: null
+          over: d.over ? +d.over - 1 : -1,                 // the image (1-based number) it may overlap on purpose
+          cy: 0, near: false, video: null
         };
         f.depth = DEPTH[f.size];
         var b = document.createElement("button");
         b.type = "button";
-        b.className = "float float-" + f.size + (d.video ? " is-video" : "");
+        b.className = "float float-" + f.size + (d.video ? " is-video" : "") + (d.screen !== undefined ? " is-screen" : "") + (+d.over === i ? " has-over" : "");   // on mobile only the previous image can be overlapped
+        if (d.z) b.style.zIndex = d.z;
         b.setAttribute("aria-label", src.getAttribute("aria-label"));
         b.innerHTML = '<span class="float-card"><span class="float-enter"></span></span>';
         var enter = b.querySelector(".float-enter");
-        var sh = Math.round(f.ry * -1.6) + "px " + Math.round(18 + f.rx * 1.6) + "px";
-        enter.style.boxShadow = sh + " 40px rgba(0, 0, 0, 0.55)";
+        // Soft shadow that follows the tilt, plus a faint glow so the image separates from the dark page
+        enter.style.boxShadow = Math.round(f.ry * -1.6) + "px " + Math.round(22 + f.rx * 1.6) + "px 48px rgba(0, 0, 0, 0.75), 0 0 36px rgba(255, 255, 255, 0.06)";
         if (d.video && !reduceMotion) {
           var v = document.createElement("video");
           v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none";
@@ -262,11 +267,19 @@
     }
 
     /* Layout. Measures only here (on load, font load, view change and real resizes), never while scrolling.
-       Desktop: each image is placed at its data-x / data-y (in % of the row width, from the top of its anchor) and
-       pushed down until it clears every text block by GAP plus its own drift and tilt; images overlap each other by
-       20 % at most; the constellation then grows so the following text starts below its last image.
+       Desktop: each image starts at its data-x / data-y (in % of the row width, from the top of its anchor). It keeps
+       GAP_TEXT from every text block, label and the section rule (plus its vertical drift and tilt); beside a column
+       of text it may shrink by up to 15 % to fit, otherwise it moves down. Images keep GAP_IMG between them, except
+       the one named in data-over, which it may overlap by 20 % at most; no two images share a top edge. The band then
+       grows so the next text (or the next section's rule, GAP_END) starts below its last image.
        Mobile: the constellation is a band in the flow, between paragraphs, with alternating offsets. */
     var vw = 0, vh = 0, mobile = false;
+    function textBox(el, rowRect) {
+      var r = document.createRange();
+      r.selectNodeContents(el);                          // the text itself, not the 60ch box
+      var a = r.getBoundingClientRect();
+      return a.height ? { l: a.left - rowRect.left, r: a.right - rowRect.left, t: a.top - rowRect.top, b: a.bottom - rowRect.top } : null;
+    }
     function layout() {
       if (!expanded()) return;
       vw = document.documentElement.clientWidth; vh = window.innerHeight; mobile = mobileMQ.matches;
@@ -281,10 +294,10 @@
           if (mobile) {
             if (f.ar < 1) { h = Math.min(MOBILE_H[f.size] * vh / 100, 1.5 * MOBILE_W[f.size] * vw / 100); w = h * f.ar; }
             else { w = MOBILE_W[f.size] * vw / 100; h = w / f.ar; }
-          } else if (f.ar < 1) {
-            h = Math.min(Math.max(SIZE[f.size] * vw / 100 * 1.2, 420), vh * 0.8); w = h * f.ar;
           } else {
-            w = Math.max(SIZE[f.size] * vw / 100, 260); h = w / f.ar;
+            w = Math.max(SIZE[f.size] * vw / 100, f.ar < 1 ? 200 : 260);
+            h = w / f.ar;
+            if (h > vh * 0.75) { h = vh * 0.75; w = Math.max(h * f.ar, 200); h = w / f.ar; }   // very tall screens
           }
           f.w = w; f.h = h;
           el.style.width = Math.round(w) + "px"; el.style.height = Math.round(h) + "px";
@@ -294,39 +307,70 @@
         var rowRect = c.row.getBoundingClientRect(), W = rowRect.width;
         var top0 = c.anchor.getBoundingClientRect().top - rowRect.top;
         if (c.anchor === c.row) top0 = c.row.querySelector(".span-main").getBoundingClientRect().top - rowRect.top;
-        // Text blocks of the row that come before this constellation
-        var texts = [];
+        // Text of the row that comes before this band, and the section rule at the top of the row
+        var texts = [{ l: -1e4, r: 1e4, t: -1, b: 0 }];
         c.row.querySelectorAll("h2, h3, p, .case-visit").forEach(function (t) {
           if (c.el.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING) return;
-          var r = t.getBoundingClientRect();
-          if (r.height) texts.push({ l: r.left - rowRect.left, r: r.right - rowRect.left, t: r.top - rowRect.top, b: r.bottom - rowRect.top });
+          var r = textBox(t, rowRect);
+          if (r) texts.push(r);
         });
+        // Top to bottom, each image that overlaps another placed right after it
         var order = c.list.slice().sort(function (a, b) { return a.y - b.y; });
+        order.slice().forEach(function (f) {
+          var m = order.filter(function (o) { return o.i === f.over; })[0];
+          if (!m) return;
+          order.splice(order.indexOf(f), 1);
+          order.splice(order.indexOf(m) + 1, 0, f);
+        });
         order.forEach(function (f) {
-          var mx = GAP + 20 * f.depth + f.w * 0.05, my = GAP + 40 * f.depth + f.h * 0.06;
-          var x = Math.max(0, Math.min(W - f.w, f.x / 100 * W));
-          var y = top0 + f.y / 100 * W;
-          for (var guard = 0; guard < 40; guard++) {
+          var w0 = f.w, minW = f.ar < 1 ? 200 : 260;
+          var x = f.x / 100 * W, y = top0 + f.y / 100 * W;
+          // An image that overlaps another on purpose follows it, so the overlap survives when the other one moves
+          var mate = placedInRow.filter(function (o) { return o.f.i === f.over; })[0];
+          if (mate) { x = mate.l + (f.x - mate.f.x) / 100 * W; y = mate.t + (f.y - mate.f.y) / 100 * W; }
+          x = Math.max(0, Math.min(W - f.w, x));
+          for (var guard = 0; guard < 80; guard++) {
+            var sin = Math.sin(Math.abs(f.rz) * Math.PI / 180);
+            var gx = f.h * sin / 2 + f.w * 0.01, gy = f.w * sin / 2 + f.h * 0.02;       // what the tilt adds around the box
+            var mx = GAP_TEXT + gx, my = GAP_TEXT + gy + DRIFT * f.depth;
             var box = { l: x, r: x + f.w, t: y, b: y + f.h }, moved = false;
-            for (var j = 0; j < texts.length; j++) {
+            for (var j = 0; j < texts.length && !moved; j++) {
               var t = texts[j];
-              if (box.l < t.r + mx && box.r > t.l - mx && box.t < t.b + my && box.b > t.t - my) { y = t.b + my; moved = true; break; }
+              if (!(box.l < t.r + mx && box.r > t.l - mx && box.t < t.b + my && box.b > t.t - my)) continue;
+              // Beside a column of text: shrink a little to fit, keeping the side the image is on
+              var fit = -1, nx = x;
+              if (box.l + f.w / 2 < t.l) fit = t.l - mx - x;
+              else if (box.l + f.w / 2 > t.r) { nx = Math.max(x, t.r + mx); fit = W - nx; }
+              if (fit >= Math.max(minW, w0 * 0.85) && fit < f.w) { f.h *= fit / f.w; f.w = fit; x = nx; }
+              else if (fit >= f.w) x = nx;
+              else y = t.b + my;
+              moved = true;
             }
             if (moved) continue;
-            for (var q = 0; q < placedInRow.length; q++) {
+            for (var q = 0; q < placedInRow.length && !moved; q++) {
               var o = placedInRow[q];
-              if (overlap(box, o) > 0.2 * Math.min(f.w * f.h, (o.r - o.l) * (o.b - o.t))) { y = o.b - Math.min(f.h, o.b - o.t) * 0.14; moved = true; break; }
+              if (o.f.i === f.over || f.i === o.f.over) {
+                if (overlap(box, o) > 0.2 * Math.min(f.w * f.h, (o.r - o.l) * (o.b - o.t))) { y = o.b - Math.min(f.h, o.b - o.t) * 0.12; moved = true; }
+              } else if (box.l < o.r + GAP_IMG && box.r > o.l - GAP_IMG && box.t < o.b + GAP_IMG && box.b > o.t - GAP_IMG) {
+                y = o.b + GAP_IMG; moved = true;
+              } else if (Math.abs(box.t - o.t) < 16) { y = o.t + 24; moved = true; }   // never the same top edge
             }
             if (!moved) break;
           }
           f.left = x; f.top = y;
-          placedInRow.push({ l: x, r: x + f.w, t: y, b: y + f.h });
+          placedInRow.push({ l: x, r: x + f.w, t: y, b: y + f.h, f: f });
+          f.btn.style.width = Math.round(f.w) + "px"; f.btn.style.height = Math.round(f.h) + "px";
           f.btn.style.left = Math.round(x) + "px"; f.btn.style.top = Math.round(y) + "px";
         });
-        // The constellation grows so the next text starts below its last image (plus room for the drift)
+        // The band grows: GAP_TEXT before the next paragraph, or GAP_END before the next section's rule
         var boxTop = c.el.getBoundingClientRect().top - rowRect.top;
-        var bottom = Math.max.apply(null, c.list.map(function (f) { return f.top + f.h + 40 * f.depth; }));
-        c.el.style.height = Math.max(0, Math.round(bottom - boxTop + GAP * 2)) + "px";
+        var bottom = Math.max.apply(null, c.list.map(function (f) {
+          return f.top + f.h + DRIFT * f.depth + f.w * Math.sin(Math.abs(f.rz) * Math.PI / 180) / 2;
+        }));
+        var next = c.el.nextElementSibling;
+        var gap = next && next.tagName === "P" ? GAP_TEXT - parseFloat(getComputedStyle(next).marginTop)
+          : GAP_END - parseFloat(getComputedStyle(c.row).paddingBottom);
+        c.el.style.height = Math.max(0, Math.ceil(bottom - boxTop + gap)) + "px";
       });
       // Cache each image's centre (document coordinates) for the scroll loop
       floats.forEach(function (f) {
@@ -347,8 +391,8 @@
         var p = reduceMotion ? 1 : Math.max(-1.2, Math.min(1.2, (f.cy - sy - vh / 2) / vh));
         var ease = reduceMotion ? 1 : 0.3 + 0.7 * Math.min(1, Math.abs(p) * 1.4);   // flatter at the middle of the screen
         var tilt = mobile ? 0.6 : 1;                                             // at most ±6° on mobile
-        var dy = reduceMotion ? 0 : -p * 40 * f.depth * half;
-        var dx = reduceMotion ? 0 : p * 20 * f.depth * f.sign * half;
+        var dy = reduceMotion ? 0 : -p * DRIFT * f.depth * half;
+        var dx = 0;                                                              // no sideways drift: the 48 px beside the text hold
         f.card.style.transform = "translate3d(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px,0) perspective(1200px) rotateX(" +
           (f.rx * tilt * ease).toFixed(2) + "deg) rotateY(" + (f.ry * tilt * ease).toFixed(2) + "deg) rotateZ(" + (f.rz * ease).toFixed(2) + "deg)";
       });
@@ -520,6 +564,7 @@
         img.decoding = "async";
         media.appendChild(img);
       }
+      media.classList.toggle("is-screen", btn.dataset.screen !== undefined);
       capEl.textContent = btn.dataset.caption || "";
       countEl.textContent = (current + 1) + " / " + n;
       if (!reduceMotion) { media.classList.remove("is-in"); void media.offsetWidth; media.classList.add("is-in"); }

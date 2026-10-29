@@ -100,6 +100,20 @@
 #figure-compelling { --px: 1010; --py: 17; }
 #figure-clean { --px: 1018; --py: 48.5; --c: var(--pink); }
 
+/* Pinned, one principle at a time (home-anim.js adds .is-anim; without it, or with reduced motion, the three are stacked) */
+html.gsap-on { scroll-behavior: auto; }   /* smooth CSS scrolling fights the snapping */
+.principles.is-anim { height: calc(100svh - 40px); display: flex; flex-direction: column; }
+.principles.is-anim .principle-list { flex: 1; display: grid; align-content: center; margin-top: 0; }
+.principles.is-anim .principle { grid-area: 1 / 1; margin-top: 0; align-items: start; }   /* the three texts share their top line */
+.principles.is-anim .principle .figure { display: none; }
+/* The stage: one box with the three figures as placed in Figma (223 × 233.5 Figma px), and a pool of 4 pieces */
+.morph {
+  grid-area: 1 / 1; align-self: start; justify-self: start; position: relative; z-index: 1;
+  margin: calc(17 * var(--s)) 0 0 calc(1003 * var(--s));
+  width: calc(223 * var(--s)); height: calc(233.5 * var(--s)); pointer-events: none;
+}
+.morph-piece { position: absolute; display: block; will-change: left, top, width, height; }
+
 /* ---------- Pixel edges (stepped edges of squares; --x / --y in squares) ---------- */
 
 .pixel-edge {
@@ -220,6 +234,10 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
   .principle { display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
   .principle + .principle { margin-top: 64px; }
   .principle .figure { --k: 0.62px; position: relative; left: auto; top: auto; order: -1; margin-bottom: 32px; }
+  /* Pinned on mobile: the figure above the text */
+  .principles.is-anim .principle-list { align-content: start; margin-top: 32px; }
+  .principles.is-anim .principle { grid-area: 2 / 1; }
+  .morph { grid-area: 1 / 1; margin: 0 0 32px; width: calc(223 * 0.62px); height: calc(233.5 * 0.62px); }
   .principle-text .t-h3, .principle-text .t-lead { margin-top: 24px; }
 
   .cases { padding: 64px var(--gutter); }

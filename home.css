@@ -15,6 +15,8 @@
   --green: #007923;
   --blue: #0042e5;
   --lilac: #987fff;
+  --blue-hi: #104ffe;   /* the "Hi!" on the pill */
+  --black: #000;
   /* Shared variables used by styles.css (topbar, skip link, focus) */
   --bg: var(--cream);
   --ink: var(--red);
@@ -41,22 +43,22 @@
 
 /* ---------- Pieces (shared by the shapes, the principle figures and the step figures) ---------- */
 
-/* A figure is a square box; each piece sits in it with --l / --t / --w / --h (% of the box), --c (colour) and --r (deg). */
-.figure { position: relative; width: var(--box, 224px); aspect-ratio: 1; flex: none; }
+/* A figure is a box with the proportions of its Figma frame (--fw × --fh, in Figma px; --k scales it).
+   Each piece is one path of the original SVG (images/shapes/), in its own small <svg> whose viewBox is that
+   path's bounding box, placed with --l / --t / --w / --h (% of the box). Colour: --c (a token), else currentColor.
+   Pieces can be moved one by one (transform). */
+.figure { position: relative; width: calc(var(--fw) * var(--k, 1px)); height: calc(var(--fh) * var(--k, 1px)); flex: none; }
 .piece {
-  position: absolute; display: block;
+  position: absolute; display: block; overflow: visible;
   left: calc(var(--l) * 1%); top: calc(var(--t) * 1%); width: calc(var(--w) * 1%); height: calc(var(--h) * 1%);
-  background: var(--c, currentColor); transform: rotate(calc(var(--r, 0) * 1deg));
+  fill: var(--c, currentColor);
 }
-.piece-circle { border-radius: 50%; }
-.piece-half-down { border-radius: 0 0 50% 50% / 0 0 100% 100%; }     /* flat edge on top, bowl below */
-.piece-half-up { border-radius: 50% 50% 0 0 / 100% 100% 0 0; }       /* bowl on top, flat edge below */
-.piece-half-right { border-radius: 0 50% 50% 0 / 0 100% 100% 0; }    /* D: flat edge on the left */
-.piece-quarter { border-radius: 100% 0 0 0; }                        /* quarter disc, round corner top left before --r */
-.piece-ring-top {                                                    /* top half of a ring */
-  background: radial-gradient(circle farthest-side at 50% 100%, transparent 42%, var(--c, currentColor) calc(42% + 0.5px));
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-}
+/* No seams: pieces that touch grow by one screen pixel on every side (a 2px stroke that never scales), so
+   neighbours overlap at any size, zoom or pixel density. (Half a pixel each side still left a faint joint at some
+   sizes, because each piece is drawn on its own.) */
+.figure-seamless .piece > * { stroke: var(--c, currentColor); stroke-width: 2px; vector-effect: non-scaling-stroke; stroke-linejoin: miter; }
+/* The cream cut-out of the arch ends on the same line as the pink under it: it grows a bit more, so no pink fringe shows */
+.figure-seamless .piece-hole > * { stroke-width: 4px; }
 
 /* ---------- 01 About ---------- */
 
@@ -71,19 +73,13 @@
 .about .t-hero { margin-bottom: calc(40 * var(--s)); }
 .about-lead { font-size: clamp(1.25rem, 2.08vw, 1.875rem); line-height: 1.2; letter-spacing: -0.02em; max-width: calc(690 * var(--s)); }
 
-/* Shapes: each one is a single element (its id is the shape), placed in Figma px at 1440 (--x / --y / --w / --h). */
+/* Shapes: one box each (its id is the shape), placed in Figma px at 1440 (--x / --y, box --w × --h, scaled by --s),
+   with the pieces of its SVG inside. */
 .shape {
   position: absolute; display: block;
   left: calc(var(--x) * var(--s)); top: calc(var(--y) * var(--s));
   width: calc(var(--w) * var(--s)); height: calc(var(--h) * var(--s));
-  transform: rotate(var(--rot, 0deg)); transform-origin: var(--origin, 50% 50%);
 }
-.shape-pill { --x: 121; --y: 56.5; --w: 178; --h: 67; --rot: -25deg; background: var(--pink); border-radius: 999px; display: flex; align-items: center; justify-content: center; }
-.shape-pill-text { color: var(--blue); font-size: calc(38 * var(--s)); font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
-.shape-diamond { --x: 112; --y: 382; --w: 90; --h: 90; --rot: 45deg; background: var(--yellow); }
-.shape-half { --x: 1136.5; --y: 295; --w: 195; --h: 97.5; --rot: -31deg; --origin: 50% 0; background: var(--green); border-radius: 0 0 50% 50% / 0 0 100% 100%; }
-.shape-triangle { --x: 1116; --y: 487; --w: 81; --h: 86; background: var(--lilac); clip-path: polygon(0 61.6%, 82.7% 0, 100% 100%); }
-.shape-circle { --x: 164.5; --y: 673.5; --w: 133; --h: 133; background: var(--blue); border-radius: 50%; }
 
 /* ---------- 02 Principles ---------- */
 
@@ -97,9 +93,12 @@
 .principle-text { grid-column: 1 / 7; }
 .principle-text .t-h3 { margin-top: 40px; }
 .principle-text .t-lead { margin-top: 40px; max-width: 680px; }
-.principle .figure { --box: clamp(150px, 15.56vw, 224px); grid-column: 10 / 12; justify-self: center; }
-.figure-direction { --c: var(--yellow); }
-.figure-clean { --c: var(--pink); }
+.principle { position: relative; }
+/* Placed as in Figma, relative to the principle (--px / --py in Figma px at 1440) */
+.principle .figure { --k: var(--s); position: absolute; left: calc(var(--px) * var(--s)); top: calc(var(--py) * var(--s)); }
+#figure-direction { --px: 1003; --py: 72; --c: var(--yellow); }
+#figure-compelling { --px: 1010; --py: 17; }
+#figure-clean { --px: 1018; --py: 48.5; --c: var(--pink); }
 
 /* ---------- Pixel edges (stepped edges of squares; --x / --y in squares) ---------- */
 
@@ -142,9 +141,9 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 
 /* ---------- Brands marquee ---------- */
 
-.brands { padding: 80px 0; }
+.brands { padding: 80px 0; box-shadow: 0 -1px 0 var(--red); }   /* covers any hairline where the two red sections meet */
 .brands > .t-label { padding: 0 var(--gutter); }
-.marquee { margin-top: 40px; overflow: hidden; }
+.marquee { margin-top: 40px; overflow: hidden; border-top: 1px solid var(--lime); border-bottom: 1px solid var(--lime); }   /* rules above and below the logos, full width */
 .marquee-track { display: flex; width: max-content; animation: home-marquee 40s linear infinite; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .marquee-set { display: flex; }
@@ -162,7 +161,7 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 .tl-step:last-child { padding-bottom: 80px; }
 .tl-title { grid-column: 1; padding-right: 80px; }
 .tl-text { grid-column: 2; padding-left: 80px; max-width: 680px; }
-.tl-step .figure { --box: 48px; position: absolute; top: 80px; left: calc(50% - 24px); z-index: 1; }
+.tl-step .figure { position: absolute; top: 80px; left: calc(50% - 24px); z-index: 1; background: var(--sky); }   /* the line stops behind the figure, so its gaps read as in the SVG */
 /* Curved bottom edge: it overhangs the section and rises over the footer */
 .how-curve { position: absolute; top: calc(100% - 1px); left: 0; display: block; width: 100%; height: clamp(40px, 5vw, 72px); fill: var(--sky); }
 
@@ -191,9 +190,9 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 
 .cat { position: absolute; right: clamp(1rem, 3.2vw, 46px); top: 200px; width: clamp(120px, 15.56vw, 224px); }
 .cat svg { display: block; width: 100%; height: auto; overflow: visible; }
-.cat-body { fill: #000; }
+.cat-part { fill: var(--black); }
 .cat-iris { fill: var(--red); }
-.cat-pupil { fill: #000; }
+.cat-pupil { fill: var(--black); }
 
 /* ---------- Mobile ---------- */
 
@@ -209,17 +208,18 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
   .about-text, .about-lead { max-width: none; }
   .about-eyebrow { margin-bottom: 24px; }
   .about .t-hero { margin-bottom: 24px; }
-  .shape-pill { left: 8px; top: 44px; width: 128px; height: 48px; }
-  .shape-pill-text { font-size: 26px; }
-  .shape-half { left: auto; right: 6px; top: 40px; width: 120px; height: 60px; }
-  .shape-diamond { top: auto; bottom: 90px; left: 34px; width: 60px; height: 60px; }
-  .shape-circle { top: auto; bottom: 36px; left: calc(50% - 44px); width: 88px; height: 88px; }
-  .shape-triangle { top: auto; bottom: 96px; left: auto; right: 34px; width: 60px; height: 64px; }
+  /* Shapes at 0.6 of their size: two above the text, three below */
+  .shapes { --s: 0.6px; }
+  #shape-pill { left: 0; top: 30px; }
+  #shape-half { left: auto; right: 4px; top: 34px; }
+  #shape-diamond { top: auto; bottom: 64px; left: 26px; }
+  #shape-circle { top: auto; bottom: 22px; left: calc(50% - 51px); }
+  #shape-triangle { top: auto; bottom: 84px; left: auto; right: 34px; }
 
   .principles { padding: 64px var(--gutter); }
   .principle { display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
   .principle + .principle { margin-top: 64px; }
-  .principle .figure { --box: 150px; order: -1; margin-bottom: 32px; justify-self: auto; }
+  .principle .figure { --k: 0.62px; position: relative; left: auto; top: auto; order: -1; margin-bottom: 32px; }
   .principle-text .t-h3, .principle-text .t-lead { margin-top: 24px; }
 
   .cases { padding: 64px var(--gutter); }

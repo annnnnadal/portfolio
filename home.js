@@ -32,11 +32,13 @@
   window.addEventListener("load", fitFooter);
 
   /* Cat: the pupils follow the cursor (or the last touch), clamped inside the eye, with easing (lerp).
-     With no input they look straight ahead; with reduced motion they stay centred. */
+     With no input, and with reduced motion, they stay where the drawing (images/shapes/cat.svg) puts them. */
   var eyes = Array.prototype.map.call(document.querySelectorAll(".cat [data-eye]"), function (g) {
     var iris = g.querySelector(".cat-iris"), pupil = g.querySelector(".cat-pupil");
     var r = +iris.getAttribute("r"), pr = +pupil.getAttribute("r");
-    return { iris: iris, pupil: pupil, max: r - pr - 0.4, x: 0, y: 0, tx: 0, ty: 0, cx: 0, cy: 0, scale: 1 };
+    // bx / by: where the drawing puts the pupil, from the centre of the eye
+    var bx = +pupil.getAttribute("cx") - +iris.getAttribute("cx"), by = +pupil.getAttribute("cy") - +iris.getAttribute("cy");
+    return { iris: iris, pupil: pupil, max: r - pr - 0.4, bx: bx, by: by, x: 0, y: 0, tx: 0, ty: 0, cx: 0, cy: 0, scale: 1 };
   });
   var svg = document.querySelector(".cat svg");
   function measureEyes() {
@@ -55,7 +57,7 @@
       if (!pointer) { e.tx = 0; e.ty = 0; return; }
       var dx = pointer.x - e.cx, dy = pointer.y - e.cy, d = Math.sqrt(dx * dx + dy * dy) || 1;
       var reach = Math.min(1, d / (e.scale * 60));          // close to the eye, the pupil moves less
-      e.tx = dx / d * e.max * reach; e.ty = dy / d * e.max * reach;
+      e.tx = dx / d * e.max * reach - e.bx; e.ty = dy / d * e.max * reach - e.by;   // translate from the drawn position
     });
     if (!ticking) { ticking = true; requestAnimationFrame(step); }
   }

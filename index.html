@@ -49,11 +49,22 @@
         </div>
         <!-- Five flat shapes, one component each (id = the shape). Positioned with --x / --y in Figma px at 1440. -->
         <div class="shapes" aria-hidden="true">
-          <div class="shape shape-pill" id="shape-pill"><span class="shape-pill-text">Hi!</span></div>
-          <div class="shape shape-diamond" id="shape-diamond"></div>
-          <div class="shape shape-half" id="shape-half"></div>
-          <div class="shape shape-triangle" id="shape-triangle"></div>
-          <div class="shape shape-circle" id="shape-circle"></div>
+          <div class="shape" id="shape-pill" style="--x:100.3;--y:7.8;--w:220;--h:165">
+            <svg class="piece" style="--l:0;--t:0;--w:99.75;--h:99.61;--c:var(--pink)" viewBox="0 0 219.45 164.36" focusable="false"><rect y="81.9664" width="200" height="90.3256" rx="45.1628" transform="rotate(-24.1943 0 81.9664)"></rect></svg>
+            <svg class="piece" style="--l:37.56;--t:36.16;--w:24;--h:26.87;--c:var(--blue-hi)" viewBox="82.64 59.66 52.8 44.33" focusable="false"><path d="M110.207 96.7625L98.7318 71.222L103.658 69.0089L115.133 94.5494L110.207 96.7625ZM94.1166 103.992L82.6413 78.4515L87.567 76.2384L99.0423 101.779L94.1166 103.992ZM93.3819 91.035L91.595 87.0579L104.292 81.3531L106.079 85.3301L93.3819 91.035ZM120.163 92.2894L111.901 73.9002L116.827 71.6871L125.089 90.0763L120.163 92.2894ZM113.251 70.2679C112.375 70.6613 111.531 70.7338 110.717 70.4853C109.917 70.2015 109.337 69.6582 108.977 68.8555C108.616 68.0528 108.601 67.2704 108.931 66.5082C109.274 65.7108 109.883 65.1154 110.759 64.7219C111.659 64.3176 112.509 64.2573 113.309 64.541C114.122 64.7896 114.709 65.3152 115.07 66.1179C115.43 66.9206 115.439 67.7206 115.096 68.5181C114.766 69.2802 114.151 69.8635 113.251 70.2679ZM127.459 79.0129L119.175 62.0372L124.465 59.6602L131.655 77.1277L127.459 79.0129ZM133.395 86.5634C132.495 86.9678 131.633 87.0335 130.809 86.7607C129.998 86.4526 129.412 85.8972 129.052 85.0945C128.691 84.2918 128.67 83.4972 128.989 82.7107C129.322 81.889 129.938 81.2759 130.838 80.8715C131.738 80.4672 132.593 80.419 133.404 80.7271C134.204 81.0109 134.784 81.5541 135.145 82.3568C135.506 83.1595 135.532 83.9663 135.224 84.7771C134.905 85.5636 134.295 86.159 133.395 86.5634Z"></path></svg>
+          </div>
+          <div class="shape" id="shape-diamond" style="--x:93;--y:364;--w:128;--h:128">
+            <svg class="piece" style="--l:0;--t:0;--w:99.75;--h:99.75;--c:var(--yellow)" viewBox="0 0 127.68 127.68" focusable="false"><rect x="63.8408" width="90.2843" height="90.2843" transform="rotate(45 63.8408 0)"></rect></svg>
+          </div>
+          <div class="shape" id="shape-half" style="--x:1149;--y:243;--w:183;--h:149">
+            <svg class="piece" style="--l:0;--t:0;--w:99.77;--h:99.35;--c:var(--green)" viewBox="0 0 182.58 148.03" focusable="false"><path d="M165.417 0.592773C167.299 -0.56483 169.77 0.0180799 170.845 1.94806C176.322 11.7811 179.965 22.5559 181.596 33.7828C183.42 46.3387 182.693 59.2143 179.457 71.6744C176.22 84.1346 170.537 95.9354 162.733 106.403C154.928 116.871 145.154 125.8 133.969 132.681C122.784 139.563 110.407 144.261 97.5452 146.509C84.6831 148.756 71.5876 148.509 59.0063 145.78C46.4251 143.052 34.6046 137.896 24.2196 130.607C14.9338 124.089 6.95841 115.98 0.650367 106.659C-0.587743 104.829 0.00636844 102.36 1.88792 101.202L83.6525 50.8974L165.417 0.592773Z"></path></svg>
+          </div>
+          <div class="shape" id="shape-triangle" style="--x:1116;--y:487;--w:83;--h:88">
+            <svg class="piece" style="--l:0;--t:0;--w:99.02;--h:99.16;--c:var(--lilac)" viewBox="0 0 82.19 87.27" focusable="false"><path d="M69.6199 1.08174e-05L82.1891 87.2652L-4.25105e-05 54.095L69.6199 1.08174e-05Z"></path></svg>
+          </div>
+          <div class="shape" id="shape-circle" style="--x:146.5;--y:655.5;--w:170;--h:170">
+            <svg class="piece" style="--l:0;--t:0;--w:99.68;--h:99.68;--c:var(--blue)" viewBox="0 0 169.45 169.45" focusable="false"><rect x="44.1484" width="132.856" height="132.856" rx="66.4281" transform="rotate(19.4085 44.1484 0)"></rect></svg>
+          </div>
         </div>
       </div>
     </section>
@@ -69,11 +80,11 @@
             <p class="t-lead">When anything can be generated, options are cheap and endless. The real work is knowing which one to pursue: orchestrating toward the strongest solution, or questioning the default when something better is possible.</p>
           </div>
           <!-- Figures: pieces absolutely positioned in a shared square box (--l/--t/--w/--h in % of the box) -->
-          <div class="figure figure-direction" id="figure-direction" aria-hidden="true">
-            <span class="piece piece-rect" style="--l:0;--t:75;--w:25;--h:25"></span>
-            <span class="piece piece-rect" style="--l:25;--t:50;--w:25;--h:50"></span>
-            <span class="piece piece-rect" style="--l:50;--t:25;--w:25;--h:75"></span>
-            <span class="piece piece-rect" style="--l:75;--t:0;--w:25;--h:100"></span>
+          <div class="figure figure-seamless" id="figure-direction" style="--fw:223;--fh:203" aria-hidden="true">
+            <svg class="piece" style="--l:0;--t:74.88;--w:25.11;--h:25.12" viewBox="0 152 56 51" focusable="false"><rect x="56" y="152" width="51" height="56" transform="rotate(90 56 152)"></rect></svg>
+            <svg class="piece" style="--l:74.89;--t:0;--w:25.11;--h:100" viewBox="167 0 56 203" focusable="false"><rect x="223" width="203" height="56" transform="rotate(90 223 0)"></rect></svg>
+            <svg class="piece" style="--l:25.11;--t:50.25;--w:25.11;--h:49.75" viewBox="56 102 56 101" focusable="false"><rect x="112" y="102" width="101" height="56" transform="rotate(90 112 102)"></rect></svg>
+            <svg class="piece" style="--l:50.22;--t:25.12;--w:24.66;--h:74.88" viewBox="112 51 55 152" focusable="false"><rect x="167" y="51" width="152" height="55" transform="rotate(90 167 51)"></rect></svg>
           </div>
         </li>
         <li class="principle">
@@ -82,9 +93,9 @@
             <h3 class="t-h3">Keep it compelling</h3>
             <p class="t-lead">Beauty isn’t decoration — it’s what earns attention. We shape each piece to fit the medium it will live in, so it gets noticed amid the noise.</p>
           </div>
-          <div class="figure figure-compelling" id="figure-compelling" aria-hidden="true">
-            <span class="piece piece-half-down" style="--l:0;--t:40;--w:100;--h:50;--c:var(--green)"></span>
-            <span class="piece piece-circle" style="--l:24;--t:14;--w:52;--h:52;--c:var(--blue)"></span>
+          <div class="figure figure-seamless" id="figure-compelling" style="--fw:215;--fh:206" aria-hidden="true">
+            <svg class="piece" style="--l:0.04;--t:50;--w:99.93;--h:50;--c:var(--green)" viewBox="0.08 103 214.84 103" focusable="false"><path d="M211 103C213.209 103 215.008 104.792 214.919 106.999C214.426 119.16 211.686 131.153 206.817 142.416C201.415 154.913 193.496 166.268 183.514 175.832C173.532 185.396 161.681 192.983 148.638 198.16C135.596 203.336 121.617 206 107.5 206C93.3829 206 79.404 203.336 66.3615 198.16C53.319 192.983 41.4683 185.396 31.486 175.832C21.5037 166.268 13.5853 154.913 8.18295 142.416C3.31358 131.153 0.574196 119.16 0.0810478 106.999C-0.00846014 104.792 1.79086 103 4 103L107.5 103L211 103Z"></path></svg>
+            <svg class="piece" style="--l:16.52;--t:15.13;--w:67.1;--h:70.03;--c:var(--blue)" viewBox="35.52 31.17 144.26 144.26" focusable="false"><rect x="73.1001" y="31.175" width="113.103" height="113.103" rx="56.5513" transform="rotate(19.4085 73.1001 31.175)"></rect></svg>
           </div>
         </li>
         <li class="principle">
@@ -93,10 +104,10 @@
             <h3 class="t-h3">Keep it clean</h3>
             <p class="t-lead">In a world buried in information, we order and compose so the important things rise to the surface — turning noise into stories people can actually follow.</p>
           </div>
-          <div class="figure figure-clean" id="figure-clean" aria-hidden="true">
-            <span class="piece piece-rect" style="--l:0;--t:54;--w:29;--h:42"></span>
-            <span class="piece piece-rect" style="--l:71;--t:54;--w:29;--h:42"></span>
-            <span class="piece piece-ring-top" style="--l:0;--t:4;--w:100;--h:50"></span>
+          <div class="figure figure-seamless" id="figure-clean" style="--fw:191;--fh:202" aria-hidden="true">
+            <svg class="piece" style="--l:0;--t:48.13;--w:100;--h:39.11" viewBox="0 97.23 191 79" focusable="false"><rect x="191" y="97.2288" width="79" height="191" transform="rotate(90 191 97.2288)"></rect></svg>
+            <svg class="piece" style="--l:0;--t:0.11;--w:100;--h:87.13" viewBox="0 0.23 191 176" focusable="false"><rect y="0.22876" width="191" height="176" rx="88"></rect></svg>
+            <svg class="piece piece-hole" style="--l:28.74;--t:30.92;--w:41.88;--h:56.44;--c:var(--cream)" viewBox="54.89 62.46 80 114" focusable="false"><rect x="134.892" y="62.4576" width="114" height="80" transform="rotate(90 134.892 62.4576)"></rect></svg>
           </div>
         </li>
       </ol>
@@ -114,7 +125,7 @@
       <ul class="case-grid">
         <li class="case">
           <a class="card-btn case-link" href="case/resa/">
-            <span class="card-thumb case-thumb"><img src="images/resa/resa-thumbnail.webp" width="660" height="354" alt="" loading="lazy" decoding="async"></span>
+            <span class="card-thumb case-thumb"><img src="images/resa/resa-thumbnail.webp" srcset="images/resa/resa-thumbnail.webp 660w, images/resa/resa-thumbnail-2x.webp 1320w" sizes="(max-width: 860px) 100vw, 50vw" width="660" height="354" alt="" loading="lazy" decoding="async"></span>
             <span class="case-title t-h3">Resa</span>
             <span class="t-label">Brand strategy, UX/UI · 2025</span>
           </a>
@@ -202,46 +213,50 @@
       <ol class="timeline">
         <li class="tl-step">
           <h3 class="t-h3 tl-title">Listen</h3>
-          <div class="figure figure-step" aria-hidden="true">
-            <span class="piece piece-half-down" style="--l:0;--t:25;--w:100;--h:50;--r:-45"></span>
+          <div class="figure figure-step" id="figure-step-1" style="--fw:48;--fh:48" aria-hidden="true">
+            <svg class="piece" style="--l:0;--t:0;--w:100;--h:100" viewBox="0 0 48 48" focusable="false"><path d="M8.2355 0C2.9624 5.2731 3.85273e-08 12.425 0 19.8823C-3.85273e-08 27.3395 2.9624 34.4914 8.2355 39.7645C13.5086 45.0376 20.6605 48 28.1178 48C35.575 48 42.7269 45.0376 48 39.7645L8.2355 0Z"></path></svg>
           </div>
           <p class="t-lead tl-text">Every project starts with listening: what the project needs, and what the people behind it need too. Experience helps me ask the right questions from day one, and show where design can help long before anything is drawn.</p>
         </li>
         <li class="tl-step">
           <h3 class="t-h3 tl-title">Discover</h3>
-          <div class="figure figure-step" aria-hidden="true">
-            <span class="piece piece-half-up" style="--l:0;--t:12;--w:76;--h:38"></span>
-            <span class="piece piece-half-down" style="--l:24;--t:50;--w:76;--h:38"></span>
+          <div class="figure figure-step" id="figure-step-2" style="--fw:48;--fh:48" aria-hidden="true">
+            <svg class="piece" style="--l:25;--t:51.05;--w:75;--h:39.37" viewBox="12 24.5 36 18.9" focusable="false"><path d="M12 24.504C12 29.5156 13.8964 34.3218 17.2721 37.8656C20.6477 41.4093 25.2261 43.4001 30 43.4001C34.7739 43.4001 39.3523 41.4093 42.7279 37.8656C46.1036 34.3219 48 29.5156 48 24.504L12 24.504Z"></path></svg>
+            <svg class="piece" style="--l:0;--t:9.58;--w:75;--h:39.37" viewBox="0 4.6 36 18.9" focusable="false"><path d="M0 23.4962C0 18.4846 1.89642 13.6783 5.27208 10.1346C8.64773 6.59093 13.2261 4.6001 18 4.6001C22.7739 4.6001 27.3523 6.59093 30.7279 10.1346C34.1036 13.6783 36 18.4846 36 23.4962L0 23.4962Z"></path></svg>
           </div>
           <p class="t-lead tl-text">Before shaping anything, I get to know the brand, look at what already exists and search for the value proposition. When a project is already underway, a blueprint workshop helps us see where we stand. I share what I’m finding before we choose a path, often with references or a quick low-fi sketch. A simple visual sparks a better conversation than a concept explained in words.</p>
         </li>
         <li class="tl-step">
           <h3 class="t-h3 tl-title">Plan</h3>
-          <div class="figure figure-step" aria-hidden="true">
-            <span class="piece piece-half-right" style="--l:0;--t:6;--w:44;--h:88"></span>
-            <span class="piece piece-half-right" style="--l:46;--t:17;--w:33;--h:66"></span>
-            <span class="piece piece-half-right" style="--l:79;--t:27;--w:23;--h:46"></span>
+          <div class="figure figure-step" id="figure-step-3" style="--fw:48;--fh:48" aria-hidden="true">
+            <svg class="piece" style="--l:86.5;--t:0;--w:13.5;--h:100" viewBox="41.52 0 6.48 48" focusable="false"><path d="M41.52 0.000343889C45.6801 6.5525 48 15.1051 48 24.0002C48 32.8952 45.6801 41.4478 41.52 48L41.52 0.000343889Z"></path></svg>
+            <svg class="piece" style="--l:0;--t:0;--w:50;--h:100" viewBox="0 0 24 48" focusable="false"><path d="M-4.19629e-06 3.81596e-07C6.36519 -1.74867e-07 12.4697 2.52856 16.9706 7.02943C21.4714 11.5303 24 17.6348 24 24C24 30.3652 21.4714 36.4697 16.9706 40.9706C12.4697 45.4714 6.3652 48 3.8147e-06 48L-4.19629e-06 3.81596e-07Z"></path></svg>
+            <svg class="piece" style="--l:52;--t:0;--w:32.5;--h:100" viewBox="24.96 0 15.6 48" focusable="false"><path d="M33.5306 5.88366C31.0776 3.26504 28.1482 1.27181 24.96 9.73817e-05L24.96 48C28.1482 46.7283 31.0776 44.7351 33.5306 42.1164C38.0314 37.3117 40.56 30.795 40.56 24C40.56 17.2051 38.0314 10.6884 33.5306 5.88366Z"></path></svg>
           </div>
           <p class="t-lead tl-text">We set clear milestones, with clear deliverables at each one. Delivering in phases gives strategy the weight it deserves, and gives the visual work a solid reason to exist.</p>
         </li>
         <li class="tl-step">
           <h3 class="t-h3 tl-title">Build together</h3>
-          <div class="figure figure-step" aria-hidden="true">
-            <span class="piece piece-quarter" style="--l:0;--t:0;--w:50;--h:50;--r:90"></span>
-            <span class="piece piece-quarter" style="--l:50;--t:0;--w:50;--h:50;--r:180"></span>
-            <span class="piece piece-quarter" style="--l:50;--t:50;--w:50;--h:50;--r:270"></span>
-            <span class="piece piece-quarter" style="--l:0;--t:50;--w:50;--h:50;--r:0"></span>
+          <div class="figure figure-step" id="figure-step-4" style="--fw:48;--fh:48" aria-hidden="true">
+            <svg class="piece" style="--l:0;--t:0.03;--w:32.5;--h:64.93" viewBox="0 0.02 15.6 31.17" focusable="false"><path d="M15.6 0.719998C15.6 0.322353 15.2775 -0.00173525 14.8802 0.0166109C13.0774 0.0998757 11.3008 0.495446 9.63014 1.18748C7.73746 1.97145 6.01773 3.12054 4.56913 4.56913C3.12054 6.01772 1.97145 7.73745 1.18748 9.63013C0.403506 11.5228 1.85196e-07 13.5514 0 15.6C-1.85195e-07 17.6486 0.403505 19.6772 1.18748 21.5698C1.97145 23.4625 3.12054 25.1823 4.56913 26.6309C6.01772 28.0794 7.73745 29.2285 9.63013 30.0125C11.3008 30.7045 13.0774 31.1001 14.8802 31.1834C15.2775 31.2017 15.6 30.8776 15.6 30.48L15.6 0.719998Z"></path></svg>
+            <svg class="piece" style="--l:35.03;--t:0;--w:64.93;--h:32.5" viewBox="16.82 0 31.17 15.6" focusable="false"><path d="M47.28 15.6C47.6776 15.6 48.0017 15.2775 47.9834 14.8802C47.9001 13.0774 47.5045 11.3008 46.8125 9.63014C46.0285 7.73746 44.8794 6.01773 43.4308 4.56913C41.9823 3.12054 40.2625 1.97145 38.3698 1.18748C36.4772 0.403506 34.4486 3.32862e-07 32.4 0C30.3514 -3.32861e-07 28.3228 0.403505 26.4301 1.18748C24.5374 1.97145 22.8177 3.12054 21.3691 4.56913C19.9205 6.01772 18.7714 7.73745 17.9875 9.63013C17.2954 11.3008 16.8999 13.0774 16.8166 14.8802C16.7983 15.2775 17.1223 15.6 17.52 15.6L47.28 15.6Z"></path></svg>
+            <svg class="piece" style="--l:67.5;--t:35.03;--w:32.5;--h:64.93" viewBox="32.4 16.82 15.6 31.17" focusable="false"><path d="M32.4 47.28C32.4 47.6776 32.7225 48.0017 33.1197 47.9834C34.9225 47.9001 36.6991 47.5045 38.3698 46.8125C40.2625 46.0285 41.9822 44.8794 43.4308 43.4308C44.8794 41.9823 46.0285 40.2625 46.8125 38.3698C47.5965 36.4772 48 34.4486 48 32.4C48 30.3514 47.5965 28.3228 46.8125 26.4301C46.0285 24.5374 44.8794 22.8177 43.4308 21.3691C41.9823 19.9205 40.2625 18.7714 38.3698 17.9875C36.6991 17.2954 34.9225 16.8999 33.1197 16.8166C32.7225 16.7983 32.4 17.1223 32.4 17.52L32.4 47.28Z"></path></svg>
+            <svg class="piece" style="--l:0.03;--t:67.5;--w:64.93;--h:32.5" viewBox="0.02 32.4 31.17 15.6" focusable="false"><path d="M0.720002 32.4C0.322357 32.4 -0.00173132 32.7225 0.0166148 33.1197C0.0998792 34.9225 0.49545 36.6991 1.18748 38.3698C1.97145 40.2625 3.12054 41.9822 4.56913 43.4308C6.01772 44.8794 7.73745 46.0285 9.63013 46.8125C11.5228 47.5965 13.5514 48 15.6 48C17.6486 48 19.6772 47.5965 21.5699 46.8125C23.4625 46.0285 25.1823 44.8794 26.6309 43.4308C28.0794 41.9822 29.2285 40.2625 30.0125 38.3698C30.7045 36.6991 31.1001 34.9225 31.1834 33.1197C31.2017 32.7225 30.8776 32.4 30.48 32.4L0.720002 32.4Z"></path></svg>
           </div>
           <p class="t-lead tl-text">Every proposal is a draft, open to improvement until we reach a shared goal. I bring the team and the client into each decision, because a decision made together rarely gets overturned. Once we agree, that phase is closed and we move forward without going back.</p>
         </li>
         <li class="tl-step">
           <h3 class="t-h3 tl-title">Craft</h3>
-          <div class="figure figure-step" aria-hidden="true">
-            <span class="piece piece-quarter" style="--l:0;--t:0;--w:38;--h:38;--r:0"></span>
-            <span class="piece piece-quarter" style="--l:62;--t:0;--w:38;--h:38;--r:90"></span>
-            <span class="piece piece-quarter" style="--l:62;--t:62;--w:38;--h:38;--r:180"></span>
-            <span class="piece piece-quarter" style="--l:0;--t:62;--w:38;--h:38;--r:270"></span>
-            <span class="piece piece-circle" style="--l:27;--t:27;--w:46;--h:46"></span>
+          <div class="figure figure-step" id="figure-step-5" style="--fw:48;--fh:48" aria-hidden="true">
+            <svg class="piece" style="--l:50;--t:50;--w:44.1;--h:44.1" viewBox="24 24 21.17 21.17" focusable="false"><path d="M44.2011 24C44.9362 25.8055 45.2646 27.8116 45.1399 29.891C44.9111 33.7065 43.176 37.4566 40.3163 40.3163C37.4566 43.176 33.7065 44.9111 29.891 45.1399C27.8116 45.2645 25.8055 44.9362 24 44.2011L44.2011 24Z"></path></svg>
+            <svg class="piece" style="--l:5.9;--t:5.9;--w:44.1;--h:44.1" viewBox="2.83 2.83 21.17 21.17" focusable="false"><path d="M24 3.79887C22.1945 3.06375 20.1884 2.73544 18.109 2.86012C14.2935 3.0889 10.5434 4.82399 7.68371 7.68371C4.824 10.5434 3.08891 14.2935 2.86014 18.109C2.73545 20.1884 3.06376 22.1944 3.79888 24L24 3.79887Z"></path></svg>
+            <svg class="piece" style="--l:0;--t:0;--w:30.58;--h:30.58" viewBox="0 0 14.68 14.68" focusable="false"><path d="M14.6764 0.691005C13.4166 0.172302 12.0189 -0.0639616 10.5717 0.0148387C7.91646 0.159427 5.3125 1.35289 3.3327 3.33269C1.3529 5.3125 0.159434 7.91645 0.014848 10.5717C-0.0639521 12.0189 0.172313 13.4166 0.691019 14.6764L14.6764 0.691005Z"></path></svg>
+            <svg class="piece" style="--l:69.42;--t:69.42;--w:30.58;--h:30.58" viewBox="33.32 33.32 14.68 14.68" focusable="false"><path d="M33.3236 47.309C34.5834 47.8277 35.9811 48.064 37.4283 47.9852C40.0835 47.8406 42.6875 46.6471 44.6673 44.6673C46.6471 42.6875 47.8406 40.0835 47.9852 37.4283C48.064 35.9811 47.8277 34.5834 47.309 33.3236L33.3236 47.309Z"></path></svg>
+            <svg class="piece" style="--l:69.42;--t:0;--w:30.58;--h:30.58" viewBox="33.32 0 14.68 14.68" focusable="false"><path d="M47.309 14.6764C47.8277 13.4166 48.064 12.0189 47.9852 10.5717C47.8406 7.91645 46.6471 5.31249 44.6673 3.33269C42.6875 1.35289 40.0835 0.159426 37.4283 0.0148414C35.9811 -0.0639588 34.5834 0.172305 33.3236 0.691008L47.309 14.6764Z"></path></svg>
+            <svg class="piece" style="--l:0;--t:69.42;--w:30.58;--h:30.58" viewBox="0 33.32 14.68 14.68" focusable="false"><path d="M0.691015 33.3236C0.17231 34.5834 -0.0639547 35.9811 0.0148453 37.4283C0.159433 40.0835 1.3529 42.6875 3.3327 44.6673C5.31251 46.6471 7.91646 47.8406 10.5717 47.9851C12.0189 48.0639 13.4166 47.8277 14.6764 47.309L0.691015 33.3236Z"></path></svg>
+            <svg class="piece" style="--l:5.9;--t:50;--w:44.1;--h:44.1" viewBox="2.83 24 21.17 21.17" focusable="false"><path d="M24 44.2011C22.1945 44.9362 20.1884 45.2645 18.109 45.1399C14.2935 44.9111 10.5434 43.176 7.68371 40.3163C4.824 37.4566 3.08891 33.7065 2.86013 29.891C2.73545 27.8116 3.06376 25.8055 3.79888 24L24 44.2011Z"></path></svg>
+            <svg class="piece" style="--l:50;--t:5.9;--w:44.1;--h:44.1" viewBox="24 2.83 21.17 21.17" focusable="false"><path d="M44.2011 24C44.9362 22.1945 45.2646 20.1884 45.1399 18.109C44.9111 14.2935 43.176 10.5434 40.3163 7.68371C37.4566 4.82399 33.7065 3.0889 29.891 2.86013C27.8116 2.73545 25.8055 3.06374 24 3.79887L44.2011 24Z"></path></svg>
+            <svg class="piece" style="--l:20.24;--t:20.24;--w:59.52;--h:59.52" viewBox="9.72 9.72 28.57 28.57" focusable="false"><path d="M34.1006 13.8994C39.679 19.4778 39.679 28.5222 34.1006 34.1006C28.5222 39.6789 19.4778 39.6789 13.8994 34.1006C8.32106 28.5222 8.32106 19.4778 13.8994 13.8994C19.4778 8.32105 28.5222 8.32105 34.1006 13.8994Z"></path></svg>
           </div>
           <p class="t-lead tl-text">Only now does the final design take shape, built on everything that came before.</p>
         </li>
@@ -261,10 +276,14 @@
     <p class="contact-links t-link"><a href="mailto:anaonadal@gmail.com">anaonadal@gmail.com</a><a href="https://www.linkedin.com/in/anadal" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></p>
     <!-- Cat: the pupils follow the cursor (home.js) -->
     <div class="cat" aria-hidden="true">
-      <svg viewBox="0 0 224 104" focusable="false">
-        <path class="cat-body" d="M0 104V12L7 0L29 15L51 0L56 42C98 38 127 60 131 86H219L224 104Z"/>
-        <g class="cat-eye" data-eye><circle class="cat-iris" cx="19" cy="30" r="5.5"/><circle class="cat-pupil" cx="19" cy="30" r="2.4"/></g>
-        <g class="cat-eye" data-eye><circle class="cat-iris" cx="39" cy="30" r="5.5"/><circle class="cat-pupil" cx="39" cy="30" r="2.4"/></g>
+      <svg viewBox="0 0 224 175" focusable="false">
+        <path class="cat-part" d="M1.25655 114.199C0.562503 114.199 -0.00161484 113.636 0.0141779 112.942C0.185732 105.408 1.89879 97.9647 5.06973 90.9955C8.41685 83.639 13.3228 76.9548 19.5075 71.3244C25.6921 65.694 33.0344 61.2278 41.1151 58.1806C49.1957 55.1335 57.8565 53.5651 66.603 53.5651C75.3494 53.5651 84.0102 55.1335 92.0909 58.1806C100.172 61.2277 107.514 65.694 113.698 71.3244C119.883 76.9548 124.789 83.639 128.136 90.9955C131.307 97.9647 133.02 105.408 133.192 112.942C133.208 113.636 132.643 114.199 131.949 114.199L66.603 114.199L1.25655 114.199Z"/>
+        <path class="cat-part" d="M106.502 97.5488H162.738H218.974L224 114.2H106.502L106.502 97.5488Z"/>
+        <path class="cat-part" d="M4.86957 29.2647L53.7223 29.2646L79.0126 114.199H0L4.86957 29.2647Z"/>
+        <path class="cat-part" d="M5.78129 11.8067C5.79402 11.552 6.08888 11.4178 6.2893 11.5755L28.6753 29.1858C28.9082 29.369 28.7813 29.7431 28.4851 29.7469L5.20365 30.0453C5.0224 30.0477 4.87679 29.8966 4.88585 29.7155L5.78129 11.8067Z"/>
+        <path class="cat-part" d="M52.0525 11.7806C52.0276 11.5316 51.7357 11.4102 51.5416 11.5682L29.8893 29.1887C29.6615 29.3741 29.7899 29.7428 30.0836 29.7465L53.5278 30.0452C53.7152 30.0475 53.8631 29.8863 53.8444 29.6998L52.0525 11.7806Z"/>
+        <g class="cat-eye" data-eye><circle class="cat-iris" cx="19.0399" cy="40.3197" r="5.6"/><circle class="cat-pupil" cx="16.2401" cy="38.64" r="1.68"/></g>
+        <g class="cat-eye" data-eye><circle class="cat-iris" cx="39.2001" cy="40.3197" r="5.6"/><circle class="cat-pupil" cx="36.4002" cy="38.64" r="1.68"/></g>
       </svg>
     </div>
     <div class="contact-foot" aria-hidden="true">

@@ -176,6 +176,14 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 .tl-title { grid-column: 1; padding-right: 80px; }
 .tl-text { grid-column: 2; padding-left: 80px; max-width: 680px; }
 .tl-step .figure { position: absolute; top: 80px; left: calc(50% - 24px); z-index: 1; background: var(--sky); }   /* the line stops behind the figure, so its gaps read as in the SVG */
+/* Travelling figure (home-anim.js adds .is-anim): one figure in a track as long as the line; it is sticky in the middle
+   of the screen, so it travels down the line and stops at its end. Its pieces come from the static step figures. */
+.how.is-anim .tl-step .figure { display: none; }
+.tl-track { --run: 48px; position: absolute; top: 80px; bottom: 0; left: calc(50% - var(--run) / 2); width: var(--run); z-index: 1; pointer-events: none; }
+.tl-runner { position: sticky; top: calc(50vh - var(--run) / 2); width: var(--run); height: var(--run); background: var(--sky); }   /* hides the line behind it */
+.run-piece { position: absolute; display: block; }
+.run-piece svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--red); overflow: visible; }
+
 /* Curved bottom edge: it overhangs the section and rises over the footer */
 .how-curve { position: absolute; top: calc(100% - 1px); left: 0; display: block; width: 100%; height: clamp(40px, 5vw, 72px); fill: var(--sky); }
 
@@ -253,6 +261,7 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
   .tl-title, .tl-text { grid-column: 1; padding: 0; }
   .tl-text { margin-top: 16px; }
   .tl-step .figure { left: 0; top: 52px; }
+  .tl-track { --run: 36px; top: 58px; left: 6px; }   /* smaller, on the line at the left */
 
   .contact { padding: 56px var(--gutter) 32px; }
   .cat { position: static; width: 120px; margin: 32px 0 0 auto; }

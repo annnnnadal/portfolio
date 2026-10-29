@@ -104,6 +104,7 @@ Diseño en Figma: Wireframes, nodo `34:101` ("Homepage — Desktop 1443", 1440 p
   - **Transiciones de cuadrados:** los cuadrados de cada borde pixelado aparecen uno a uno, escalando de 0 a 1 (`power2.out`, sin rebote), escalonados por columna (de la derecha hacia dentro) con un poco de aleatoriedad fija, y ligados al scroll (`scrub: 0.6`) mientras la sección pasa del 40 % de la pantalla a su borde superior. El estado final es exactamente el diseño estático. Arriba de Case studies (rojo que sube al crema) crecen desde abajo; arriba de How I work los cuadrados son rojos y cuelgan de Brands, así que crecen desde arriba, desde el borde. Se miden después del pin de Principles (`refreshPriority: -1`).
   - **Principles, de uno en uno:** la sección se fija bajo la cabecera durante unos 100vh por principio (80vh en móvil). Solo se ve un principio: el que sale se desvanece y sube 24 px, el que entra llega desde 24 px más abajo, con un ligero solape; el número cambia con su texto. Snapping suave a cada principio (al más cercano, 0,4–0,6 s, `power2.inOut`). Entre principios la figura se queda quieta un momento.
   - **La figura se recompone:** una caja (`.morph`, 223 × 233,5 px de Figma, con las tres figuras colocadas como en Figma) con un grupo fijo de 4 piezas (`.morph-piece`, las que necesita la figura más compleja). Se animan posición, tamaño, radios de las esquinas (esquina a esquina, en %) y color, de una figura a la siguiente: escalera → medio disco + círculo → arco. Las piezas que una figura no necesita se quedan exactamente detrás de otra (misma caja, mismo color). Todas empiezan y acaban juntas, con un escalonado mínimo, en línea recta, sin girar y sin pasar sobre el texto; el color cambia rápido, a mitad del movimiento; `power3.inOut`. Cada transición va de un estado dado a otro, así que al volver hacia arriba se deshace igual. Las figuras estáticas de cada principio (las de `images/shapes/`) se ocultan mientras tanto y vuelven sin animaciones.
+  - **How I work, una figura que viaja:** una sola figura baja por la línea central mientras se recorre la sección: va en una pista tan larga como la línea (`.tl-track`) y es `sticky` en el centro de la pantalla (`.tl-runner`), así que se queda centrada, avanza de Listen a Craft y se para al final de la línea. Siempre tiene tantas piezas como el paso actual (de 1 a 5), de un grupo fijo de 5 piezas hechas con los trazos de las figuras estáticas (en Craft, cada esquina, pétalo grande y pequeño, es una pieza, más el círculo). Al cruzar el título de un paso (ScrollTrigger, sin scrub), las piezas que ya estaban se deslizan a su sitio (0,5 s, `power3.out`) y la nueva aparece (escala 0 → 1, 0,4 s, `back.out(1.6)`); hacia arriba, la última se va (escala a 0) y las demás vuelven. El paso activo, título y texto, al 100 %; los demás al 40 %, con un fundido de 0,3 s. Las figuras estáticas de cada paso se ocultan mientras tanto. En móvil, la figura es más pequeña (36 px) y viaja por la línea de la izquierda. Con `prefers-reduced-motion`, cada paso muestra su figura estática sobre la línea.
 - **Móvil (hasta 860 px):** una columna; principios con la figura encima del texto; línea de tiempo a la izquierda; una card por fila; el marquee sigue moviéndose; el gato más pequeño.
 
 **Dos niveles de lectura**
@@ -206,17 +207,17 @@ En la home, How I work es una línea de tiempo (ver "Home (v2)"): la frase "How 
 
 Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas de caso").
 
-| Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
+| Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (card de la home: resa-thumbnail; "siguiente proyecto": resa-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI · 2025 |
-| — | Signify | Coming soon (sin página) | — | Brand strategy, UX/UI · 2024 |
-| Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
-| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail: oros-poster; galería: todas) | Brand identity & website · 2021 |
-| Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
-| Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI · 2017–2022 |
-| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction · 2026 |
+| Show the direction | Resa | Completo | images/resa (card de la home: resa-thumbnail; "siguiente proyecto": resa-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI |
+| — | Signify | Coming soon (sin página) | — | Brand strategy, UX/UI |
+| Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI |
+| Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail: oros-poster; galería: todas) | Brand identity & website |
+| Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity |
+| Keep it compelling | Havaianas | Craft | images/havaianas | Campaign adaptation for EMEAI |
+| Keep it clean | A guide for newcomers to Spain | Proceso (NDA) | images/generated (líneas) | UX strategy, content structure, UI, art direction |
 
-En las cards va solo el tipo de proyecto, no la posición.
+En las cards va solo el tipo de proyecto, sin la posición y sin años. Ningún caso lleva años: ni las cards de la home, ni el acceso "siguiente proyecto", ni la línea de datos de cada página de caso (los años que forman parte del texto, como "Q4 2026" o "in 2021", se quedan).
 
 **Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (salvo Resa, que usa una selección) (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-thumbnail` (660×354) en la card de la home y `resa-thumb` (1600×1200) en el acceso "siguiente proyecto"; ninguna está en la galería (`resa-mockup-thumb` se conserva sin usar); en los demás casos la miniatura es también la primera imagen de la galería.
 
@@ -239,7 +240,7 @@ En las cards va solo el tipo de proyecto, no la posición.
 
 **Nivel 2**
 
-> Design Lead · Brand strategy, UX/UI · With SEO, content strategy, data and an external development team · 2025
+> Design Lead · Brand strategy, UX/UI · With SEO, content strategy, data and an external development team
 >
 > **Challenge**
 > Resa runs university residences across Spain. Students stay for the academic year, and when rooms are free, travellers book them like a hotel. Each business had its own website and its own identity, and Resa wanted one.
@@ -343,7 +344,7 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 
 **Nivel 2**
 
-> Brand Designer, co-lead · Brand identity, web design, art direction · With the creative director, an illustrator, a copywriter and an external development team · 2021
+> Brand Designer, co-lead · Brand identity, web design, art direction · With the creative director, an illustrator, a copywriter and an external development team
 >
 > **Challenge**
 > Oros designs tailor-made performance tours in Spain for orchestras, bands and choirs, mostly from the United States, but also from Latin America and Europe. After twenty years working alongside his parents, Nacho took over the family business and added a word to its name: culture.
@@ -390,7 +391,7 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 
 **Nivel 2**
 
-> Campaign adaptation for EMEAI, 2017–2022
+> Campaign adaptation for EMEAI
 >
 > I led the team adapting each Havaianas campaign for the EMEAI market: key visuals, retail spaces, final artwork, and motion for stores and social media. Knowing each campaign in depth let us protect the details that make it work in every format. When the brand renewed its identity in 2021, we also brought it to their Madrid headquarters.
 

@@ -134,6 +134,123 @@
     mm.add("(max-width: 860px) and " + MOTION, function () { return build(0.8); });
   }
 
+  /* ---------- 3. How I work: one figure travels down the line ---------- */
+
+  var how = document.querySelector(".how");
+  var steps = how ? Array.prototype.slice.call(how.querySelectorAll(".tl-step")) : [];
+  if (how && steps.length === 5) {
+    /* Which pieces of each static figure make each of the 5 pool pieces (indices in the SVG's order).
+       Craft's drawing has 9 paths: each corner pair (big petal + small corner) is one piece, plus the circle. */
+    var MAP = [
+      [[0]],                                   // Listen: 1
+      [[1], [0]],                              // Discover: top half, bottom half
+      [[1], [2], [0]],                         // Plan: big D, middle, thin
+      [[0], [1], [2], [3]],                    // Build together: left, top, right, bottom
+      [[1, 2], [7, 4], [0, 3], [6, 5], [8]]    // Craft: four corners, then the circle
+    ];
+    function num(el, k) { return parseFloat(el.style.getPropertyValue("--" + k)); }
+
+    mm.add(MOTION, function () {
+      how.classList.add("is-anim");
+      var timeline = how.querySelector(".timeline");
+      var track = document.createElement("div");
+      track.className = "tl-track"; track.setAttribute("aria-hidden", "true");
+      var runner = document.createElement("div");
+      runner.className = "tl-runner";
+      track.appendChild(runner);
+      timeline.insertBefore(track, timeline.firstChild);    // first, so .tl-step:last-child still matches
+
+      // Build the pool: each piece has a box per step (in % of the figure) and one svg per step with its shape
+      var pool = [0, 1, 2, 3, 4].map(function () {
+        var el = document.createElement("span"); el.className = "run-piece"; runner.appendChild(el);
+        return { el: el, boxes: [], svgs: [] };
+      });
+      steps.forEach(function (step, n) {
+        var src = Array.prototype.slice.call(step.querySelectorAll(".figure .piece"));
+        MAP[n].forEach(function (parts, i) {
+          var l = 1e9, t = 1e9, r = -1e9, b = -1e9, vx = 1e9, vy = 1e9, vr = -1e9, vb = -1e9, inner = "";
+          parts.forEach(function (k) {
+            var pc = src[k], vb4 = pc.getAttribute("viewBox").split(" ").map(Number);
+            l = Math.min(l, num(pc, "l")); t = Math.min(t, num(pc, "t"));
+            r = Math.max(r, num(pc, "l") + num(pc, "w")); b = Math.max(b, num(pc, "t") + num(pc, "h"));
+            vx = Math.min(vx, vb4[0]); vy = Math.min(vy, vb4[1]); vr = Math.max(vr, vb4[0] + vb4[2]); vb = Math.max(vb, vb4[1] + vb4[3]);
+            inner += pc.innerHTML;
+          });
+          var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("viewBox", [vx, vy, vr - vx, vb - vy].join(" "));
+          svg.setAttribute("preserveAspectRatio", "none");
+          svg.innerHTML = inner;
+          pool[i].el.appendChild(svg);
+          pool[i].boxes[n] = { left: l + "%", top: t + "%", width: (r - l) + "%", height: (b - t) + "%" };
+          pool[i].svgs[n] = svg;
+        });
+      });
+
+      var titles = steps.map(function (st) { return st.querySelector(".tl-title"); });
+      var texts = steps.map(function (st) { return st.querySelector(".tl-text"); });
+      var current = 0;                                          // index of the step shown (0 = Listen)
+
+      function showShape(p, n, fade) {
+        p.svgs.forEach(function (svg, k) { if (svg) gsap.to(svg, { opacity: k === n ? 1 : 0, duration: fade ? 0.2 : 0, overwrite: true }); });
+      }
+      function setStep(n, instant) {
+        if (n === current && !instant) return;
+        pool.forEach(function (p, i) {
+          var needed = i <= n, had = i <= current && !instant;
+          if (needed) {
+            var box = p.boxes[n];
+            if (had) {
+              // An existing piece glides to its new place and takes its new shape
+              gsap.to(p.el, Object.assign({ duration: instant ? 0 : 0.5, ease: "power3.out", overwrite: "auto" }, box));
+              showShape(p, n, !instant);
+            } else {
+              // A new piece pops in where it belongs
+              gsap.set(p.el, Object.assign({ display: "block" }, box));
+              showShape(p, n, false);
+              gsap.fromTo(p.el, { scale: 0 }, { scale: 1, duration: instant ? 0 : 0.4, ease: "back.out(1.6)", overwrite: "auto" });
+            }
+          } else if (i <= current || instant) {
+            // Scrolling back: the last piece leaves
+            gsap.to(p.el, { scale: 0, duration: instant ? 0 : 0.3, ease: "power2.in", overwrite: "auto",
+              onComplete: function () { gsap.set(p.el, { display: "none" }); } });
+          }
+        });
+        current = n;
+        // The active step at full opacity, the others at 40 %
+        titles.concat(texts).forEach(function (el, k) {
+          gsap.to(el, { opacity: (k % 5) === n ? 1 : 0.4, duration: instant ? 0 : 0.3, overwrite: "auto" });
+        });
+      }
+      pool.forEach(function (p) { gsap.set(p.el, { display: "none", scale: 0, transformOrigin: "50% 50%" }); });
+      setStep(0, true);
+
+      // A step starts when the figure (sticky, centred in the screen) crosses its title
+      var triggers = steps.slice(1).map(function (st, k) {
+        return ScrollTrigger.create({
+          trigger: st.querySelector(".tl-title"),
+          start: function () { return "top " + Math.round(window.innerHeight / 2 - runner.offsetHeight / 2) + "px"; },
+          onEnter: function () { setStep(k + 1); },
+          onLeaveBack: function () { setStep(k); }
+        });
+      });
+      // After a refresh (resize, load), show the step that matches the scroll position, without animation
+      function sync() {
+        var n = 0;
+        triggers.forEach(function (t, k) { if (t.progress > 0 || window.scrollY >= t.start) n = k + 1; });
+        setStep(n, true);
+      }
+      ScrollTrigger.addEventListener("refresh", sync);
+
+      return function () {
+        ScrollTrigger.removeEventListener("refresh", sync);
+        triggers.forEach(function (t) { t.kill(); });
+        track.remove();
+        gsap.set(titles.concat(texts), { clearProps: "opacity" });
+        how.classList.remove("is-anim");
+      };
+    });
+  }
+
   // The footer spacer and the fonts change the page height after load: measure again then
   window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });

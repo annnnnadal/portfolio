@@ -7,7 +7,7 @@ Este archivo es el brief del portfolio de Ana Nadal. Léelo entero antes de cada
 - **Stack:** web estática con HTML, CSS y JavaScript sin frameworks. Debe desplegarse en Vercel sin configuración.
 - **Idioma de la web:** inglés. Usa los textos de este documento tal cual; no reescribas el copy sin pedir permiso.
 - **Niveles de lectura:** el Nivel 1 siempre visible; el Nivel 2 se despliega al interactuar (por ejemplo, con `<details>` o un botón accesible).
-- **Dirección visual:** manda la sección "Dirección visual (v1)": DM Sans, blanco y negro, retícula de 12 columnas, detalles en las esquinas, líneas finas. En la v1 no hay gradientes ni color.
+- **Dirección visual:** la home sigue la sección "Home (v2)" (crema, rojo y formas planas de color, diseño en Figma). Las páginas de caso siguen "Dirección visual (v1)": DM Sans, negro y blanco, retícula de 12 columnas, líneas finas.
 - **Imágenes:** están en `/images`, una subcarpeta por proyecto. Optimízalas para web. Esquinas rectas, sin sombras.
 - **Reglas:** respeta siempre la sección "Reglas, confidencialidad y backlog".
 - **Forma de trabajar:** construye sección por sección. Antes de cambios grandes, explica brevemente qué vas a hacer.
@@ -53,20 +53,19 @@ Un portfolio minimalista que muestra cómo trabajo, no solo lo que he hecho. Obj
 
 Una one-page con los tres principios como eje, y una página ligera por caso de estudio.
 
-**Orden de la home**
+**Orden de la home** (ver "Home (v2)")
 
 1. About
-2. Principles, con sus casos de estudio dentro (cada principio lleva sus proyectos)
-3. How I work
-4. Contact
+2. Principles
+3. Case studies (y, en el mismo fondo rojo, "Brands I've designed for")
+4. How I work
+5. Contact (footer fijo que se descubre al final)
 
-Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work y Contact (en el menú de la cabecera, "01 — About"). Kept / Cut, Evidence y Now ya no están en la web (su copy se conserva al final, en "Copy retirado de la web").
+Los capítulos del menú de la cabecera son "01 — About", "02 — Principles", "03 — Case studies", "04 — How I work" y "05 — Contact". Kept / Cut, Evidence y Now ya no están en la web (su copy se conserva al final, en "Copy retirado de la web").
 
 **Orden de los principios:** Show the direction, Keep it compelling, Keep it clean.
 
-**Parallax en las miniaturas:** la imagen de cada card es un 30 % mayor que su marco (`scale: 1.3`) y se desplaza un 12 % de la altura del marco en cada sentido (`shift: 0.12`, constante `PX` de `script.js`) mientras la card cruza el viewport, sin dejar bordes vacíos. No se aplica con `prefers-reduced-motion`.
-
-**Casos dentro de cada principio:** bajo el texto del principio hay un título pequeño "Case studies" y una fila de cards (máximo 3 en horizontal en escritorio, 2 en tablet y 1 en móvil). Cada card lleva miniatura, nombre del proyecto, tipo de proyecto y año. Los proyectos en curso llevan un label "WIP" con un punto que pulsa. Al hacer clic en una card se abre la página del caso (ver "Páginas de caso"), con un fundido de toda la página.
+**Parallax en las miniaturas:** la imagen de cada card con imagen de Case studies es un 30 % mayor que su marco (`scale: 1.3`) y se desplaza un 12 % de la altura del marco en cada sentido (`shift: 0.12`, constante `PX` de `script.js`) mientras la card cruza el viewport, sin dejar bordes vacíos. No se aplica con `prefers-reduced-motion`.
 
 **Páginas de caso:** cada caso tiene su propia página y su id: `/case/resa/`, `/case/ai-tools/`, `/case/oros/`, `/case/mr-sunday/`, `/case/havaianas/`, `/case/newcomers-guide/`. Cada una es un `index.html` estático dentro de `case/<id>/`, con rutas absolutas a `/styles.css`, `/script.js` y `/images`.
 
@@ -80,23 +79,26 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 - **Visor:** al hacer clic en una miniatura se abre un `<dialog>` modal (`aria-modal`, foco atrapado, botones con etiqueta): la imagen centrada, con su proporción, lo más grande posible sin recortes (máximo 90 % del ancho y del alto, caption incluido), sobre la página difuminada (`::backdrop` con `backdrop-filter: blur` y una capa semitransparente del color de fondo). Flechas a izquierda y derecha, teclas ← → y swipe en móvil. Debajo, el caption y el contador ("2 / 6"). Se cierra con la X de arriba a la derecha, con Esc o con un clic fuera de la imagen, y el foco vuelve a la imagen que lo abrió (miniatura de la tira o imagen flotante). Los vídeos se reproducen dentro del visor (sin sonido, en bucle) con el botón redondo de play/pausa; con `prefers-reduced-motion` empiezan en pausa y no hay animación de apertura ni de cambio de imagen. Todo está en `script.js`; las miniaturas llevan los datos del visor en atributos `data-` (`data-full`, `data-caption`, `data-width`, `data-height`, `data-alt` y, en vídeos, `data-video`).
 - **Captions (en el visor):** en Resa, los textos escritos para cada imagen (ver "Galerías actuales"). En Oros, Mr Sunday y Havaianas, el nombre del archivo sin extensión, sin guiones y sin el prefijo de la marca ("identity panel", "typo", "promo window 1"…). Las etiquetas accesibles de las miniaturas siguen el formato "Open image 3 of 17: caption".
 - **Estructura del texto:** principio, título, frase de Nivel 1, línea de datos y los bloques del caso (Challenge, Direction, Solution…), igual que en el brief.
-- **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, al principio al que pertenece el caso (no al inicio de la home), con el mismo fundido. Se abra el caso desde la home, desde otro caso ("siguiente proyecto") o desde un enlace directo, la "x" lleva siempre a su principio: Resa y AI tools a `/#principle-direction` (Show the direction), Oros, Mr Sunday y Havaianas a `/#principle-compelling` (Keep it compelling) y Newcomers a `/#principle-clean` (Keep it clean); el principio queda con su regla superior justo bajo la cabecera y sus cards a la vista. La home tiene esos tres `id` y `guide.js` vuelve a alinear el destino tras medir el layout (el About fijo y Contact añaden altura por encima) hasta que la persona hace scroll o pasan 2,5 s. Funciona también sin View Transitions.
+- **Cerrar:** una "x" arriba a la derecha, en la cabecera, cierra el caso y vuelve a la home, a Case studies, con el mismo fundido. Las páginas de caso enlazan a `/#principle-direction` (Resa y AI tools), `/#principle-compelling` (Oros, Mr Sunday y Havaianas) y `/#principle-clean` (Newcomers); en la home esos tres `id` están al inicio de Case studies, que queda justo bajo la cabecera.
 - **Siguiente proyecto:** si el principio tiene más de un proyecto, al final de la página hay un acceso directo al siguiente, con miniatura y el mismo fundido. El último vuelve al primero del principio. Keep it clean tiene un solo caso y no lleva acceso.
 - **Transición:** un fundido suave de toda la página, de unos 250 ms, en los dos sentidos (home ↔ caso y caso ↔ caso), con View Transitions entre documentos (`@view-transition { navigation: auto }`, solo CSS). Sin soporte del navegador, o con `prefers-reduced-motion`, se navega sin animación.
 
-**Línea guía (solo en la home):** concepto "I turn noise into direction". Una línea de 3 px en #0044FF (el color de la web; el resto de líneas de la web son de 1 px, salvo los grosores propios de cada SVG) que se dibuja con el scroll como un hilo que crece hacia abajo. Su extremo inferior va a la altura de la mitad del viewport. Implementación: `guide.js` (SVG + `requestAnimationFrame`, sin librerías), cargado solo en `index.html`. Las páginas de caso no la llevan. Todo el trazado, la flor y la figura final son #0044FF.
+## Home (v2)
 
-- **Recorrido en escritorio:** baja por el eje de la flor (el centro de las cuatro últimas columnas; la tercera línea del grid desde la derecha) y dibuja la flor → al llegar a la línea que hay bajo el título "Principles" (la regla superior del principio 01) gira a la izquierda, superpuesta a esa línea → llega a la primera línea del grid (el borde izquierdo de la retícula, x = 40 px a 1440) y baja por ella sin más cambios de lado, atravesando Principles, How I work y Contact. No hay tramo hacia la derecha en How I work ni vertical por la derecha.
-- **Flor (`images/flower.svg`, en línea):** volteada: su base está abajo y se abre hacia arriba; el tallo recto central es la propia línea guía. Ocupa cuatro columnas de ancho, en las cuatro últimas, con su eje sobre la línea guía. Tiene su propia línea base, que no pasa del ancho del dibujo. Dos grosores, constantes a cualquier tamaño: 1 px en anillos y abanico y 2,5 px en la línea base y los arranques gruesos junto a la base (`.heavy`; `guide.js` calcula `--fsw`). La línea baja por el tallo hasta la base; entonces, con el scroll, se dibujan de forma consecutiva la base (desde el centro hacia los lados), los anillos (`#flower-rings`) y después el abanico (`#flower-fan`), cada grupo por `data-order`, con las dos mitades creciendo a la vez desde la base. Después la línea sigue hacia abajo, hasta Principles.
-- **Contact (sticky) y onda (`images/closing-wave.svg`, en línea):** al llegar al título "Contact", la sección se queda fija bajo la cabecera (si es más alta que el viewport, se fija por abajo). La línea guía llega al extremo izquierdo de la onda, donde arranca su línea de 3 px (en el SVG, en x = 0, abajo a la izquierda; las demás líneas pasan por arriba a unos 13 px del borde), y desde ahí el scroll dibuja la onda de izquierda a derecha con `stroke-dashoffset`: primero la de 3 px y, con un retraso escalonado (7 % del recorrido), las de 2, 1,5, 1,5 y 0,5 px. La onda ocupa todo el ancho de la retícula (viewBox 1360×170, `preserveAspectRatio="none"`, 170 px de alto) y cada línea mantiene el grosor del archivo (`vector-effect: non-scaling-stroke`, por lo que `guide.js` mide en píxeles de pantalla el largo de cada trazo). Cada línea son dos trazos solapados, recorridos de izquierda a derecha. La página termina cuando la onda está completa, sin espacio sobrante.
-- **About fijo mientras se forma la flor:** con el scroll, About se queda quieto (sticky) mientras la línea baja por el tallo y se dibuja la flor entera; cuando está completa, About se suelta y la página sigue hacia Principles. En `prefers-reduced-motion` no se fija.
-- **Pausas:** mientras se dibuja un cambio de lado o un cambio de lado, el extremo se queda parado y el scroll sigue; después la línea acelera hasta recuperar la mitad del viewport.
-- **Vibración:** al acercar el cursor o el dedo, el tramo cercano se deforma y oscila como una cuerda pulsada, y se amortigua en menos de un segundo. La línea tiene `pointer-events: none`; la vibración se detecta con eventos de la ventana.
-- **Móvil (hasta 860 px):** no hay tramo de bajada por el margen ni giro hacia el centro. El punto de inicio es la propia flor, a ancho completo bajo el texto de About: con el scroll (desde el primer scroll si la flor ya se ve entera al cargar; si no, en cuanto se ve entera) About se queda fijo y se dibujan la línea base (desde su centro hacia los lados), los anillos y el abanico, igual que en escritorio. Con la flor completa, la línea guía sale del extremo izquierdo de la línea base, superpuesta a ella, y baja por el margen izquierdo (el borde izquierdo de la retícula, 3 px) durante toda la página, hasta el extremo izquierdo de la onda. Hasta que el centro del viewport alcanza la base de la flor, la línea espera; luego sigue la regla normal.
-- **Onda en móvil:** misma onda, sin espejar ni estirar: `preserveAspectRatio="xMinYMid slice"`, 110 px de alto y todo el ancho disponible, así que se ve solo el tramo izquierdo (recortado a la derecha). Se dibuja de izquierda a derecha, como en escritorio, con `vector-effect: non-scaling-stroke`. `guide.js` pone el atributo según el breakpoint y calcula la escala en pantalla.
-- **Rendimiento (importante, sobre todo en móvil):** `guide.js` no lee medidas del DOM en el scroll ni en `requestAnimationFrame`; en el scroll solo actualiza estilos. Mide al cargar y en cambios reales (`resize` con otro ancho o más de 120 px de alto; el `ResizeObserver` del body), con debounce de 120 ms: la animación de los desplegables cambia la altura de la página durante medio segundo y las barras del navegador cambian el alto del viewport al hacer scroll, y nada de eso debe volver a medir. La onda se muestrea a partir de los datos de sus propios trazos (no con `getPointAtLength`, que costaba ~0,5 s por medición). Causa del tirón que había: cada `setup()` costaba ~2,3 s con CPU 4x y se lanzaba 3 veces al cargar y 3 por cada desplegable. Ahora quedan 2 tareas largas al cargar (≤ 190 ms a 4x) y ninguna al desplegar ni al hacer scroll.
-- **`prefers-reduced-motion`:** línea, flor y onda completas, estáticas y sin vibración; Contact sin recorrido extra; About no se fija.
-- **Decidido:** la vertical izquierda puede cruzar el título "How I work" (ahora no lo cruza: va por el borde de la retícula).
+Diseño en Figma: Wireframes, nodo `34:101` ("Homepage — Desktop 1443", 1440 px). Archivos: `index.html`, `home.css` (solo la home, todo bajo `body.home`) y `home.js` (footer y gato); `styles.css` queda para lo compartido (base, cabecera, páginas de caso). La línea guía (`guide.js`), la flor y la onda se quitaron de la home (`images/flower.svg` y `images/closing-wave.svg` se conservan sin usar). Esta versión monta la estructura y las interacciones sencillas; las animaciones complejas llegan después, así que todo está hecho por piezas sueltas, fáciles de animar.
+
+- **Tokens:** crema #F5F5F2 · rojo #CD2605 · rojo oscuro #A41E04 · lima #E9FFAA · azul claro #DDE7FF · granate #490000. Formas: rosa #FF91C2, amarillo #FFC400, verde #007923, azul #0042E5, lila #987FFF. Tipos (DM Sans, todos fluidos con `clamp()`): label 11/1 medium mayúsculas · lead 22/30.8 · H3 40/40.8 medium −1.4 · H2 74.88/71.14 medium −3.37 · título de card 25.92/28.51 medium −0.78 · enlace 24/37.2 · titular del hero ≈150 px.
+- **Cabecera:** la de siempre (hora de Madrid y menú de capítulos), en crema con texto rojo.
+- **About (crema, texto rojo):** label "Ana Nadal — Product & brand design lead", titular "I turn noise / into direction" y el párrafo de About. Cinco formas planas alrededor del texto, nunca encima: píldora rosa con "Hi!" en azul (arriba a la izquierda, −25°), rombo amarillo (izquierda), medio disco verde (derecha, girado), triángulo lila (derecha) y círculo azul (abajo a la izquierda). Cada forma es un único elemento con su id (`#shape-pill`, `#shape-diamond`, `#shape-half`, `#shape-triangle`, `#shape-circle`) colocado en px de Figma a 1440 (`--x`, `--y`, `--w`, `--h`, escalados con `--s`), pensado para animarse y convertirse en un juego de físicas. En móvil van en una banda encima y otra debajo del texto.
+- **Principles (crema, texto rojo):** label "Principles" y los tres principios apilados (número, título, texto) con su figura a la derecha: 01 escalera amarilla de 4 peldaños, 02 círculo azul sobre medio disco verde, 03 arco rosa. Cada figura es una caja cuadrada (`.figure`) con piezas sueltas (`.piece`, con `--l`, `--t`, `--w`, `--h` en % de la caja, `--c` color y `--r` giro): escalera = 4 rectángulos; compelling = medio disco + círculo; clean = 2 patas + medio anillo. Así otra versión puede mover las piezas de una figura a otra. En móvil la figura va encima del texto.
+- **Case studies (fondo rojo, texto y bordes de 1 px en lima):** label "Case studies"; rejilla 2×2: Resa (`images/resa/resa-thumbnail.webp`), Signify (sin página ni imagen: caja #A41E04 con borde lima y "Coming soon" en cursiva, centrado), Oros Travel & Culture (`oros-poster`) y Mr Sunday (`mr-sunday-logo`). Debajo, el badge "● WIP" (el punto pulsa) y dos cards pequeñas con borde, sin imagen todavía: AI tools for corporate bankers y A guide for newcomers to Spain. Havaianas ya no está en la home (su página sigue existiendo). En móvil, una card por fila.
+- **Brands I've designed for (mismo rojo):** fila de logos de `/images/logos/` (Amadeus, Signify, BBVA, Havaianas, Avolta, Santander, Loewe; ya en lima) separados por líneas verticales de 1 px en lima, que se mueve sin parar de derecha a izquierda (animación CSS; el conjunto va duplicado para que el bucle no tenga corte). Se para al pasar el ratón; con `prefers-reduced-motion` no se mueve.
+- **Bordes pixelados:** donde acaba el crema y empieza el rojo de Case studies, y donde empieza How I work, el borde es escalonado, de cuadrados (`.pixel-edge` con `.px`, colocados con `--x` / `--y` en cuadrados de 80 px a 1440). Arriba de Case studies suben hacia el crema; arriba de How I work cuelgan hacia el azul. Por ahora son estáticos; se animarán después.
+- **How I work (azul claro, texto rojo):** H2 "How I work", la frase de introducción y una línea de tiempo: línea roja de 1 px en el centro, títulos a la izquierda (Listen, Discover, Plan, Build together, Craft; sin "Always") y los textos de Nivel 2 a la derecha. Sobre la línea, la figura de cada paso (estática por ahora), con tantas piezas como su número (de 1 a 5), hechas igual que las de los principios. El borde inferior de la sección es una curva ancha hacia abajo (`.how-curve`). En móvil la línea va a la izquierda.
+- **Contact (footer, granate):** label "Contact", "Let's talk" enorme en rojo, enlaces rojos subrayados (email y LinkedIn), y abajo la marca "Concept by human / Made by AI" y la pastilla "© 2026" con sus iconos (los SVG de siempre, en rojo con `mask`). A la derecha, un gato negro sentado con los ojos rojos.
+- **Footer que se descubre:** el footer está fijo debajo de la página (`position: fixed`, z-index 0); todo lo de encima tiene su fondo y va por encima (`main`, z-index 1). Al final hay un espacio transparente (`.footer-spacer`, tan alto como el footer, medido por `home.js`), así que How I work, con su curva, sube como un telón y descubre el footer. Si el footer es más alto que la pantalla, deja de ser fijo y sigue a la página, para que nunca quede nada oculto.
+- **Gato:** las pupilas siguen al cursor (solo se mueven las pupilas, dentro del ojo, con suavizado `lerp`); en pantallas táctiles miran hacia el último toque; sin interacción miran al frente. Con `prefers-reduced-motion` se quedan en el centro.
+- **Móvil (hasta 860 px):** una columna; principios con la figura encima del texto; línea de tiempo a la izquierda; una card por fila; el marquee sigue moviéndose; el gato más pequeño.
 
 **Dos niveles de lectura**
 
@@ -119,15 +121,15 @@ Los capítulos se numeran del 01 al 04 y se llaman About, Principles, How I work
 
 ## Dirección visual (v1)
 
-Versión sencilla para presentar ya: tipografía protagonista, retícula visible y líneas finas, en azul #0044FF sobre blanco roto.
+Se aplica a las páginas de caso (la home sigue "Home (v2)"). Versión sencilla para presentar ya: tipografía protagonista, retícula visible y líneas finas, en azul #0044FF sobre blanco roto.
 
 - **Tipografía:** DM Sans (Google Fonts). Jerarquía muy marcada: titulares enormes y ajustados, texto de lectura pequeño y limpio, etiquetas en mayúsculas pequeñas.
 - **Color:** fondo blanco roto y todo lo demás en azul #0044FF: texto, líneas, retícula y figuras SVG. Las páginas de caso son negro con blanco.
 - **Retícula:** 12 columnas, líneas de la retícula de 1 px, visibles y muy finas en algunas secciones, como en un plano. Azul al 4 % de opacidad y siempre en el fondo: las imágenes van por encima. Reglas y bordes, 1 px.
 - **Cabecera:** barra fija con fondo opaco (100 %). A la izquierda, Madrid con la hora local en directo; a la derecha, el número y nombre del capítulo en curso ("03 — How I work"). Al hacer clic en el capítulo se abre un menú con los capítulos para saltar de uno a otro dentro de la página. Sin versión, sin estado y sin nombre en la cabecera.
-- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. La flor de círculos y arcos de `images/flower.svg` y la onda de barras de `images/closing-wave.svg` van en línea (todo es trazo; ver "Línea guía"). Las miniaturas de los casos sin imagen (AI tools, A guide for newcomers) son composiciones de elipses y órbitas de línea fina, SVG de `images/generated/` (`ai-tools.svg` —versión con la mitad de líneas, usada tal cual en escritorio y móvil— y `newcomers-guide.svg`, 1600×1200, con su propia animación CSS al cargar y los grosores del archivo; en la página del caso se ven en blanco con `filter: brightness(0) invert(1)`).
+- **Imágenes abstractas:** composiciones de líneas finas con ritmo y pausas, nunca literales. Las miniaturas de los casos sin imagen (AI tools, A guide for newcomers) son composiciones de elipses y órbitas de línea fina, SVG de `images/generated/` (`ai-tools.svg` —versión con la mitad de líneas, usada tal cual en escritorio y móvil— y `newcomers-guide.svg`, 1600×1200, con su propia animación CSS al cargar y los grosores del archivo; en la página del caso se ven en blanco con `filter: brightness(0) invert(1)`).
 - **Imágenes de proyecto:** esquinas rectas, sin bordes redondeados ni sombras (salvo la sombra suave de las imágenes flotantes de la vista Expanded).
-- **Movimiento:** discreto. En las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (lo hacen al entrar en pantalla). La flor y la línea guía se dibujan con el scroll. El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
+- **Movimiento:** discreto. En las miniaturas generadas cada línea se dibuja por separado, con su propio retraso, para un movimiento fluido y orgánico (lo hacen al entrar en pantalla). El nivel 2 se despliega con suavidad y el punto de WIP pulsa.
 - **Referencias:** clemenceguillemot.com (meta-información, listado editorial numerado) y creativewebmanual.com (retícula, etiquetas tipo código, capítulos numerados). Carteles tipográficos suizos con líneas y números grandes.
 
 ## Copy: Hero
@@ -156,7 +158,7 @@ Un solo nivel de lectura. En la web, los títulos de los principios van sin punt
 
 ## Copy: How I work
 
-En la web los pasos van sin numeración. Cada paso es un desplegable: el Nivel 1 siempre visible y el Nivel 2 al hacer clic, con un símbolo + que aparece al pasar el ratón. "Always" es un paso más de la lista. La lista empieza sin regla sobre "Listen"; el resto de pasos llevan una línea superior de 1 px. Todos los pasos cerrados miden lo mismo (`min-height` de 102 px en escritorio, tengan una o dos líneas de Nivel 1); nombre y texto quedan alineados arriba, a 21 px de la línea; al desplegar el Nivel 2 la fila crece y al cerrar vuelve a 102 px. La frase "How I take a project from the first conversation to the final design." queda visible encima de los pasos, y los textos del Nivel 1 de cada paso tienen el mismo tamaño que esa frase.
+En la home, How I work es una línea de tiempo (ver "Home (v2)"): la frase "How I take a project from the first conversation to the final design." encima, y para cada paso su nombre y su texto de Nivel 2, sin numeración y sin "Always" (su copy se conserva aquí). El Nivel 1 de los pasos no se usa por ahora.
 
 **Nivel 1**
 
@@ -200,7 +202,8 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 | Principio | Caso | Tipo | Carpeta de imágenes | Card: tipo de proyecto · año |
 | --- | --- | --- | --- | --- |
-| Show the direction | Resa | Completo | images/resa (thumbnail: resa-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI · 2025 |
+| Show the direction | Resa | Completo | images/resa (card de la home: resa-thumbnail; "siguiente proyecto": resa-thumb; galería: ver "Galerías actuales") | Brand strategy, UX/UI · 2025 |
+| — | Signify | Coming soon (sin página) | — | Brand strategy, UX/UI · 2024 |
 | Show the direction | AI tools for corporate bankers | Proceso (NDA), WIP | images/generated (líneas) | Conversation design, UX/UI · 2026 |
 | Keep it compelling | Oros Travel & Culture | Craft | images/oros (thumbnail: oros-poster; galería: todas) | Brand identity & website · 2021 |
 | Keep it compelling | Mr Sunday | Craft | images/mr-sunday | Brand identity · 2024 |
@@ -209,7 +212,7 @@ Cada caso vive dentro de su principio y tiene su propia página (ver "Páginas d
 
 En las cards va solo el tipo de proyecto, no la posición.
 
-**Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (salvo Resa, que usa una selección) (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-thumb` (1600×1200), que no está en la galería (`resa-mockup-thumb` se conserva sin usar); en los demás casos la miniatura es también la primera imagen de la galería.
+**Imágenes de las páginas de caso:** cada página muestra en su galería todas las imágenes de su carpeta (salvo Resa, que usa una selección) (la versión `.webp`; los `.png`, `.jpg`, `.mov` y `.mp4` originales se conservan sin usar). Al añadir una imagen a una carpeta, hay que añadirla también a la galería de su página. La miniatura de la card de la home (y del acceso "siguiente proyecto") es independiente: Resa usa `resa-thumbnail` (660×354) en la card de la home y `resa-thumb` (1600×1200) en el acceso "siguiente proyecto"; ninguna está en la galería (`resa-mockup-thumb` se conserva sin usar); en los demás casos la miniatura es también la primera imagen de la galería.
 
 **Galerías actuales:**
 - **Resa (19), en orden de lectura, de visor y de la tira**, con su sección, su caption y su colocación en Expanded:
@@ -391,13 +394,9 @@ Visuales: la pregunta "Where are you right now?" con las cuatro tarjetas en wire
 >
 > anaonadal@gmail.com · [LinkedIn](https://www.linkedin.com/in/anadal)
 
-Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie. Contact es una sección fija (sticky) donde la línea guía llega a la onda.
+Sin teléfono y sin CV en la web: solo email y LinkedIn. Sin texto de versión ni estado en el pie.
 
-**Maquetación de Contact (escritorio, a 1440 px):** "Let's talk" y los enlaces se alinean ópticamente con la línea del grid del inicio de la columna 4 (x ≈ 380 px), compensando el espacio lateral propio de la letra, no con el texto. La parte superior de "Let's talk" queda 64 px por debajo de la etiqueta "Contact"; los enlaces, 165 px por debajo del inicio de "Let's talk"; la onda empieza 230 px por debajo de los enlaces.
-
-**Footer (dentro de Contact, decorativo, `aria-hidden="true"`):** 28 px bajo la onda, en una fila alineada con la retícula y con su parte inferior a 40 px del final de la página. A la izquierda, `images/cabezas-footer.svg` (solo el icono de las cabezas, 59 × 44) con el texto real en HTML "Concept by human / Made by AI" (DM Sans 11 px, medium, mayúsculas, tracking 0.1em), alineado con la primera línea del grid. A la derecha, alineado con la última línea del grid y con la misma base: la pastilla con borde de 1 px y "© 2026" como texto HTML, y los dos iconos de `images/fecha-icons.svg` (sacados de `fecha-footer.svg`). En móvil se apilan en vertical, alineados a la izquierda: primero el bloque de las cabezas y debajo la pastilla con los iconos, 16 px entre ambos. Las imágenes del footer y los semicírculos llevan `loading="lazy"` y `decoding="async"`.
-
-**Semicírculos (`images/semicircles.svg`, 81 × 136, decorativo):** a la derecha, alineados con la última línea del grid, a caballo entre el final de Principles y el inicio de How I work (empiezan 46 px antes del final de Principles).
+Contact es el footer fijo que se descubre al final (ver "Home (v2)"). El footer decorativo ("Concept by human / Made by AI" con `images/cabezas-footer.svg`, la pastilla "© 2026" y `images/fecha-icons.svg`) lleva `aria-hidden="true"`.
 
 ## Reglas que no se rompen
 

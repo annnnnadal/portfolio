@@ -156,85 +156,8 @@ a:hover { text-decoration-thickness: 2px; }
 
 .section > *:not(.gridlines) { position: relative; z-index: 1; }
 
-/* ---------- Disclosure (Level 2) ---------- */
+/* ---------- Case thumbnails (the "next project" link on case pages, and the home cards) ---------- */
 
-.toggle {
-  display: inline-flex; align-items: center; gap: 0.75rem;
-  padding: 0.65rem 0; background: none; border: 0; border-bottom: 1px solid var(--ink);
-  font: inherit; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink); cursor: pointer; min-height: 2.75rem;
-}
-.toggle:hover { border-bottom-width: 2px; }
-
-.icon { position: relative; width: 0.75rem; height: 0.75rem; flex: none; }
-.icon::before, .icon::after {
-  content: ""; position: absolute; background: currentColor; transition: transform 0.4s var(--ease);
-}
-.icon::before { left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; }
-.icon::after  { top: 0; bottom: 0; left: calc(50% - 0.5px); width: 1px; }
-[aria-expanded="true"] > .icon::after { transform: scaleY(0); }
-
-.panel { display: grid; grid-template-rows: 1fr; }
-.panel > .panel-inner { min-height: 0; overflow: hidden; }
-.js .panel {
-  grid-template-rows: 0fr; visibility: hidden;
-  transition: grid-template-rows 0.55s var(--ease), visibility 0s linear 0.55s;
-}
-.js .panel[data-open] {
-  grid-template-rows: 1fr; visibility: visible;
-  transition: grid-template-rows 0.55s var(--ease), visibility 0s;
-}
-.js .panel > .panel-inner { opacity: 0; transition: opacity 0.4s var(--ease); }
-.js .panel[data-open] > .panel-inner { opacity: 1; transition-delay: 0.12s; }
-
-/* ---------- 01 Hero ---------- */
-
-.hero { padding-top: clamp(3.5rem, 7vw, 6rem); padding-bottom: clamp(3rem, 6vw, 5rem); display: flex; flex-direction: column; }
-.hero > .g { flex: none; }
-/* While the flower forms, About stays still (guide.js sets the wrapper height and the sticky offset). */
-.hero-pin { position: relative; }
-.hero-pin.is-pinned > .hero { position: sticky; min-height: 100svh; }
-.hero .eyebrow { margin-bottom: clamp(1.5rem, 4vw, 3.5rem); }
-.hero-row {
-  position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
-}
-.hero-row .about { grid-column: 1 / 8; padding: 1.25rem var(--pad) 0; }
-/* Flower (images/flower.svg, inline). Its base is the top centre and it opens downwards.
-   Desktop: four columns wide, in the last four columns, so its axis sits on the third grid line from the right, where the guide line runs.
-   Mobile: full width, under the About text. */
-.hero-flower { grid-column: 1 / -1; margin-top: 2rem; color: var(--ink); pointer-events: none; }
-.hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 1); }   /* 1 px: rings and fan (guide.js keeps it at 1 px at any size) */
-.hero-flower .heavy { stroke-width: calc(var(--fsw, 1) * 2.5); }   /* 2.5 px: the base line and the heavy arcs next to the base */
-#flower-axis { stroke: none; }                                      /* the guide line itself runs along the axis */
-.js .hero-flower path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
-.js .closing-wave path { visibility: hidden; }   /* guide.js draws the wave with the scroll */
-@media (min-width: 861px) {
-  .hero-flower { position: absolute; top: 0; left: calc(100% * 2 / 3); width: calc(100% / 3); margin: 0; z-index: 2; }
-}
-/* "About me": always visible, same size as the principle headings. */
-.about {
-  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-}
-
-/* ---------- 02 Principles + case studies ---------- */
-
-.principle { border-top: 1px solid var(--line-strong); padding-top: 1.25rem; padding-bottom: 2rem; }
-.principle .h3 { margin-bottom: 0.9rem; }
-.principle > .span-main > .lead { max-width: 54ch; }
-
-.cards-title { margin-top: 2rem; }
-.cards {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;
-  margin-top: 0.75rem;
-}
-.card-btn {
-  display: block; text-decoration: none; width: 100%; padding: 0; background: none; border: 0;
-  text-align: left; font: inherit; color: inherit; cursor: pointer;
-}
-.card-head { font: inherit; }
 .card-thumb {
   position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden;
   border: 1px solid var(--line-strong); background: var(--bg);
@@ -242,100 +165,8 @@ a:hover { text-decoration-thickness: 2px; }
 .card-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .js .card-btn .card-thumb img { will-change: transform; }   /* small parallax on scroll (script.js) */
 .card-thumb img.gen { object-fit: contain; padding: 2%; }
-.card-thumb img.fit { object-fit: contain; }   /* whole image, centred on the background (Resa) */
-.card-btn:hover .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
-.card-btn:focus-visible { outline: none; }
-.card-btn:focus-visible .card-thumb { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-
-.card-info { display: flex; flex-direction: column; gap: 0.25rem; padding-top: 0.75rem; }
-.card-title { font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
-
-/* WIP label with a pulsing dot */
-.wip {
-  position: absolute; top: 0; left: 0; display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.4rem 0.6rem; background: var(--bg); border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
-  font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1;
-}
-.wip .dot { position: relative; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--ink); }
-.wip .dot::after {
-  content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--ink);
-  animation: pulse 1.8s ease-out infinite;
-}
-@keyframes pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
-
-.figs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
-.figs figure { grid-column: span 6; }
-.figs figure.full { grid-column: 1 / -1; }
-.figs img { width: 100%; height: auto; background: #e8e8e4; border-radius: 0; box-shadow: none; }
-.figs figcaption { margin-top: 0.5rem; }
-
-/* ---------- 03 How I work ---------- */
-
-.steps > li { --bt: 1px; border-top: var(--bt) solid var(--line-strong); }
-.steps > li:first-child { --bt: 0px; }   /* the list starts without a line */
-.step { font-weight: inherit; }
-.step-btn {
-  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: baseline;
-  width: 100%; padding: 1.25rem 0; background: none; border: 0; text-align: left;
-  font: inherit; color: inherit; cursor: pointer;
-}
-.step-btn > * { padding-left: var(--pad); padding-right: var(--pad); }
-.step-btn .name { grid-column: 1 / 7; }
-.step-btn .desc { grid-column: 7 / 12; }
-.step-btn .desc.lead { align-self: center; }
-.step-btn .icon {
-  grid-column: 12 / 13; justify-self: end; align-self: center; margin-right: var(--pad); padding: 0;
-  box-sizing: content-box; opacity: 0; transition: opacity 0.3s var(--ease);
-}
-.step-btn:hover .icon, .step-btn:focus-visible .icon, .step-btn[aria-expanded="true"] .icon { opacity: 1; }
-@media (hover: none) { .step-btn .icon { opacity: 1; } }
-
-.step-detail { padding: 0 0 1.75rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.step-detail > * { grid-column: 1 / 9; padding-left: var(--pad); padding-right: var(--pad); }
-.step-detail .body + .body { margin-top: 0.9em; }
-.step-detail em { font-style: italic; font-weight: 500; }
-
-/* ---------- 04 Contact ---------- */
-
-.contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; margin-left: -0.05em; }
-/* Contact is a stage that stays pinned (sticky) under the header while the scroll draws the guide line and the wave.
-   guide.js gives the section its extra height; it ends exactly when the wave is complete. */
-.contact { padding: 0; }
-.contact > .contact-stage {
-  position: sticky; top: 2.5rem; min-height: calc(100svh - 2.5rem); overflow: hidden;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 40px;
-}
-/* "Let's talk" and the links start on the grid line of column 4 (text indented only by the glyph's own side bearing);
-   "Let's talk" sits 64 px below the label, the links 165 px below the start of "Let's talk". */
-.contact .g > .span-main { padding-left: 0; margin-top: 64px; }
-.contact .display { min-height: 165px; margin: 0 0 0 -0.065em; }
-.finale { position: relative; height: 170px; margin: 230px 0 0; }   /* the wave: the grid's full width, 230 px under the links */
-.closing-wave { display: block; width: 100%; height: 170px; overflow: hidden; }
-.foot {
-  display: flex; justify-content: space-between; align-items: flex-end; margin-top: 28px;
-  position: relative; z-index: 1;
-}
-.foot-left { display: flex; align-items: center; gap: 16px; height: 56px; }
-.foot-left img { display: block; flex: none; }
-.foot-text, .foot-pill {
-  margin: 0; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.5;
-}
-.foot-right { display: flex; align-items: center; gap: 19px; height: 23px; }
-.foot-right img { display: block; flex: none; }
-.foot-pill { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 54px; height: 23px; border: 1px solid var(--ink); border-radius: 12px; line-height: 1; }
-/* Static ornament between Principles and How I work */
-.section > .semicircles { position: absolute; right: var(--gutter); top: calc(100% - 46px); z-index: 2; pointer-events: none; }
-
-/* ---------- Abstract line compositions (SVG) ---------- */
 
 /* ---------- Responsive ---------- */
-
-@media (min-width: 861px) {
-  .step-btn { min-height: calc(102px - var(--bt)); padding: 20px 0 0; align-items: start; }   /* every closed step is 102 px tall; text 21 px under the line */
-  .steps > li:first-child .step-btn { padding-top: 21px; }
-}
 
 @media (max-width: 860px) {
   .span-side, .span-main { grid-column: 1 / -1; }
@@ -343,26 +174,6 @@ a:hover { text-decoration-thickness: 2px; }
   .gridlines { grid-template-columns: repeat(4, 1fr); }
   .gridlines span:nth-child(n+5) { display: none; }
   .gridlines span:nth-child(4) { border-right: 1px solid var(--grid); }
-
-  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hero > .g { order: 1; }
-  .hero > .hero-row { order: 3; }
-  .hero-row .about { grid-column: 1 / -1; }
-  .finale { margin-top: 3rem; height: 110px; }   /* the wave keeps its proportions and shows only its left part (xMinYMid slice) */
-  .closing-wave { height: 110px; }
-  .contact .display { min-height: 0; }
-  .contact .g > .span-main { margin-top: 0; padding-left: var(--pad); }
-  .foot { flex-direction: column; align-items: flex-start; gap: 16px; }   /* heads block, then the © 2026 chip, left aligned */
-
-  .step-btn .name { grid-column: 1 / 11; }
-  .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }
-  .step-btn .icon { grid-column: 11 / -1; grid-row: 1; }
-  .step-detail > * { grid-column: 1 / -1; }
-  .figs figure { grid-column: 1 / -1; }
-}
-
-@media (max-width: 560px) {
-  .cards { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 480px) {
@@ -372,10 +183,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .panel, .js .panel[data-open], .js .panel > .panel-inner,
-  .js .gridlines span, .icon::before, .icon::after, .chev, .chapter-menu,
-  .step-btn .icon { transition: none !important; }
-  .wip .dot::after { animation: none; opacity: 0; }
+  .js .gridlines span, .chev, .chapter-menu { transition: none !important; }
 }
 
 /* ---------- Case study pages ---------- */
@@ -636,14 +444,3 @@ html:not(.js) .video-toggle { display: none; }
 @media (prefers-reduced-motion: reduce) { .video-toggle span { transition: none; } }
 
 .figs figcaption { overflow-wrap: anywhere; }
-
-/* ---------- Guide line (home only) ---------- */
-
-.guide {
-  position: absolute; top: 0; left: 0; z-index: 55; overflow: visible;
-  pointer-events: none;                       /* the line never blocks clicks; guide.js listens on the window */
-}
-.guide path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: miter; }
-.guide path { stroke-linecap: square; }       /* square caps fill the 90° corners */
-.guide-local { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 55; }
-.guide-local path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: square; }

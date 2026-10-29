@@ -622,7 +622,7 @@
 
   /* Header: current chapter + chapter menu. */
   var sectionLabel = document.getElementById("section-label");
-  var sections = document.querySelectorAll("main section[data-label]");
+  var sections = document.querySelectorAll("[data-label]");
   var menuLinks = document.querySelectorAll("#chapter-menu a");
   function setCurrent(section) {
     if (sectionLabel) sectionLabel.textContent = section.dataset.label;

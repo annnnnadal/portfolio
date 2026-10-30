@@ -66,6 +66,18 @@
             <svg class="piece" style="--l:0;--t:0;--w:99.68;--h:99.68;--c:var(--blue)" viewBox="0 0 169.45 169.45" focusable="false"><rect x="44.1484" width="132.856" height="132.856" rx="66.4281" transform="rotate(19.4085 44.1484 0)"></rect></svg>
           </div>
         </div>
+        <!-- The balance game: copy next to the composition, and the play area on the right (hero.js) -->
+        <div class="hero-game">
+          <p class="t-label hero-game-label" aria-live="polite">Touch and play</p>
+          <p class="hero-game-text">As a kid I had a wooden set of coloured shapes and spent hours making endless compositions. Now it’s your turn: drag and drop your own. Don’t lose the balance!</p>
+          <button class="hero-play-btn" type="button" aria-pressed="false">Play</button>
+        </div>
+        <div class="hero-play">
+          <button class="hero-shuffle" type="button" aria-label="Shuffle — a new random composition">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span class="hero-tip" aria-hidden="true">Shuffle — a new random composition</span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -302,6 +314,8 @@
   <script src="home.js" defer></script>
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/matter.min.js" defer></script>
+  <script src="hero.js" defer></script>
   <script src="home-anim.js" defer></script>
 </body>
 </html>

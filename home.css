@@ -81,6 +81,45 @@
   width: calc(var(--w) * var(--s)); height: calc(var(--h) * var(--s));
 }
 
+/* The hero game (hero.js). Each shape gets three nested layers: the game (.sh-play), the composed rotation and
+   scale (.sh-turn) and the floating (.sh-float), so the motions never fight over one transform. */
+.sh-play, .sh-turn, .sh-float { position: absolute; inset: 0; display: block; }
+/* The copy next to the composition, and the play area on the right of the text column (never over the text) */
+.hero-game {
+  position: absolute; z-index: 1;
+  left: calc(960 * var(--s)); bottom: calc(100% - 828 * var(--s)); width: calc(175 * var(--s));
+}
+/* Narrower desktops: not enough room beside the lead, so the copy goes under it, in the text column */
+@media (min-width: 861px) and (max-width: 1399px) {
+  .hero-game { position: relative; left: auto; bottom: auto; width: auto; max-width: calc(690 * var(--s)); margin-top: 32px; }
+}
+.hero-game-label { margin-bottom: 10px; }
+.hero-game-text { font-size: 13px; line-height: 1.35; }
+.hero-play-btn { display: none; }
+.hero-play { position: absolute; left: calc(1145 * var(--s)); top: 0; width: calc(275 * var(--s)); height: calc(828 * var(--s)); pointer-events: none; }
+.hero-shuffle {
+  position: absolute; right: calc(28 * var(--s)); bottom: calc(22 * var(--s)); z-index: 3;
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--red); background: var(--cream); color: var(--red); cursor: pointer; pointer-events: auto;
+  transition: background-color 0.2s, color 0.2s;
+}
+.hero-shuffle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hero-shuffle:focus-visible { background: var(--red); color: var(--cream); }
+@media (hover: hover) { .hero-shuffle:hover { background: var(--red); color: var(--cream); } }
+.hero-shuffle:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.hero-tip {
+  position: absolute; right: 0; bottom: calc(100% + 10px); white-space: nowrap;
+  padding: 6px 10px; background: var(--red); color: var(--cream); font-size: 12px; line-height: 1;
+  opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+}
+.hero-shuffle:focus-visible .hero-tip { opacity: 1; transform: none; }
+@media (hover: hover) { .hero-shuffle:hover .hero-tip { opacity: 1; transform: none; } }
+/* Without JavaScript (or without the game) there is nothing to play */
+html:not(.js) .hero-game, html:not(.js) .hero-play { display: none; }
+.about.is-game .shape .piece { cursor: grab; touch-action: none; }
+.about.is-dragging, .about.is-dragging .shape .piece { cursor: grabbing; }
+.about.is-dragging { user-select: none; -webkit-user-select: none; }
+
 /* ---------- 02 Principles ---------- */
 
 .principles { position: relative; background: var(--cream); padding: 80px var(--gutter) 80px; }
@@ -239,6 +278,24 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
   #shape-diamond { top: auto; bottom: 64px; left: 26px; }
   #shape-circle { top: auto; bottom: 22px; left: calc(50% - 51px); }
   #shape-triangle { top: auto; bottom: 84px; left: auto; right: 34px; }
+  /* With the game: no band above the text; the copy, then the play area with the composition, in the flow */
+  html.js .about-frame { padding-top: 64px; padding-bottom: 48px; }
+  html.js .about .shapes { visibility: hidden; }
+  html.js .about.is-ready .shapes { visibility: visible; }
+  .hero-game { position: relative; left: auto; top: auto; width: auto; min-width: 0; margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .hero-game-label { margin: 0; }
+  .hero-game-text { flex: 1 1 100%; order: 3; max-width: 34em; }
+  .hero-play-btn {
+    display: inline-block; order: 2; padding: 7px 14px; border: 1px solid var(--red); border-radius: 999px;
+    background: transparent; color: var(--red); font: inherit; font-size: 13px; line-height: 1; cursor: pointer;
+  }
+  .hero-play-btn[aria-pressed="true"] { background: var(--red); color: var(--cream); }
+  .hero-play-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  .hero-play { position: relative; left: auto; width: auto; height: 380px; margin-top: 16px; }
+  .hero-shuffle { right: 0; bottom: 0; width: 36px; height: 36px; }
+  .about.is-game .shape .piece { cursor: default; touch-action: auto; }
+  .about.is-playing .shape .piece { cursor: grab; touch-action: none; }
+  .about.is-playing .hero-play { touch-action: none; outline: 1px dashed color-mix(in srgb, var(--red) 40%, transparent); outline-offset: 0; }
 
   .principles { padding: 64px var(--gutter); }
   .principle { display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }

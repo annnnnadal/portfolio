@@ -95,22 +95,25 @@
       gsap.set(texts, { autoAlpha: 0, y: 24 });
       gsap.set(texts[0], { autoAlpha: 1, y: 0 });
 
-      /* Timeline, 3 units long: 01 rests 0–0.4, moves 0.4–1.1, 02 rests 1.1–1.9, moves 1.9–2.6, 03 rests 2.6–3.
-         Snapping goes to the middle of each rest (progress 0, 0.5, 1). */
+      /* Timeline, 3 units long. The rests are at 0, 1.5 and 3 (progress 0, 0.5, 1, where the snapping goes).
+         Between two rests (1.5 units) the change takes 45 % (0.675) and the figure holds for the other 55 %:
+         01 holds 0–0.41, changes 0.41–1.09, 02 holds 1.09–1.91, changes 1.91–2.59, 03 holds 2.59–3. */
       var tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
       tl.set({}, {}, 3);                                     // fixes the length
-      [[0, 1, 0.4], [1, 2, 1.9]].forEach(function (step) {
-        var from = step[0], to = step[1], at = step[2], dur = 0.7;
-        // Text: the outgoing one fades and rises 24 px, the incoming one comes from 24 px below, slightly overlapping
-        tl.to(texts[from], { autoAlpha: 0, y: -24, duration: 0.36, ease: "power2.in" }, at);
-        tl.fromTo(texts[to], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.36, ease: "power2.out", immediateRender: false }, at + 0.3);
-        // Pieces: same start and end for all, a tiny stagger (0.02 of a 0.7 move), straight paths, no rotation
+      var CHANGE = 0.675, HALF = CHANGE / 2;
+      [[0, 1, 0.75 - HALF], [1, 2, 2.25 - HALF]].forEach(function (step) {
+        var from = step[0], to = step[1], at = step[2];
+        // Text, in sequence: the outgoing one fades and rises 24 px in the first half and is gone at the midpoint;
+        // the incoming one comes up from 24 px below in the second half. The number goes with its text.
+        tl.to(texts[from], { autoAlpha: 0, y: -24, duration: HALF, ease: "power2.in" }, at);
+        tl.fromTo(texts[to], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: HALF, ease: "power2.out", immediateRender: false }, at + HALF);
+        // Pieces: the figure recomposes across the whole change; same start and end for all (tiny stagger), straight paths
         // (from → to, both given, so nothing is read from the page and scrolling back is exact)
         STATES[to].forEach(function (s, i) {
           var a = STATES[from][i];
-          tl.fromTo(pieces[i], geometry(a), Object.assign(geometry(s), { duration: dur - 0.06, immediateRender: false }), at + i * 0.02);
+          tl.fromTo(pieces[i], geometry(a), Object.assign(geometry(s), { duration: CHANGE - 0.06, immediateRender: false }), at + i * 0.02);
           // The colour changes in the middle of the movement, quickly, so it never looks muddy
-          tl.fromTo(pieces[i], { backgroundColor: token(a.c) }, { backgroundColor: token(s.c), duration: 0.1, ease: "none", immediateRender: false }, at + dur / 2 - 0.05 + i * 0.02);
+          tl.fromTo(pieces[i], { backgroundColor: token(a.c) }, { backgroundColor: token(s.c), duration: 0.1, ease: "none", immediateRender: false }, at + HALF - 0.05 + i * 0.02);
         });
       });
 
@@ -119,7 +122,7 @@
         start: "top top+=40",                                  // under the topbar
         end: function () { return "+=" + Math.round(window.innerHeight * perPrinciple * 3); },
         pin: true, scrub: 0.5, animation: tl, invalidateOnRefresh: true,
-        snap: { snapTo: [0, 0.5, 1], inertia: false, duration: { min: 0.4, max: 0.6 }, ease: "power2.inOut", delay: 0.08 }
+        snap: { snapTo: [0, 0.5, 1], inertia: false, duration: { min: 0.4, max: 0.6 }, ease: "power2.inOut", delay: 0.3 }   // waits for the scroll to stop: a shorter delay snapped between wheel ticks and played the change as a cut
       });
 
       return function () {
@@ -228,7 +231,7 @@
       var triggers = steps.slice(1).map(function (st, k) {
         return ScrollTrigger.create({
           trigger: st.querySelector(".tl-title"),
-          start: function () { return "top " + Math.round(window.innerHeight / 2 - runner.offsetHeight / 2) + "px"; },
+          start: "top center",                                  // the title crosses the vertical centre, where the figure travels
           onEnter: function () { setStep(k + 1); },
           onLeaveBack: function () { setStep(k); }
         });
@@ -252,6 +255,20 @@
   }
 
   // The footer spacer and the fonts change the page height after load: measure again then
-  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+  /* Measure again whenever the page changes height after the first measurement: when DM Sans arrives from Google
+     Fonts after the scripts ran, every text reflows and the trigger positions would be stale (the steps of How I
+     work would switch far from the centre). Debounced; the page height after each refresh is the new reference. */
+  var lastH = 0, rt = null;
+  function remeasure() { clearTimeout(rt); rt = setTimeout(function () { ScrollTrigger.refresh(); }, 150); }
+  ScrollTrigger.addEventListener("refresh", function () { lastH = document.body.scrollHeight; });
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(function () {
+      if (Math.abs(document.body.scrollHeight - lastH) > 2) remeasure();
+    }).observe(document.body);
+  }
+  if (document.fonts) {
+    if (document.fonts.ready) document.fonts.ready.then(remeasure);
+    if (document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", remeasure);
+  }
+  window.addEventListener("load", remeasure);
 })();

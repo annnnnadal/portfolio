@@ -151,7 +151,9 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 .wip-badge .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--lime); animation: home-pulse 1.8s ease-out infinite; }
 @keyframes home-pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
 .case-grid-small { margin-top: 40px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.case-empty { aspect-ratio: 4 / 3; border: 1px solid var(--lime); }
+.case-empty { aspect-ratio: 660 / 354; border: 1px solid var(--lime); }   /* the same proportion as the main cards */
+/* WIP watermark: the hero's half-disc in the footer's maroon, centred, 40 % of the thumbnail's height */
+.wip-mark { position: absolute; top: 50%; left: 50%; height: 40%; width: auto; aspect-ratio: 182.58 / 148.03; transform: translate(-50%, -50%); fill: var(--maroon); pointer-events: none; }
 
 /* ---------- Brands marquee ---------- */
 
@@ -180,7 +182,7 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
    of the screen, so it travels down the line and stops at its end. Its pieces come from the static step figures. */
 .how.is-anim .tl-step .figure { display: none; }
 .tl-track { --run: 48px; position: absolute; top: 80px; bottom: 0; left: calc(50% - var(--run) / 2); width: var(--run); z-index: 1; pointer-events: none; }
-.tl-runner { position: sticky; top: calc(50vh - var(--run) / 2); width: var(--run); height: var(--run); background: var(--sky); }   /* hides the line behind it */
+.tl-runner { position: sticky; top: calc(50vh - var(--run) / 2); top: calc(50dvh - var(--run) / 2); width: var(--run); height: var(--run); background: var(--sky); }   /* hides the line behind it; dvh: the same centre ScrollTrigger measures when phone toolbars come and go */
 .run-piece { position: absolute; display: block; }
 .run-piece svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--red); overflow: visible; }
 

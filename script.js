@@ -154,7 +154,8 @@
 
     /* ----- Expanded view: constellations ----- */
 
-    var SIZE = { l: 34, m: 24, s: 16 };                 // width in vw
+    var SIZE = { l: 34, m: 24, s: 16 };                 // width in vw (of the 1440 px container at most)
+    var SIZE_MAX = { l: 560, m: 420, s: 300 };          // and never wider than this, in px
     var DEPTH = { l: 1, m: 0.7, s: 0.45 };              // drift and stacking: larger is closer
     var MOBILE_W = { l: 85, m: 78, s: 70 };             // width in vw on mobile
     var MOBILE_H = { l: 66, m: 60, s: 54 };             // height in svh for tall images on mobile
@@ -295,7 +296,7 @@
             if (f.ar < 1) { h = Math.min(MOBILE_H[f.size] * vh / 100, 1.5 * MOBILE_W[f.size] * vw / 100); w = h * f.ar; }
             else { w = MOBILE_W[f.size] * vw / 100; h = w / f.ar; }
           } else {
-            w = Math.max(SIZE[f.size] * vw / 100, f.ar < 1 ? 200 : 260);
+            w = Math.min(Math.max(SIZE[f.size] * Math.min(vw, 1440) / 100, f.ar < 1 ? 200 : 260), SIZE_MAX[f.size]);
             h = w / f.ar;
             if (h > vh * 0.75) { h = vh * 0.75; w = Math.max(h * f.ar, 200); h = w / f.ar; }   // very tall screens
           }

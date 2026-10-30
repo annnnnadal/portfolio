@@ -6,7 +6,9 @@
      .sh-play    the game: translation and rotation from the physics body, relative to the composed place
      .sh-turn    the composed rotation and scale (the pill lies flat, the triangle points up…)
      .sh-float   the gentle floating
-   Coordinates are px inside .about-frame. Figma coordinates are px of the 1440 frame (node 42:568). */
+   Coordinates are px inside .about-frame, the hero's 1440 px container. Figma coordinates are px of the 1440 frame
+   (node 42:568). The world is the container: a floor along its whole width, walls at both sides, a ceiling at its top,
+   and the texts as invisible static bodies, so the pieces can be thrown anywhere, never cover a text, never leave. */
 (function () {
   "use strict";
   var about = document.querySelector(".about");
@@ -16,20 +18,23 @@
   if (hasST) gsap.registerPlugin(ScrollTrigger);
 
   var IDS = ["half", "diamond", "circle", "pill", "triangle"];     // the stack, top to bottom (diamond and circle side by side)
-  /* The composition (Figma 42:568), per shape: centre of its box, rotation and scale from its drawing to the stack */
+  /* The composition (Figma 42:568), per shape: centre of its box, rotation and scale from its drawing to the stack.
+     It stands under the lead, centre-right, on the floor (the triangle's base, y 946); CX is its middle. */
   var STACK = {
-    half:     { x: 1296,   y: 441.5, rot: 0,     sc: 1 },
-    diamond:  { x: 1212,   y: 558,   rot: 0,     sc: 1 },
-    circle:   { x: 1338,   y: 565,   rot: 0,     sc: 0.872 },
-    pill:     { x: 1277,   y: 674,   rot: 24.19, sc: 1 },
-    triangle: { x: 1263.1, y: 793.5, rot: -22,   sc: 1.4 }
+    half:     { x: 1155.5, y: 560,   rot: 0,     sc: 1 },
+    diamond:  { x: 1070.6, y: 676.6, rot: 0,     sc: 1 },
+    circle:   { x: 1196,   y: 683,   rot: 0,     sc: 0.872 },
+    pill:     { x: 1135,   y: 792.2, rot: 24.19, sc: 1 },
+    triangle: { x: 1121.6, y: 911.8, rot: -22,   sc: 1.4 }
   };
-  var PLAY_RIGHT = 1420, FLOOR = 828;                               // the play area's right edge and floor, in Figma px
-  /* Detours so that nothing crosses the text: the pill goes over the top, the diamond and the circle along the bottom */
+  var FLOOR = 946, CX = 1130, AREA = { l: 1005, r: 1255, t: 426 };   // the floor, and the stack's area (Figma px)
+  /* Paths so that nothing crosses the text (Figma px, centre of the shape): the pill over the headline and down the
+     right side, the half-disc down its right side, the diamond and the circle under the lead */
   var VIA = {
-    pill: [[260, 45], [1277, 45]],
-    diamond: [[157, 770], [1212, 770]],
-    circle: [[231.5, 790], [1338, 790]]
+    pill: [[260, 45], [1300, 45], [1300, 792]],
+    half: [[1250, 317.5], [1250, 560]],
+    diamond: [[157, 800], [1070.6, 800]],
+    circle: [[231.5, 850], [1196, 850]]
   };
 
   var shapes = {};
@@ -56,23 +61,32 @@
   var geo = {};
   function measure() {
     var mobile = mobileMQ.matches;
-    var pr = { left: playArea.offsetLeft, top: playArea.offsetTop, width: playArea.offsetWidth, height: playArea.offsetHeight };
-    pr.right = pr.left + pr.width; pr.bottom = pr.top + pr.height;
     var any = shapes.half;
     var kRest = any.el.offsetWidth / any.w;                       // px per Figma px for the shapes at rest
     var k = mobile ? 0.6 : kRest;                                  // ...and in the stack
+    var map, floor;
+    if (mobile) {
+      // On mobile the stack stands in the area under the copy, centred, on the hero's bottom edge
+      var pa = { left: playArea.offsetLeft, top: playArea.offsetTop, width: playArea.offsetWidth, height: playArea.offsetHeight };
+      floor = pa.top + pa.height;
+      map = function (X, Y) { return { x: pa.left + pa.width / 2 + (X - CX) * k, y: floor - (FLOOR - Y) * k }; };
+    } else {
+      floor = FLOOR * k;
+      map = function (X, Y) { return { x: X * k, y: Y * k }; };
+    }
     IDS.forEach(function (id) {
       var s = shapes[id], st = STACK[id];
       s.rest = { x: s.el.offsetLeft + s.el.offsetWidth / 2, y: s.el.offsetTop + s.el.offsetHeight / 2 };
-      s.target = { x: pr.right - (PLAY_RIGHT - st.x) * k, y: pr.bottom - (FLOOR - st.y) * k };
+      s.target = map(st.x, st.y);
       s.dx = s.target.x - s.rest.x; s.dy = s.target.y - s.rest.y;
       s.rot = st.rot; s.sc = st.sc * k / kRest;
     });
-    geo = { play: pr, k: k, kRest: kRest, mobile: mobile };
+    var a0 = map(AREA.l, AREA.t), a1 = map(AREA.r, FLOOR);
+    geo = { k: k, kRest: kRest, mobile: mobile, floor: floor, W: frame.offsetWidth,
+      play: { left: a0.x, top: a0.y, right: a1.x, bottom: floor, width: a1.x - a0.x, height: floor - a0.y } };
   }
-  function fig(x, y) {                                             // Figma point → translation for a shape (detours)
-    var k = geo.kRest;
-    return { x: x * k, y: y * k };
+  function fig(x, y) {                                             // Figma point → px in the frame (desktop paths)
+    return { x: x * geo.kRest, y: y * geo.kRest };
   }
 
   /* ---------- 1. Floating ---------- */
@@ -130,7 +144,7 @@
 
   function buildWorld() {
     var Bodies = M.Bodies, k = geo.k;
-    var engine = M.Engine.create({ enableSleeping: true });
+    var engine = M.Engine.create({ enableSleeping: true, positionIterations: 10, velocityIterations: 8 });
     engine.gravity.y = 1;
     var opts = { friction: 0.7, frictionStatic: 1, restitution: 0.02, slop: 0.02, density: 0.002 };
     var list = [];
@@ -154,19 +168,22 @@
       }
       list.push({ s: s, body: body, a0: a0, off: off });
     });
-    // Floor, walls, a high ceiling (pieces can be dropped from above) and the shuffle button as an obstacle
-    var P = geo.play, W = 400;
-    var floor = Bodies.rectangle((P.left + P.right) / 2, P.bottom + W / 2, P.width + 2 * W, W, { isStatic: true, friction: 1 });
+    // The container: a floor along its whole width, walls at both sides and a ceiling at its top
+    var W = geo.W, F = geo.floor, T = 400;
+    var floor = Bodies.rectangle(W / 2, F + T / 2, W + 2 * T, T, { isStatic: true, friction: 1 });
     var statics = [floor,
-      Bodies.rectangle(P.left - W / 2, P.bottom - 2000, W, 4000 + W, { isStatic: true }),
-      Bodies.rectangle(P.right + W / 2, P.bottom - 2000, W, 4000 + W, { isStatic: true }),
-      Bodies.rectangle((P.left + P.right) / 2, P.bottom - 4000 - W / 2, P.width + 2 * W, W, { isStatic: true })];
-    var b = shuffleBtn.getBoundingClientRect(), fr = frame.getBoundingClientRect();
-    if (!geo.mobile || b.width) statics.push(Bodies.rectangle(b.left - fr.left + b.width / 2, b.top - fr.top + b.height / 2, b.width + 8, b.height + 8, { isStatic: true }));
+      Bodies.rectangle(-T / 2, F / 2, T, F + 2 * T, { isStatic: true }),
+      Bodies.rectangle(W + T / 2, F / 2, T, F + 2 * T, { isStatic: true }),
+      Bodies.rectangle(W / 2, -T / 2, W + 2 * T, T, { isStatic: true })];
+    // The texts and buttons, line by line, as invisible static bodies: the pieces bounce off them
+    var texts = textRects(), textBodies = texts.map(function (r) {
+      return Bodies.rectangle((r.l + r.r) / 2, (r.t + r.b) / 2, r.r - r.l, r.b - r.t, { isStatic: true, friction: 0.3 });
+    });
+    statics = statics.concat(textBodies);
     M.Composite.add(engine.world, list.map(function (x) { return x.body; }).concat(statics));
     // Asleep until touched: the composition holds as it is
     list.forEach(function (x) { M.Sleeping.set(x.body, true); });
-    return { engine: engine, list: list, floor: floor, drag: null };
+    return { engine: engine, list: list, floor: floor, drag: null, texts: texts, textBodies: textBodies };
   }
 
   function sync() {
@@ -180,13 +197,56 @@
   function loop() {
     raf = 0;
     if (!world || !running || !visible) return;
-    M.Engine.update(world.engine, 1000 / 60);
+    // Two substeps per frame and a speed limit, so a thrown piece never tunnels through a text or the floor
+    for (var n = 0; n < 2; n++) { drive(); M.Engine.update(world.engine, 1000 / 120); limit(); }
     sync();
     checkBalance();
     if (assist && (performance.now() - assist > 4000 || world.list.every(function (x) { return x.body.isSleeping; }))) setAssist(false);
     // Everything asleep and already checked: stop until the next touch or shuffle
     if (!world.drag && (settled || !interacted) && world.list.every(function (x) { return x.body.isSleeping; })) return;
     raf = requestAnimationFrame(loop);
+  }
+  var MAX_V = 18, MAX_W = 0.35;
+  function limit() {
+    var F = geo.floor, W = geo.W;
+    world.list.forEach(function (x) {
+      var b = x.body, v = b.velocity, sp = Math.sqrt(v.x * v.x + v.y * v.y);
+      if (sp > MAX_V) M.Body.setVelocity(b, { x: v.x * MAX_V / sp, y: v.y * MAX_V / sp });
+      if (Math.abs(b.angularVelocity) > MAX_W) M.Body.setAngularVelocity(b, MAX_W * Math.sign(b.angularVelocity));
+      // Outside the hero after all: back above the floor, near the composition
+      var p = b.position;
+      // (or caught over a text, squeezed between two of them: never left covering it)
+      if (p.x < -20 || p.x > W + 20 || p.y > F + 20 || p.y < -20 || (!(world.drag && world.drag.b === b) && overText(b))) {
+        M.Body.setVelocity(b, { x: 0, y: 0 }); M.Body.setAngularVelocity(b, 0);
+        M.Body.setPosition(b, { x: (geo.play.left + geo.play.right) / 2, y: geo.play.top });
+      }
+    });
+  }
+  /* Rectangles (px in the frame) of the texts and buttons of the hero, with a little margin: one solid block per
+     text (the text itself, not its box), since thin line-by-line walls let a dragged piece squeeze between them */
+  function textRects() {
+    var fr = frame.getBoundingClientRect(), out = [], m = 6;
+    function add(r) { if (r.width && r.height) out.push({ l: r.left - fr.left - m, r: r.right - fr.left + m, t: r.top - fr.top - m, b: r.bottom - fr.top + m }); }
+    frame.querySelectorAll(".about-eyebrow, .about h1, .about-lead, .hero-game-label, .hero-game-text").forEach(function (el) {
+      var rg = document.createRange(); rg.selectNodeContents(el);
+      add(rg.getBoundingClientRect());
+    });
+    frame.querySelectorAll(".hero-shuffle, .hero-play-btn").forEach(function (el) { add(el.getBoundingClientRect()); });
+    return out;
+  }
+  function overText(b) {
+    for (var i = 0; i < world.textBodies.length; i++) {
+      var c = M.Collision.collides(b, world.textBodies[i]);
+      if (c && c.depth > 8) return true;
+    }
+    return false;
+  }
+  function inText(x, y, pad) {
+    for (var i = 0; i < world.texts.length; i++) {
+      var r = world.texts[i];
+      if (x > r.l - pad && x < r.r + pad && y > r.t - pad && y < r.b + pad) return r;
+    }
+    return null;
   }
   function wake() { if (world && running && visible && !raf) raf = requestAnimationFrame(loop); }
 
@@ -221,21 +281,40 @@
     interacted = true; shownBalance = false;
     if (assist) setAssist(false);
     M.Sleeping.set(hit, false);
-    var c = M.Constraint.create({ pointA: pt, bodyB: hit, pointB: { x: pt.x - hit.position.x, y: pt.y - hit.position.y }, stiffness: 0.12, damping: 0.08, length: 0 });
-    M.Composite.add(world.engine.world, c);
-    world.drag = { c: c, id: e.pointerId };
+    // The grabbed point, in the piece's own frame (it turns with the piece)
+    var a = -hit.angle, dx = pt.x - hit.position.x, dy = pt.y - hit.position.y;
+    world.drag = { b: hit, off: { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) }, target: pt, id: e.pointerId };
     about.classList.add("is-dragging");
     try { frame.setPointerCapture(e.pointerId); } catch (err) {}
     settled = false; wake();
   }
+  // The pointer pulls the piece, but never into a text: inside one, the pull stops at its nearest edge
+  function outside(pt) {
+    var r = inText(pt.x, pt.y, 8);
+    if (!r) return pt;
+    var d = [pt.x - (r.l - 8), (r.r + 8) - pt.x, pt.y - (r.t - 8), (r.b + 8) - pt.y], m = Math.min.apply(null, d);
+    if (m === d[0]) return { x: r.l - 8, y: pt.y };
+    if (m === d[1]) return { x: r.r + 8, y: pt.y };
+    if (m === d[2]) return { x: pt.x, y: r.t - 8 };
+    return { x: pt.x, y: r.b + 8 };
+  }
   function onMove(e) {
     if (!world || !world.drag || e.pointerId !== world.drag.id) return;
-    world.drag.c.pointA = localPoint(e);
-    M.Sleeping.set(world.drag.c.bodyB, false);
+    world.drag.target = outside(localPoint(e));
+    M.Sleeping.set(world.drag.b, false);
+  }
+  /* Each substep, the grabbed point is driven towards the pointer by its velocity (not by moving it), so the
+     collisions always win: a piece pulled against a text stops at its edge. It swings gently under its own weight. */
+  function drive() {
+    var d = world.drag; if (!d) return;
+    var b = d.b, c = Math.cos(b.angle), sn = Math.sin(b.angle);
+    var gx = b.position.x + d.off.x * c - d.off.y * sn, gy = b.position.y + d.off.x * sn + d.off.y * c;
+    M.Sleeping.set(b, false);
+    M.Body.setVelocity(b, { x: (d.target.x - gx) * 0.35, y: (d.target.y - gy) * 0.35 });
+    M.Body.setAngularVelocity(b, b.angularVelocity * 0.9 + (b.position.x - gx) * 0.00006);
   }
   function endDrag() {
     if (!world || !world.drag) return;
-    M.Composite.remove(world.engine.world, world.drag.c);
     world.drag = null;
     about.classList.remove("is-dragging");
   }
@@ -303,7 +382,7 @@
     var flip = Math.random() < 0.5, pair = function (a) { return flip ? [a, "triangle"] : ["triangle", a]; };
     var rows = Math.random() < 0.5
       ? [["pill"], ["half"], pair("diamond"), ["circle"]]
-      : [["diamond"], ["pill"], ["half"], pair("circle")];
+      : [["diamond"], ["pill"], ["half"], ["triangle", "circle"]];   // the overhanging circle on the side away from the lead
     var POSE = { half: 0.552, diamond: -Math.PI / 4, pill: 0, triangle: 0, circle: 0 };   // from the composed angle
     var P = geo.play, gap = 3 * geo.k, total = 0;
     world.list.forEach(function (x) {
@@ -318,15 +397,17 @@
     // Built just above the floor and dropped from a short height (reduced motion: placed on the floor),
     // all inside the play area, so it usually stands and never falls over the text
     var drop = reduce ? 0 : Math.max(0, Math.min(0.05 * P.height, P.height - total - 8));
-    var bottom = P.bottom - 1 - drop, cx = (P.left + P.right) / 2 + (Math.random() - 0.5) * 16 * geo.k, under = {};
+    var bottom = P.bottom - 1 - drop, cx = (P.left + P.right) / 2 + (geo.mobile ? 0 : 10 * geo.k) + (Math.random() - 0.5) * 12 * geo.k, under = {};
     rows.forEach(function (r) {
       var bs = r.map(box), fs = r.map(function (id, i) { return foot(id, bs[i], r.length); });
       var wAll = fs.reduce(function (t, w) { return t + w; }, 0) + gap * (r.length - 1);
       var left = cx - wAll / 2, hRow = 0;
       r.forEach(function (id, i) {
         var b = by[id].body, bd = b.bounds, q = bs[i];
-        // Side by side; the circle alone sits on the square; a circle on the left overhangs to the left
-        var x = r.length === 1 && id === "circle" ? under.diamond : id === "circle" && i === 0 ? left + fs[i] - q.w / 2 : left + q.w / 2;
+        // Side by side; the circle alone sits on the square. Beside the triangle, the circle may tuck in over the
+        // triangle's slope: both stand near the middle of the half-disc, where it doesn't tip
+        var x = r.length === 1 && id === "circle" ? under.diamond : left + q.w / 2;
+        if (r.join() === "triangle,circle") x = cx + (id === "circle" ? 46 : -46) * geo.k;
         // By the outline, not the centre of mass (the half-disc and the triangle have it off-centre)
         var ox = b.position.x - (bd.min.x + bd.max.x) / 2, oy = b.position.y - (bd.min.y + bd.max.y) / 2;
         M.Body.setPosition(b, { x: x + ox + (Math.random() - 0.5) * 6 * geo.k, y: bottom - q.h / 2 + oy });
@@ -341,7 +422,7 @@
   }
   function setAssist(on) {
     assist = on ? performance.now() : 0;
-    if (world) world.list.forEach(function (x) { x.body.frictionAir = on ? 0.2 : 0.01; });
+    if (world) world.list.forEach(function (x) { x.body.frictionAir = on ? 0.12 : 0.01; });
   }
   shuffleBtn.addEventListener("click", shuffle);
 
@@ -376,31 +457,38 @@
       gsap.set([game, shuffleBtn], { autoAlpha: 0 });
       var tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
       IDS.forEach(function (id) {
-        var s = shapes[id], via = VIA[id];
-        var path = (via || []).map(function (p) { return p; });
-        if (!path.length) {
-          tl.fromTo(s.el, { x: 0, y: 0 }, { x: function () { return s.dx; }, y: function () { return s.dy; }, duration: 0.8 }, 0.2);
-        } else {
-          // Detours, in Figma px from the shape's rest centre (measured each refresh)
-          var seg = [0, 0.3, 0.72, 1];
-          path.concat([null]).forEach(function (p, i) {
-            tl.to(s.el, {
-              x: function () { if (!p) return s.dx; var q = fig(p[0], p[1]); return q.x - s.rest.x; },
-              y: function () { if (!p) return s.dy; var q = fig(p[0], p[1]); return q.y - s.rest.y; },
-              duration: seg[i + 1] - seg[i]
-            }, seg[i]);
-          });
+        var s = shapes[id], via = VIA[id] || [];
+        // Each shape follows its path (rest → detour points → its place in the stack), timed by distance
+        var proxy = { t: 0 };
+        function along(t) {
+          var pts = [{ x: 0, y: 0 }].concat(via.map(function (q) { var f = fig(q[0], q[1]); return { x: f.x - s.rest.x, y: f.y - s.rest.y }; }), [{ x: s.dx, y: s.dy }]);
+          var lens = [], total = 0;
+          for (var i = 1; i < pts.length; i++) { var l = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); lens.push(l); total += l; }
+          var d = t * total, j = 0;
+          while (j < lens.length - 1 && d > lens[j]) { d -= lens[j]; j++; }
+          var u = lens[j] ? Math.min(1, d / lens[j]) : 1;
+          gsap.set(s.el, { x: pts[j].x + (pts[j + 1].x - pts[j].x) * u, y: pts[j].y + (pts[j + 1].y - pts[j].y) * u });
         }
-        tl.fromTo(s.turn, { rotation: 0, scale: 1 }, { rotation: function () { return s.rot; }, scale: function () { return s.sc; }, duration: id === "pill" ? 0.3 : 0.7, transformOrigin: "50% 50%" }, id === "pill" ? 0 : 0.3);
+        tl.fromTo(proxy, { t: 0 }, { t: 1, duration: via.length ? 1 : 0.8, onUpdate: function () { along(proxy.t); } }, via.length ? 0 : 0.15);
+        tl.fromTo(s.turn, { rotation: 0, scale: 1 }, { rotation: function () { return s.rot; }, scale: function () { return s.sc; }, duration: id === "pill" ? 0.25 : 0.7, transformOrigin: "50% 50%" }, id === "pill" ? 0 : 0.3);
       });
       tl.fromTo([game, shuffleBtn], { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12, ease: "none" }, 0.88);
+      /* Pinned with the design centred under the topbar: from the label to the floor. On a short screen the pin
+         starts a little later, so the whole composition is in view; on a tall one it starts at once. */
+      function startAt() {
+        var top = about.getBoundingClientRect().top + window.pageYOffset;
+        var mid = frame.offsetTop + (104 + FLOOR) / 2 * geo.kRest;
+        return Math.max(0, Math.round(top + mid - (40 + (window.innerHeight - 40) / 2)));
+      }
       var st = ScrollTrigger.create({
-        trigger: about, start: "top top+=40", end: "+=50%", pin: true, scrub: 0.6, animation: tl,
+        trigger: about, start: startAt, end: function () { return startAt() + Math.round(window.innerHeight * 0.5); },
+        pin: true, scrub: 0.6, animation: tl,
         invalidateOnRefresh: true, refreshPriority: 2,
         onUpdate: function (self) { amp = 1 - self.progress; },
         onLeave: function () { amp = 0; enterGame(); },
         onEnterBack: function () { exitGame(true); },
-        onRefreshInit: function () { exitGame(false); measure(); },
+        // A refresh (fonts, late images) keeps the game as it is, unless the hero changed size
+        onRefreshInit: function () { var w = frame.offsetWidth; if (!world || w !== geo.W) { exitGame(false); measure(); } },
         onRefresh: function (self) { if (self.progress >= 1) enterGame(); }
       });
       return function () { st.kill(); tl.kill(); exitGame(false); stopFloat(); setComposed(false); };

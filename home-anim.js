@@ -1,7 +1,8 @@
 /* Homepage scroll animations (GSAP + ScrollTrigger, local copies in /vendor).
-   1. Square transitions: the stepped edges build up square by square, scrubbed to the scroll.
+   1. Section colours: the page's background and text colour dissolve from one section to the next.
    2. Principles: pinned, one principle at a time; the figure on the right recomposes from a fixed pool of pieces.
-   With prefers-reduced-motion nothing here runs: the page shows its static design. */
+   3. How I work: one figure travels down the timeline.
+   With prefers-reduced-motion only the colour switch runs: the page shows its static design. */
 (function () {
   "use strict";
   if (!window.gsap || !window.ScrollTrigger) return;
@@ -11,35 +12,68 @@
   var mm = gsap.matchMedia();
   var MOTION = "(prefers-reduced-motion: no-preference)";
 
-  /* ---------- 1. Square transitions ---------- */
+  /* ---------- 1. Section colours: one dissolve per boundary ---------- */
 
-  // Small deterministic randomness, so the order is the same on every visit
-  function rand(seed) { var x = Math.sin(seed * 12.9898) * 43758.5453; return x - Math.floor(x); }
+  /* The page (main) has one background and one text colour, --page-bg / --page-fg; each section declares its pair
+     (data-bg / data-fg). Where the pair changes, the two colours dissolve from one pair to the next while the boundary
+     crosses the screen from 75 % to 35 % of its height, scrubbed. All the changes live in one timeline, laid out in
+     scroll px, so the colour is always the one of the current position, in either direction. Measured after the pins
+     (refreshPriority -1) and again on every refresh. With reduced motion, the colours switch at the boundary. */
+  var page = document.querySelector("main.page");
+  var parts = Array.prototype.slice.call(document.querySelectorAll("main.page > [data-bg]"));
+  var bounds = [];
+  parts.forEach(function (sec, i) {
+    var prev = parts[i - 1];
+    if (prev && (prev.dataset.bg !== sec.dataset.bg || prev.dataset.fg !== sec.dataset.fg)) bounds.push({ sec: sec, from: prev.dataset, to: sec.dataset });
+  });
+  function pair(d) { return { "--page-bg": d.bg, "--page-fg": d.fg }; }
 
-  mm.add(MOTION, function () {
-    root.classList.add("gsap-on");                              // CSS smooth scrolling off: it fights the snapping
-    document.querySelectorAll(".pixel-edge").forEach(function (edge, e) {
-      var down = edge.classList.contains("pixel-edge-down");     // hangs from the section above: grows from its top
-      var squares = Array.prototype.slice.call(edge.querySelectorAll(".px")).map(function (el) {
-        var cs = el.style;
-        return { el: el, x: parseFloat(cs.getPropertyValue("--x")), y: parseFloat(cs.getPropertyValue("--y")) };
+  if (page && parts.length) {
+    gsap.set(page, pair(parts[0].dataset));
+
+    mm.add(MOTION, function () {
+      root.classList.add("gsap-on");                              // CSS smooth scrolling off: it fights the snapping
+      // One trigger per boundary, only to measure where it starts and ends (pins included)
+      var marks = bounds.map(function (b) {
+        return ScrollTrigger.create({ trigger: b.sec, start: "top 75%", end: "top 35%", refreshPriority: -1 });
       });
       var tl = gsap.timeline({ paused: true });
-      squares.forEach(function (sq, i) {
-        // Staggered by column (right to left, from the edge of the screen inwards), with a little randomness;
-        // in a column with two squares, the one nearest the edge goes first.
-        var col = 5 - sq.x;
-        var at = col * 0.16 + rand(i + e * 10 + 1) * 0.1 + (down ? sq.y : 1 - sq.y) * 0.12;
-        gsap.set(sq.el, { scale: 0, transformOrigin: down ? "50% 0%" : "50% 100%" });
-        tl.to(sq.el, { scale: 1, duration: 0.5, ease: "power2.out" }, at);
-      });
-      ScrollTrigger.create({
-        trigger: edge.parentElement, start: "top 40%", end: "top top", scrub: 0.6, animation: tl,
-        refreshPriority: -1                                    // measured after the Principles pin adds its length
-      });
+      var st = ScrollTrigger.create({ start: 0, end: function () { return ScrollTrigger.maxScroll(window); }, scrub: 0.6, animation: tl, refreshPriority: -2 });
+      // Rebuilt in place after every refresh (the positions change), keeping the current progress
+      function build() {
+        var max = ScrollTrigger.maxScroll(window) || 1;
+        tl.clear();
+        tl.set(page, pair(parts[0].dataset), 0);
+        bounds.forEach(function (b, i) {
+          var m = marks[i];
+          tl.fromTo(page, pair(b.from), Object.assign(pair(b.to), { duration: Math.max(1, m.end - m.start), ease: "none", immediateRender: false }), Math.max(0, m.start));
+        });
+        tl.set({}, {}, max);                                      // the timeline is as long as the page scroll
+        tl.progress(Math.min(1, Math.max(0, window.pageYOffset / max)));
+      }
+      build();
+      ScrollTrigger.addEventListener("refresh", build);
+      return function () {
+        ScrollTrigger.removeEventListener("refresh", build);
+        marks.forEach(function (m) { m.kill(); });
+        st.kill(); tl.kill();
+        gsap.set(page, pair(parts[0].dataset));
+        root.classList.remove("gsap-on");
+      };
     });
-    return function () { root.classList.remove("gsap-on"); };
-  });
+
+    // Reduced motion: the colours switch at the boundary (its middle point), with no interpolation
+    mm.add("(prefers-reduced-motion: reduce)", function () {
+      var marks = bounds.map(function (b) {
+        return ScrollTrigger.create({
+          trigger: b.sec, start: "top 55%",
+          onEnter: function () { gsap.set(page, pair(b.to)); },
+          onLeaveBack: function () { gsap.set(page, pair(b.from)); }
+        });
+      });
+      return function () { marks.forEach(function (m) { m.kill(); }); };
+    });
+  }
 
   /* ---------- 2. Principles: one at a time, the figure recomposes ---------- */
 
@@ -116,10 +150,12 @@
           tl.fromTo(pieces[i], { backgroundColor: token(a.c) }, { backgroundColor: token(s.c), duration: 0.1, ease: "none", immediateRender: false }, at + HALF - 0.05 + i * 0.02);
         });
       });
+      // The opening of "Keep it clean" is the page colour, so it follows the dissolve into Case studies
+      tl.set(pieces[3], { backgroundColor: "var(--page-bg)" }, 2.25 + HALF);
 
       var st = ScrollTrigger.create({
         trigger: section,
-        start: "top top+=40",                                  // under the topbar
+        start: "center center+=20",                            // centred under the topbar (it fills that space up to 900 px)
         end: function () { return "+=" + Math.round(window.innerHeight * perPrinciple * 3); },
         pin: true, scrub: 0.5, animation: tl, invalidateOnRefresh: true,
         snap: { snapTo: [0, 0.5, 1], inertia: false, duration: { min: 0.4, max: 0.6 }, ease: "power2.inOut", delay: 0.3 }   // waits for the scroll to stop: a shorter delay snapped between wheel ticks and played the change as a cut

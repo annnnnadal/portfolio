@@ -8,6 +8,8 @@
   --line-strong: #0044ff;
   --grid: rgba(0, 68, 255, 0.04);
   --gutter: clamp(1rem, 3vw, 2.5rem);
+  /* One centred 1440 px container: the side padding of every section and of the topbar (backgrounds full-bleed) */
+  --inline: max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter)));
   --pad: 0.75rem;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -66,13 +68,13 @@ a:hover { text-decoration-thickness: 2px; }
 
 .display {
   font-weight: 500;
-  font-size: clamp(3rem, 11.5vw, 11rem);
+  font-size: clamp(3rem, 11.5vw, 10.35rem);
   line-height: 0.88;
   letter-spacing: -0.055em;
 }
 .h2 {
   font-weight: 500;
-  font-size: clamp(2rem, 5.2vw, 4.75rem);
+  font-size: clamp(2rem, 5.2vw, 4.68rem);
   line-height: 0.95;
   letter-spacing: -0.045em;
 }
@@ -94,7 +96,7 @@ a:hover { text-decoration-thickness: 2px; }
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 2.5rem;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 var(--gutter); background: var(--bg); border-bottom: 1px solid var(--line-strong);
+  padding: 0 var(--inline); background: var(--bg); border-bottom: 1px solid var(--line-strong);
 }
 .topbar-meta { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .sep { color: var(--muted); margin: 0 0.4em; }
@@ -129,7 +131,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Layout ---------- */
 
-.section { position: relative; padding: clamp(4rem, 9vw, 8rem) var(--gutter); }
+.section { position: relative; padding: clamp(4rem, 9vw, 8rem) var(--inline); }
 
 .g {
   position: relative;
@@ -145,7 +147,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Visible 12-column grid, drawn like a blueprint. It stays in the background. */
 .gridlines {
-  position: absolute; inset: 0 var(--gutter);
+  position: absolute; inset: 0 var(--inline);
   display: grid; grid-template-columns: repeat(12, 1fr);
   pointer-events: none; z-index: 0;
 }
@@ -214,7 +216,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
 .case-title {
-  font-weight: 500; font-size: clamp(2.5rem, 8vw, 7.5rem); line-height: 0.92; letter-spacing: -0.05em;
+  font-weight: 500; font-size: clamp(2.5rem, 8vw, 7.2rem); line-height: 0.92; letter-spacing: -0.05em;
   margin-bottom: 1.5rem;
 }
 .case-intro .case-lead {
@@ -233,14 +235,14 @@ a:hover { text-decoration-thickness: 2px; }
 .case-row .link-out { padding-top: 0.25rem; }
 
 /* Direct access to the next project of the same principle */
-.case-next { padding: clamp(3rem, 6vw, 5rem) var(--gutter) clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line-strong); }
+.case-next { padding: clamp(3rem, 6vw, 5rem) var(--inline) clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line-strong); }
 .next-link {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1rem; align-items: end;
   text-decoration: none; color: inherit;
 }
 .next-thumb { grid-column: 1 / 5; }
 .next-text { grid-column: 5 / -1; display: flex; flex-direction: column; gap: 0.75rem; padding-left: var(--pad); }
-.next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.5rem); line-height: 0.95; letter-spacing: -0.045em; }
+.next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 0.95; letter-spacing: -0.045em; }
 .next-title::after { content: " →"; display: inline-block; transition: transform 0.4s var(--ease); }
 .next-link:hover .next-title::after, .next-link:focus-visible .next-title::after { transform: translateX(0.2em); }
 .next-link:focus-visible { outline-offset: 6px; }
@@ -254,8 +256,8 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 1rem 0; background: var(--bg); border-top: 1px solid var(--line);
 }
 .gallery-track {
-  display: flex; gap: 1rem; margin: 0; padding: 0 var(--gutter); list-style: none;
-  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter);
+  display: flex; gap: 1rem; margin: 0; padding: 0 var(--inline); list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--inline);
   scrollbar-width: none; cursor: grab;
 }
 .gallery-track::-webkit-scrollbar { display: none; }
@@ -319,7 +321,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* View toggle, fixed bottom right; above the strip while the strip is shown */
 .view-toggle {
-  position: fixed; right: var(--gutter); bottom: 1rem; z-index: 30;
+  position: fixed; right: var(--inline); bottom: 1rem; z-index: 30;
   display: flex; border: 1px solid var(--ink); background: var(--bg);
 }
 .view-strip .view-toggle { bottom: calc(var(--strip-h, 0px) + 0.75rem); }

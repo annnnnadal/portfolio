@@ -40,7 +40,7 @@
   <main id="main" class="page">
 
     <!-- 01 About -->
-    <section class="about" id="about" data-label="01 — About" aria-labelledby="about-title">
+    <section class="about" data-bg="#F5F5F2" data-fg="#CD2605" id="about" data-label="01 — About" aria-labelledby="about-title">
       <div class="about-frame">
         <div class="about-text">
           <p class="t-label about-eyebrow"><strong>Ana Nadal</strong> — Product &amp; brand design lead</p>
@@ -66,23 +66,25 @@
             <svg class="piece" style="--l:0;--t:0;--w:99.68;--h:99.68;--c:var(--blue)" viewBox="0 0 169.45 169.45" focusable="false"><rect x="44.1484" width="132.856" height="132.856" rx="66.4281" transform="rotate(19.4085 44.1484 0)"></rect></svg>
           </div>
         </div>
-        <!-- The balance game: copy next to the composition, and the play area on the right (hero.js) -->
+        <!-- The balance game (hero.js): the copy and the shuffle button beside the composition; on mobile, the area
+             under the copy where the stack sits (.hero-play) -->
         <div class="hero-game">
           <p class="t-label hero-game-label" aria-live="polite">Touch and play</p>
           <p class="hero-game-text">As a kid I had a wooden set of coloured shapes and spent hours making endless compositions. Now it’s your turn: drag and drop your own. Don’t lose the balance!</p>
-          <button class="hero-play-btn" type="button" aria-pressed="false">Play</button>
+          <div class="hero-game-buttons">
+            <button class="hero-play-btn" type="button" aria-pressed="false">Play</button>
+            <button class="hero-shuffle" type="button" aria-label="Shuffle — a new random composition">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+              <span class="hero-tip" aria-hidden="true">Shuffle — a new random composition</span>
+            </button>
+          </div>
         </div>
-        <div class="hero-play">
-          <button class="hero-shuffle" type="button" aria-label="Shuffle — a new random composition">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-            <span class="hero-tip" aria-hidden="true">Shuffle — a new random composition</span>
-          </button>
-        </div>
+        <div class="hero-play" aria-hidden="true"></div>
       </div>
     </section>
 
     <!-- 02 Principles -->
-    <section class="principles" id="principles" data-label="02 — Principles" aria-labelledby="principles-title">
+    <section class="principles" data-bg="#F5F5F2" data-fg="#CD2605" id="principles" data-label="02 — Principles" aria-labelledby="principles-title">
       <h2 class="t-label" id="principles-title">Principles</h2>
       <ol class="principle-list">
         <li class="principle">
@@ -119,18 +121,14 @@
           <div class="figure figure-seamless" id="figure-clean" style="--fw:191;--fh:202" aria-hidden="true">
             <svg class="piece" style="--l:0;--t:48.13;--w:100;--h:39.11" viewBox="0 97.23 191 79" focusable="false"><rect x="191" y="97.2288" width="79" height="191" transform="rotate(90 191 97.2288)"></rect></svg>
             <svg class="piece" style="--l:0;--t:0.11;--w:100;--h:87.13" viewBox="0 0.23 191 176" focusable="false"><rect y="0.22876" width="191" height="176" rx="88"></rect></svg>
-            <svg class="piece piece-hole" style="--l:28.74;--t:30.92;--w:41.88;--h:56.44;--c:var(--cream)" viewBox="54.89 62.46 80 114" focusable="false"><rect x="134.892" y="62.4576" width="114" height="80" transform="rotate(90 134.892 62.4576)"></rect></svg>
+            <svg class="piece piece-hole" style="--l:28.74;--t:30.92;--w:41.88;--h:56.44;--c:var(--page-bg)" viewBox="54.89 62.46 80 114" focusable="false"><rect x="134.892" y="62.4576" width="114" height="80" transform="rotate(90 134.892 62.4576)"></rect></svg>
           </div>
         </li>
       </ol>
     </section>
 
     <!-- 03 Case studies -->
-    <section class="cases" id="case-studies" data-label="03 — Case studies" aria-labelledby="cases-title">
-      <!-- Stepped edge: red squares rising into the cream above (--x / --y in squares) -->
-      <div class="pixel-edge pixel-edge-up" aria-hidden="true">
-        <span class="px" style="--x:0;--y:0"></span><span class="px" style="--x:1;--y:0.5"></span><span class="px" style="--x:2;--y:0.1875"></span><span class="px" style="--x:3;--y:1"></span><span class="px" style="--x:3;--y:0"></span><span class="px" style="--x:4;--y:0.5"></span><span class="px" style="--x:5;--y:0"></span>
-      </div>
+    <section class="cases" data-bg="#CD2605" data-fg="#E9FFAA" id="case-studies" data-label="03 — Case studies" aria-labelledby="cases-title">
       <!-- The close "x" of each case page points to one of these: it returns to Case studies -->
       <span class="anchor" id="principle-direction"></span><span class="anchor" id="principle-compelling"></span><span class="anchor" id="principle-clean"></span>
       <h2 class="t-label" id="cases-title">Case studies</h2>
@@ -187,39 +185,35 @@
     </section>
 
     <!-- Brands (same red background) -->
-    <section class="brands" aria-labelledby="brands-title">
+    <section class="brands" data-bg="#CD2605" data-fg="#E9FFAA" aria-labelledby="brands-title">
       <h2 class="t-label" id="brands-title">Brands I’ve designed for</h2>
       <div class="marquee">
         <div class="marquee-track">
           <ul class="marquee-set">
-            <li><img src="images/logos/amadeus.svg" width="130" height="18" alt="Amadeus"></li>
-            <li><img src="images/logos/signify.svg" width="98" height="24" alt="Signify"></li>
-            <li><img src="images/logos/bbva.svg" width="80" height="24" alt="BBVA"></li>
-            <li><img src="images/logos/havaianas.svg" width="97" height="28" alt="Havaianas"></li>
-            <li><img src="images/logos/avolta.svg" width="112" height="20" alt="Avolta"></li>
-            <li><img src="images/logos/santander.svg" width="132" height="23" alt="Santander"></li>
-            <li><img src="images/logos/loewe.svg" width="88" height="20" alt="Loewe"></li>
+            <li><span class="logo" role="img" aria-label="Amadeus" style="--m:url(images/logos/amadeus.svg);--lw:130;--lh:18"></span></li>
+            <li><span class="logo" role="img" aria-label="Signify" style="--m:url(images/logos/signify.svg);--lw:98;--lh:24"></span></li>
+            <li><span class="logo" role="img" aria-label="BBVA" style="--m:url(images/logos/bbva.svg);--lw:80;--lh:24"></span></li>
+            <li><span class="logo" role="img" aria-label="Havaianas" style="--m:url(images/logos/havaianas.svg);--lw:97;--lh:28"></span></li>
+            <li><span class="logo" role="img" aria-label="Avolta" style="--m:url(images/logos/avolta.svg);--lw:112;--lh:20"></span></li>
+            <li><span class="logo" role="img" aria-label="Santander" style="--m:url(images/logos/santander.svg);--lw:132;--lh:23"></span></li>
+            <li><span class="logo" role="img" aria-label="Loewe" style="--m:url(images/logos/loewe.svg);--lw:88;--lh:20"></span></li>
           </ul>
           <!-- The same set again, so the loop is seamless -->
           <ul class="marquee-set" aria-hidden="true">
-            <li><img src="images/logos/amadeus.svg" width="130" height="18" alt=""></li>
-            <li><img src="images/logos/signify.svg" width="98" height="24" alt=""></li>
-            <li><img src="images/logos/bbva.svg" width="80" height="24" alt=""></li>
-            <li><img src="images/logos/havaianas.svg" width="97" height="28" alt=""></li>
-            <li><img src="images/logos/avolta.svg" width="112" height="20" alt=""></li>
-            <li><img src="images/logos/santander.svg" width="132" height="23" alt=""></li>
-            <li><img src="images/logos/loewe.svg" width="88" height="20" alt=""></li>
+            <li><span class="logo" style="--m:url(images/logos/amadeus.svg);--lw:130;--lh:18"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/signify.svg);--lw:98;--lh:24"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/bbva.svg);--lw:80;--lh:24"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/havaianas.svg);--lw:97;--lh:28"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/avolta.svg);--lw:112;--lh:20"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/santander.svg);--lw:132;--lh:23"></span></li>
+            <li><span class="logo" style="--m:url(images/logos/loewe.svg);--lw:88;--lh:20"></span></li>
           </ul>
         </div>
       </div>
     </section>
 
     <!-- 04 How I work -->
-    <section class="how" id="how-i-work" data-label="04 — How I work" aria-labelledby="how-title">
-      <!-- Stepped edge: red squares hanging into the blue -->
-      <div class="pixel-edge pixel-edge-down" aria-hidden="true">
-        <span class="px" style="--x:0;--y:0"></span><span class="px" style="--x:1;--y:0.5"></span><span class="px" style="--x:2;--y:0.1875"></span><span class="px" style="--x:3;--y:1"></span><span class="px" style="--x:3;--y:0"></span><span class="px" style="--x:4;--y:0.5"></span><span class="px" style="--x:5;--y:0"></span>
-      </div>
+    <section class="how" data-bg="#DDE7FF" data-fg="#CD2605" id="how-i-work" data-label="04 — How I work" aria-labelledby="how-title">
       <h2 class="t-h2" id="how-title">How I work</h2>
       <p class="t-lead how-intro">How I take a project from the first conversation to the final design.</p>
       <ol class="timeline">

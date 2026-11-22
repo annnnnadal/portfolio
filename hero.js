@@ -231,7 +231,7 @@
       var rg = document.createRange(); rg.selectNodeContents(el);
       add(rg.getBoundingClientRect());
     });
-    frame.querySelectorAll(".hero-shuffle, .hero-play-btn").forEach(function (el) { add(el.getBoundingClientRect()); });
+    frame.querySelectorAll(".hero-shuffle, .hero-play-btn, .mode-switch").forEach(function (el) { add(el.getBoundingClientRect()); });
     return out;
   }
   function overText(b) {

@@ -190,16 +190,21 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Case study pages ---------- */
 
-/* Colours inverted: black page, white text. */
+/* Light page in both modes: cream background; red text in Expressive (like the homepage), near-black in Essential */
 .case-page {
-  --bg: #0a0a0a;
-  --ink: #f5f5f2;
-  --muted: #a8a8a4;
-  --line: rgba(245, 245, 242, 0.18);
-  --line-strong: rgba(245, 245, 242, 0.9);
-  --grid: rgba(255, 255, 255, 0.03);
+  --bg: #f5f5f2;
+  --ink: #cd2605;
+  --muted: rgba(205, 38, 5, 0.78);
+  --line: rgba(205, 38, 5, 0.22);
+  --line-strong: #cd2605;
+  --grid: rgba(205, 38, 5, 0.05);
 }
-.case-page .gen { filter: brightness(0) invert(1); }   /* the blue line art turns white on the black page */
+[data-mode="essential"] .case-page {
+  --ink: #141413;
+  --muted: #4d4d4a;
+  --line: rgba(20, 20, 19, 0.2);
+  --line-strong: #141413;
+}
 
 /* "x" to close the case, top right of the header */
 .close-x { position: relative; display: block; width: 2.5rem; height: 2.5rem; margin-right: calc(var(--gutter) * -1); }
@@ -313,7 +318,7 @@ a:hover { text-decoration-thickness: 2px; }
 .float:focus-visible { outline: none; }
 .float-card { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; will-change: transform; }
 .float-enter {
-  position: relative; display: block; width: 100%; height: 100%; background: #161616;
+  position: relative; display: block; width: 100%; height: 100%; background: #e6e6e2;
   opacity: 0; transform: translateY(calc(var(--from, 1) * 48px)) scale(0.96);
   transition: opacity 0.7s var(--ease), transform 0.9s var(--ease); transition-delay: calc(var(--k, 0) * 80ms);
 }
@@ -451,3 +456,69 @@ html:not(.js) .video-toggle { display: none; }
 @media (prefers-reduced-motion: reduce) { .video-toggle span { transition: none; } }
 
 .figs figcaption { overflow-wrap: anywhere; }
+
+/* ---------- Site modes: the switch (mode.js) ---------- */
+
+/* Centred at the top of the first section, below the topbar, on every page and in both modes:
+   "Expressive", the switch, "Essential". On = Essential. Its description shows as a tooltip on hover and focus. */
+.mode-switch {
+  position: absolute; z-index: 6; top: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 16px;
+}
+html:not(.js) .mode-switch { display: none; }
+.mode-label { font-size: 11px; font-weight: 500; line-height: 1; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; user-select: none; }
+.mode-toggle {
+  position: relative; flex: none; width: 64px; height: 32px; padding: 0; border: 0; border-radius: 99px;
+  background: #ecedee; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); cursor: pointer;
+}
+.mode-knob {
+  position: absolute; top: 2px; left: 2px; width: 28px; height: 28px; border-radius: 50%;
+  background: #ffdb65; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  transition: left 0.2s var(--ease);
+}
+/* Essential: black and white, and still */
+.mode-toggle[aria-checked="true"] { background: #141413; box-shadow: none; }
+.mode-toggle[aria-checked="true"] .mode-knob { left: 34px; background: #fff; box-shadow: none; }
+[data-mode="essential"] .mode-knob { transition: none; }
+.mode-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.mode-tip {
+  position: absolute; top: calc(100% + 10px); left: 50%; width: max-content; max-width: min(88vw, 360px);
+  padding: 7px 10px; background: var(--ink); color: var(--bg); font-size: 12px; line-height: 1.35; text-align: center;
+  opacity: 0; visibility: hidden; transform: translateX(-50%); pointer-events: none;
+}
+.mode-switch:hover .mode-tip, .mode-toggle:focus-visible ~ .mode-tip { opacity: 1; visibility: visible; }
+.case-intro { position: relative; }
+.section > .mode-switch { position: absolute; z-index: 6; }   /* over ".section > *" (which makes children relative) */
+
+/* ---------- Essential case pages ---------- */
+
+html[data-mode="essential"] { scroll-behavior: auto; }   /* no animated scrolling either */
+
+/* Single reading column; each section title small and centred, with a full-width rule below; the gallery is the
+   strip only (script.js), with no tilt, drift or entrance */
+[data-mode="essential"] .case-page .gridlines { display: none; }
+[data-mode="essential"] .case-page .g { display: block; }
+[data-mode="essential"] .case-page .case-intro .span-side { margin-bottom: 1.5rem; }
+[data-mode="essential"] .case-page .case-title { font-size: clamp(2.25rem, 6vw, 5rem); }
+[data-mode="essential"] .case-page .case-row { border-top: 0; padding: 0 0 4rem; }
+[data-mode="essential"] .case-page .case-row > .span-side {
+  margin: 0 calc(var(--inline) * -1) 2.5rem; padding: 12px var(--inline);
+  text-align: center; font-size: 13px; font-weight: 600; line-height: 1; letter-spacing: 0; text-transform: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+[data-mode="essential"] .case-page .case-row:first-of-type > .span-side { border-top: 1px solid var(--line-strong); }
+[data-mode="essential"] .case-page .case-row .text p { font-size: 1.125rem; line-height: 1.55; max-width: 42rem; }
+[data-mode="essential"] .case-page .view-toggle { display: none; }
+[data-mode="essential"] .case-page .gallery-play { animation: none; }
+/* Next project: the small thumbnail (a WIP project shows its homepage row's image instead of the outlined card) */
+.next-thumb .ess-only { display: none; }
+[data-mode="essential"] .case-page .next-empty { border: 0; }
+[data-mode="essential"] .case-page .next-empty .wip-mark { display: none; }
+[data-mode="essential"] .case-page .next-thumb .ess-only { display: block; width: 100%; height: 100%; object-fit: cover; }
+[data-mode="essential"] .case-page .next-link { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+[data-mode="essential"] .case-page .next-thumb { order: 2; flex: none; width: 160px; height: 100px; max-width: none; aspect-ratio: auto; }
+[data-mode="essential"] .case-page .next-title { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+[data-mode="essential"] .case-page .next-title::after { transition: none; }
+@media (max-width: 860px) {
+  [data-mode="essential"] .case-page .next-thumb { width: 112px; height: 70px; margin: 0; }
+}

@@ -205,9 +205,6 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 .wip-badge .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--page-fg); animation: home-pulse 1.8s ease-out infinite; }
 @keyframes home-pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
 .case-grid-small { margin-top: 40px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.case-empty { aspect-ratio: 660 / 354; border: 1px solid var(--page-fg); }   /* the same proportion as the main cards */
-/* WIP watermark: the hero's half-disc in the footer's maroon, centred, 40 % of the thumbnail's height */
-.wip-mark { position: absolute; top: 50%; left: 50%; height: 40%; width: auto; aspect-ratio: 182.58 / 148.03; transform: translate(-50%, -50%); fill: var(--maroon); pointer-events: none; }
 
 /* ---------- Brands marquee ---------- */
 
@@ -228,7 +225,6 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
 /* ---------- 04 How I work ---------- */
 
 .how { position: relative; padding: 80px var(--inline) 80px; }
-.how-intro { margin-top: 40px; }
 .timeline { position: relative; margin-top: 40px; }
 .timeline::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--page-fg); }
 .tl-step { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; }

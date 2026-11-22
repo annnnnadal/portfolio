@@ -249,8 +249,6 @@ a:hover { text-decoration-thickness: 2px; }
    third of the content width (at most 420 px). Without a photo, the WIP card's outline and its half-disc watermark. */
 .next-thumb { grid-column: 1 / 5; position: relative; display: block; width: 100%; max-width: 420px; aspect-ratio: 660 / 354; overflow: hidden; }
 .next-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
-.next-empty { border: 1px solid var(--line-strong); }
-.next-empty .wip-mark { position: absolute; top: 50%; left: 50%; height: 40%; width: auto; aspect-ratio: 182.58 / 148.03; transform: translate(-50%, -50%); fill: #490000; }
 .next-text { grid-column: 5 / -1; display: flex; flex-direction: column; gap: 0.75rem; padding-left: var(--pad); }
 .next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 0.95; letter-spacing: -0.045em; }
 .next-title::after { content: " →"; display: inline-block; transition: transform 0.4s var(--ease); }
@@ -511,10 +509,6 @@ html[data-mode="essential"] { scroll-behavior: auto; }   /* no animated scrollin
 [data-mode="essential"] .case-page .view-toggle { display: none; }
 [data-mode="essential"] .case-page .gallery-play { animation: none; }
 /* Next project: the small thumbnail (a WIP project shows its homepage row's image instead of the outlined card) */
-.next-thumb .ess-only { display: none; }
-[data-mode="essential"] .case-page .next-empty { border: 0; }
-[data-mode="essential"] .case-page .next-empty .wip-mark { display: none; }
-[data-mode="essential"] .case-page .next-thumb .ess-only { display: block; width: 100%; height: 100%; object-fit: cover; }
 [data-mode="essential"] .case-page .next-link { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 [data-mode="essential"] .case-page .next-thumb { order: 2; flex: none; width: 160px; height: 100px; max-width: none; aspect-ratio: auto; }
 [data-mode="essential"] .case-page .next-title { font-size: clamp(1.5rem, 3vw, 2.5rem); }

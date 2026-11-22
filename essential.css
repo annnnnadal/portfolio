@@ -62,13 +62,17 @@ html[data-mode="essential"] .home ::selection { background: var(--ess-fg); color
 [data-mode="essential"] .ess-wip + .ess-rows { padding-top: 56px; }
 [data-mode="essential"] .ess-cases .ess-rows:last-child { padding-bottom: 80px; }
 
-/* Brands: static logos in a 4 × 2 grid, in black */
+/* Brands ("Some of the brands I worked with"): static logos in a 4 × 2 grid, in black */
 [data-mode="essential"] .ess-logos {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 0; padding: 80px var(--inline); list-style: none;
 }
 [data-mode="essential"] .ess-logos li { display: flex; align-items: center; justify-content: center; height: 60px; }
-[data-mode="essential"] .ess-logos img { width: auto; max-width: 70%; height: auto; max-height: 34px; filter: brightness(0); }
+/* Each logo is a mask filled with the text colour (the same files as the Expressive marquee, in lime there) */
+[data-mode="essential"] .ess-logos .logo {
+  display: block; width: calc(var(--lw) * 1px); max-width: 70%; aspect-ratio: var(--lw) / var(--lh); background: var(--ess-fg);
+  -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat;
+}
 
 /* How I work: title on the left, indented a little more at every step; the text on the right */
 [data-mode="essential"] .ess-steps { margin: 0; padding: 80px var(--inline); list-style: none; }

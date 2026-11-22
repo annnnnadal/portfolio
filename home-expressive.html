@@ -37,8 +37,9 @@
             <svg class="piece" style="--l:0;--t:0;--w:99.68;--h:99.68;--c:var(--hero-circle)" viewBox="0 0 169.45 169.45" focusable="false"><rect x="44.1484" width="132.856" height="132.856" rx="66.4281" transform="rotate(19.4085 44.1484 0)"></rect></svg>
           </div>
         </div>
-        <!-- The balance game (hero.js): the copy and the shuffle button beside the composition; on mobile, the area
-             under the copy where the stack sits (.hero-play) -->
+        <!-- The balance game (hero.js). On mobile, the area where the stack sits (.hero-play, its bottom edge is the
+             floor), with the copy, Play and Shuffle under it; on desktop the copy sits beside the composition -->
+        <div class="hero-play" aria-hidden="true"></div>
         <div class="hero-game">
           <p class="t-label hero-game-label" aria-live="polite">Touch and play</p>
           <p class="hero-game-text">As a kid I had a wooden set of coloured shapes and spent hours making endless compositions. Now it’s your turn: drag and drop your own. Don’t lose the balance!</p>
@@ -50,7 +51,6 @@
             </button>
           </div>
         </div>
-        <div class="hero-play" aria-hidden="true"></div>
       </div>
     </section>
 

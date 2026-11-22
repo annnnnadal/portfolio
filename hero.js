@@ -63,7 +63,7 @@
     var mobile = mobileMQ.matches;
     var any = shapes.half;
     var kRest = any.el.offsetWidth / any.w;                       // px per Figma px for the shapes at rest
-    var k = mobile ? 0.6 : kRest;                                  // ...and in the stack
+    var k = mobile ? 0.69 : kRest;                                 // ...and in the stack (mobile: 0.6 + 15 %, easier to touch)
     var map, floor;
     if (mobile) {
       // On mobile the stack stands in the area under the copy, centred, on the hero's bottom edge

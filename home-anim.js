@@ -1,6 +1,6 @@
 /* Homepage scroll animations (GSAP + ScrollTrigger, local copies in /vendor).
    1. Section colours: the page's background and text colour dissolve from one section to the next.
-   2. Principles: pinned, one principle at a time; the figure on the right recomposes from a fixed pool of pieces.
+   2. Principles: pinned, one principle at a time; each figure takes two steps, then grows into the next background.
    3. How I work: one figure travels down the timeline.
    With prefers-reduced-motion only the colour switch runs: the page shows its static design. */
 (function () {
@@ -27,6 +27,7 @@
     if (prev && (prev.dataset.bg !== sec.dataset.bg || prev.dataset.fg !== sec.dataset.fg)) bounds.push({ sec: sec, from: prev.dataset, to: sec.dataset });
   });
   function pair(d) { return { "--page-bg": d.bg, "--page-fg": d.fg }; }
+  var principlesST = null;                                    // the Principles pin (section 2), when there is one
 
   if (page && parts.length) {
     gsap.set(page, pair(parts[0].dataset));
@@ -44,9 +45,16 @@
         var max = ScrollTrigger.maxScroll(window) || 1;
         tl.clear();
         tl.set(page, pair(parts[0].dataset), 0);
+        // Principles: the page turns lavender, then light blue, exactly when the growing figure has filled the section
+        var pst = principlesST, len = pst ? pst.end - pst.start : 0;
+        if (pst) {
+          // (2 px early: the figure has covered the section by then, and the page never lags behind it)
+          tl.set(page, { "--page-bg": "#B7C3F3" }, pst.start + len / 3 - 2);
+          tl.set(page, { "--page-bg": "#DDE7FF" }, pst.start + len * 2 / 3 - 2);
+        }
         bounds.forEach(function (b, i) {
-          var m = marks[i];
-          tl.fromTo(page, pair(b.from), Object.assign(pair(b.to), { duration: Math.max(1, m.end - m.start), ease: "none", immediateRender: false }), Math.max(0, m.start));
+          var m = marks[i], from = pst && b.from.bgEnd ? { bg: b.from.bgEnd, fg: b.from.fg } : b.from;
+          tl.fromTo(page, pair(from), Object.assign(pair(b.to), { duration: Math.max(1, m.end - m.start), ease: "none", immediateRender: false }), Math.max(0, m.start));
         });
         tl.set({}, {}, max);                                      // the timeline is as long as the page scroll
         tl.progress(Math.min(1, Math.max(0, window.pageYOffset / max)));
@@ -75,102 +83,200 @@
     });
   }
 
-  /* ---------- 2. Principles: one at a time, the figure recomposes ---------- */
+  /* ---------- 2. Principles: one at a time; each figure grows into the next background ---------- */
 
+  /* Figma 107:207 (01.1/01.2 85:121 + 85:150, 02.1/02.2 85:178 + 85:218, 03.1/03.2 85:268 + 89:512).
+     The figures are drawn on a stage in Figma px (a 1440 × 800 frame) that is scaled and placed to fit the section:
+     on desktop like the frame (the container's left edge, centred vertically), on mobile the right part of the frame
+     (x 720–1440) above the text. Each principle: step 1 → step 2 over the first 40 % of its scroll, a hold, then (01
+     and 02) the figure grows over the last 30 % until it fills the section and becomes the next background. The
+     background itself is the page colour (--page-bg), switched by the section-colour timeline at the exact moments
+     the growing figure has covered everything, so it never shows a seam. */
   var section = document.querySelector(".principles");
   var list = section && section.querySelector(".principle-list");
   var items = section ? Array.prototype.slice.call(section.querySelectorAll(".principle")) : [];
-  if (section && list && items.length === 3) {
-    /* The stage: one box (223 × 233.5 Figma px, the three figures as placed in Figma) and a pool of 4 pieces,
-       the most any figure needs. Positions in % of the stage; border-radius in % of the piece itself, so
-       everything scales with the stage. A piece not needed in a figure sits exactly behind another one
-       (same box, same colour). Pieces later in the pool are drawn on top. */
-    var W = 223, H = 233.5;
-    // Corner radii (top-left, top-right, bottom-right, bottom-left), each "horizontal% vertical%" of the piece.
-    // Animated corner by corner: GSAP does not read the elliptical "a b / c d" shorthand.
-    var RECT = ["0% 0%", "0% 0%", "0% 0%", "0% 0%"];
-    var HALF = ["1.86% 3.88%", "1.86% 3.88%", "50% 96.12%", "50% 96.12%"];   // flat edge on top, slightly rounded corners
-    var ROUND = ["50% 50%", "50% 50%", "50% 50%", "50% 50%"];
-    var ARCH = ["46.07% 50%", "46.07% 50%", "46.07% 50%", "46.07% 50%"];     // the 191 × 176 rounded rectangle, radius 88
-    var CORNERS = ["borderTopLeftRadius", "borderTopRightRadius", "borderBottomRightRadius", "borderBottomLeftRadius"];
-    function box(x, y, w, h, r, c) {
-      var v = { left: x / W * 100 + "%", top: y / H * 100 + "%", width: w / W * 100 + "%", height: h / H * 100 + "%", c: c };
-      CORNERS.forEach(function (k, i) { v[k] = r[i]; });
-      return v;
+  var BG = ["#F5F5F2", "#B7C3F3", "#DDE7FF"];                // 01 cream, 02 lavender, 03 light blue
+  var EASE = "power2.inOut";
+
+  function el(cls, parent) { var d = document.createElement("div"); d.className = cls; if (parent) parent.appendChild(d); return d; }
+  /* One stage; `only` limits it to one principle's figure (the still version) */
+  function makeStage(host, only) {
+    var stage = el("p-stage"), design = el("p-design", stage), f = { stage: stage, design: design, cols: [] };
+    stage.setAttribute("aria-hidden", "true");
+    if (only == null || only === 0) {
+      // 01: four lines placed like the edges of a staircase, rising to the right (the last one runs off the edge)
+      for (var i = 0; i < 4; i++) { var c = el("p-col", design); c._x = 825 + 205 * i; c._y = 670 - 205 * i; f.cols.push(c); }
     }
-    function geometry(s) { var v = {}; ["left", "top", "width", "height"].concat(CORNERS).forEach(function (k) { v[k] = s[k]; }); return v; }
-    var STATES = [
-      // 01 Show the direction: four steps (each one 2 px wider, tucked under the next, so no joint shows)
-      [box(0, 207, 58, 51, RECT, "yellow"), box(56, 157, 58, 101, RECT, "yellow"), box(112, 106, 57, 152, RECT, "yellow"), box(167, 55, 56, 203, RECT, "yellow")],
-      // 02 Keep it compelling: the half-disc (two pieces) and the circle in front (two pieces)
-      [box(7.1, 103, 214.8, 103, HALF, "green"), box(7.1, 103, 214.8, 103, HALF, "green"), box(58.1, 46.75, 113.1, 113.1, ROUND, "blue"), box(58.1, 46.75, 113.1, 113.1, ROUND, "blue")],
-      // 03 Keep it clean: base (two pieces), arch, and the cream opening in front
-      [box(15, 128.73, 191, 79, RECT, "pink"), box(15, 31.73, 191, 176, ARCH, "pink"), box(15, 128.73, 191, 79, RECT, "pink"), box(69.9, 93.96, 80, 116, RECT, "cream")]
-    ];
-    function token(name) { return getComputedStyle(document.body).getPropertyValue("--" + name).trim(); }
+    if (only == null || only === 1) {
+      // 02: the coral half under the flat side, the large half-disc, and the thin ring outlining the full circle
+      f.fig2 = el("p-fig2", design);
+      f.coral = el("p-half-coral", f.fig2); f.half = el("p-half-big", f.fig2); f.ring = el("p-ring", f.fig2);
+    }
+    if (only == null || only === 2) {
+      // 03: the lime arch, and its mirrored copy hinged on the arch's top
+      f.fig3 = el("p-fig3", design);
+      f.archB = el("p-arch", f.fig3); f.archA = el("p-arch", f.fig3);
+    }
+    host.insertBefore(stage, host.firstChild);
+    return f;
+  }
+  /* Place the stage: scale k, offset (tx, ty) in px; the section's own rectangle in Figma px (the fill), the floor
+     the 01 lines grow to, and how much the 02 half-disc must grow to cover everything */
+  function measure(f, W, H, mobile, areaTop, areaBottom) {
+    var g = {};
+    if (mobile) {
+      var A = Math.max(120, areaBottom - areaTop);
+      g.k = Math.min(W / 720, A / 760);
+      g.tx = (W - 720 * g.k) / 2 - 720 * g.k;
+      g.ty = areaTop + (A - 760 * g.k) / 2 - 40 * g.k;
+    } else {
+      g.k = Math.min(W, 1440) / 1440;
+      g.tx = (W - 1440 * g.k) / 2;
+      g.ty = H / 2 - 400 * g.k;
+    }
+    g.x0 = -g.tx / g.k; g.x1 = (W - g.tx) / g.k; g.y0 = -g.ty / g.k; g.y1 = (H - g.ty) / g.k;
+    g.floor = mobile ? (areaBottom - g.ty) / g.k : g.y1;
+    g.line = 1 / g.k;                                          // 1 screen px
+    // 02: scaled about its centroid, the half-disc's flat side must pass the section's left edge and its dome
+    // must reach every corner (it is turned 90° clockwise by then: dome to the right)
+    var cx = 1075, cy = 406, r = 338, d = 143, S = (cx - g.x0 + 24) / d + 1;
+    function covers(S) {
+      var ccx = cx - d * (S - 1), R = r * S;
+      return [[g.x0, g.y0], [g.x1, g.y0], [g.x0, g.y1], [g.x1, g.y1]].every(function (p) { return Math.hypot(p[0] - ccx, p[1] - cy) < R - 24; });
+    }
+    while (!covers(S) && S < 60) S += 0.5;
+    g.S2 = S;
+    f.geo = g;
+    gsap.set(f.design, { x: g.tx, y: g.ty, scale: g.k });
+    return g;
+  }
+  // The states, in Figma px
+  function col01(f, i, step) {
+    var c = f.cols[i], g = f.geo;
+    var w = 205 + g.line;                                      // one screen px of overlap: no seams between columns
+    if (step === 1) return { left: c._x, top: c._y, width: w, height: g.line };
+    if (step === 2) return { left: c._x, top: c._y, width: w, height: g.floor - c._y };
+    // filled: all of them full height, the first reaching the left edge, the last the right edge
+    var left = i === 0 ? g.x0 - 2 : c._x, right = i === 3 ? Math.max(c._x + 205, g.x1 + 2) : c._x + w;
+    return { left: left, top: g.y0 - 2, width: right - left, height: g.y1 - g.y0 + 4 };
+  }
+  function setStatic(f, which) {
+    // A principle at its step 2 (the still version)
+    if (which === 0) f.cols.forEach(function (c, i) { gsap.set(c, col01(f, i, 2)); });
+    if (which === 1) { gsap.set(f.fig2, { rotation: 90 }); }
+    if (which === 2) { gsap.set(f.fig3, { x: 1099, y: 401 }); gsap.set(f.archB, { scaleY: -1, transformOrigin: "50% 0%" }); }
+  }
 
-    function build(perPrinciple) {
+  if (section && list && items.length === 3) {
+    var texts = items.map(function (li) { return li.querySelector(".principle-text"); });
+
+    var build = function (perPrinciple, mobile) {
       section.classList.add("is-anim");
-      var stage = document.createElement("div");
-      stage.className = "morph";
-      stage.setAttribute("aria-hidden", "true");
-      var pieces = STATES[0].map(function () {
-        var p = document.createElement("span"); p.className = "morph-piece"; stage.appendChild(p); return p;
-      });
-      list.insertBefore(stage, list.firstChild);
-      var texts = items.map(function (li) { return li.querySelector(".principle-text"); });
+      var f = makeStage(section);
+      var steps = el("p-steps"); steps.setAttribute("aria-hidden", "true");
+      var bars = [0, 1, 2].map(function () { var b = document.createElement("span"); b.className = "p-step"; steps.appendChild(b); return b; });
+      section.appendChild(steps);
 
-      function place(i, s, withColour) {
-        var v = geometry(s);
-        if (withColour) v.backgroundColor = token(s.c);
-        gsap.set(pieces[i], v);
+      function place() {
+        var r = section.getBoundingClientRect(), W = r.width, H = r.height, top = 0, bottom = H;
+        if (mobile) {
+          var hTxt = Math.max.apply(null, texts.map(function (t) { return t.offsetHeight; }));
+          top = 56; bottom = H - 48 - hTxt - 24;
+        }
+        measure(f, W, H, mobile, top, bottom);
       }
-      STATES[0].forEach(function (s, i) { place(i, s, true); });
-      gsap.set(texts, { autoAlpha: 0, y: 24 });
-      gsap.set(texts[0], { autoAlpha: 1, y: 0 });
+      place();
+      f.cols.forEach(function (c, i) { gsap.set(c, col01(f, i, 1)); });
 
-      /* Timeline, 3 units long. The rests are at 0, 1.5 and 3 (progress 0, 0.5, 1, where the snapping goes).
-         Between two rests (1.5 units) the change takes 45 % (0.675) and the figure holds for the other 55 %:
-         01 holds 0–0.41, changes 0.41–1.09, 02 holds 1.09–1.91, changes 1.91–2.59, 03 holds 2.59–3. */
-      var tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
-      tl.set({}, {}, 3);                                     // fixes the length
-      var CHANGE = 0.675, HALF = CHANGE / 2;
-      [[0, 1, 0.75 - HALF], [1, 2, 2.25 - HALF]].forEach(function (step) {
-        var from = step[0], to = step[1], at = step[2];
-        // Text, in sequence: the outgoing one fades and rises 24 px in the first half and is gone at the midpoint;
-        // the incoming one comes up from 24 px below in the second half. The number goes with its text.
-        tl.to(texts[from], { autoAlpha: 0, y: -24, duration: HALF, ease: "power2.in" }, at);
-        tl.fromTo(texts[to], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: HALF, ease: "power2.out", immediateRender: false }, at + HALF);
-        // Pieces: the figure recomposes across the whole change; same start and end for all (tiny stagger), straight paths
-        // (from → to, both given, so nothing is read from the page and scrolling back is exact)
-        STATES[to].forEach(function (s, i) {
-          var a = STATES[from][i];
-          tl.fromTo(pieces[i], geometry(a), Object.assign(geometry(s), { duration: CHANGE - 0.06, immediateRender: false }), at + i * 0.02);
-          // The colour changes in the middle of the movement, quickly, so it never looks muddy
-          tl.fromTo(pieces[i], { backgroundColor: token(a.c) }, { backgroundColor: token(s.c), duration: 0.1, ease: "none", immediateRender: false }, at + HALF - 0.05 + i * 0.02);
-        });
+      /* Timeline, 3 units: principle i runs from i to i + 1. Step 1 → 2 over 0–0.4, hold, grow 0.7–1 (01, 02);
+         the text swaps during the grow, after the outgoing text has faded; 03 holds its step 2 to the end. */
+      var tl = gsap.timeline({ defaults: { ease: EASE } });
+      tl.set({}, {}, 3);
+      // Start: 01 at step 1, the others hidden; the first text and step on
+      tl.set(f.cols, { autoAlpha: 1 }, 0);
+      tl.set([f.fig2, f.fig3], { autoAlpha: 0 }, 0);
+      gsap.set(texts, { autoAlpha: 0, y: 24 }); gsap.set(texts[0], { autoAlpha: 1, y: 0 });
+      gsap.set(bars, { width: 1, opacity: 0.35 }); gsap.set(bars[0], { width: 4, opacity: 1 });
+
+      // 01: the lines grow down into a staircase, which then fills the section
+      f.cols.forEach(function (c, i) {
+        tl.fromTo(c, { left: function () { return col01(f, i, 1).left; }, width: function () { return col01(f, i, 1).width; }, top: function () { return col01(f, i, 1).top; }, height: function () { return col01(f, i, 1).height; } },
+          { left: function () { return col01(f, i, 2).left; }, width: function () { return col01(f, i, 2).width; }, top: function () { return col01(f, i, 2).top; }, height: function () { return col01(f, i, 2).height; }, duration: 0.4, immediateRender: false }, 0);
+        tl.fromTo(c, { left: function () { return col01(f, i, 2).left; }, width: function () { return col01(f, i, 2).width; }, top: function () { return col01(f, i, 2).top; }, height: function () { return col01(f, i, 2).height; } },
+          { left: function () { return col01(f, i, 3).left; }, width: function () { return col01(f, i, 3).width; }, top: function () { return col01(f, i, 3).top; }, height: function () { return col01(f, i, 3).height; }, duration: 0.3, immediateRender: false }, 0.7);
       });
-      // The opening of "Keep it clean" is the page colour, so it follows the dissolve into Case studies
-      tl.set(pieces[3], { backgroundColor: "var(--page-bg)" }, 2.25 + HALF);
+      tl.set(f.cols, { autoAlpha: 0 }, 1);                     // the page is lavender now
+      // 02: appears at step 1, turns 90° clockwise, then the large half-disc grows into the next background
+      tl.fromTo(f.fig2, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04, ease: "none", immediateRender: false }, 1);
+      tl.fromTo(f.fig2, { rotation: 0 }, { rotation: 90, duration: 0.4, immediateRender: false }, 1);
+      tl.fromTo(f.ring, { opacity: 1 }, { opacity: 0, duration: 0.08, ease: "none", immediateRender: false }, 1.7);
+      tl.fromTo(f.half, { scale: 1 }, { scale: function () { return f.geo.S2; }, transformOrigin: "338px 195px", duration: 0.3, immediateRender: false }, 1.7);
+      tl.set(f.fig2, { autoAlpha: 0 }, 2);                     // the page is light blue now
+      // 03: the arch, then its mirrored copy unfolds from the hinge, forming the X
+      tl.fromTo(f.fig3, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04, ease: "none", immediateRender: false }, 2);
+      tl.fromTo(f.fig3, { x: 1065, y: 201 }, { x: 1099, y: 401, duration: 0.4, immediateRender: false }, 2);
+      tl.fromTo(f.archB, { scaleY: 1 }, { scaleY: -1, transformOrigin: "50% 0%", duration: 0.4, immediateRender: false }, 2);
+      gsap.set(f.fig3, { x: 1065, y: 201 }); gsap.set(f.archB, { scaleY: 1, transformOrigin: "50% 0%" }); gsap.set(f.fig2, { rotation: 0 });
+      gsap.set(f.half, { scale: 1, transformOrigin: "338px 195px" });
+      // Text and steps: in sequence during each grow (out in its first half, in in its second half)
+      [0, 1].forEach(function (from) {
+        var at = from + 0.7, to = from + 1;
+        tl.to(texts[from], { autoAlpha: 0, y: -24, duration: 0.15, ease: "power2.in" }, at);
+        tl.fromTo(texts[to], { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.15, ease: "power2.out", immediateRender: false }, at + 0.15);
+        tl.to(bars[from], { width: 1, opacity: 0.35, duration: 0.06, ease: "none" }, at + 0.15);
+        tl.fromTo(bars[to], { width: 1, opacity: 0.35 }, { width: 4, opacity: 1, duration: 0.06, ease: "none", immediateRender: false }, at + 0.15);
+      });
 
       var st = ScrollTrigger.create({
         trigger: section,
         start: "center center+=20",                            // centred under the topbar (it fills that space up to 900 px)
         end: function () { return "+=" + Math.round(window.innerHeight * perPrinciple * 3); },
-        pin: true, scrub: 0.5, animation: tl, invalidateOnRefresh: true,
-        snap: { snapTo: [0, 0.5, 1], inertia: false, duration: { min: 0.4, max: 0.6 }, ease: "power2.inOut", delay: 0.3 }   // waits for the scroll to stop: a shorter delay snapped between wheel ticks and played the change as a cut
+        pin: true, scrub: 0.6, animation: tl, invalidateOnRefresh: true,
+        onRefreshInit: place,
+        // Rests: each principle's start (step 1) and its hold (step 2); the end of the pin
+        snap: { snapTo: [0, 0.55 / 3, 1 / 3, 1.55 / 3, 2 / 3, 1], inertia: false, duration: { min: 0.4, max: 0.6 }, ease: "power2.inOut", delay: 0.3 }
       });
+      principlesST = st;
 
       return function () {
+        principlesST = null;
         st.kill(); tl.kill();
-        stage.remove();
+        f.stage.remove(); steps.remove();
         gsap.set(texts, { clearProps: "all" });
         section.classList.remove("is-anim");
       };
-    }
+    };
 
-    mm.add("(min-width: 861px) and " + MOTION, function () { return build(1); });
-    mm.add("(max-width: 860px) and " + MOTION, function () { return build(0.8); });
+    // Reduced motion: no pin; each principle on its own background with its figure at step 2
+    var buildStill = function () {
+      section.classList.add("is-still");
+      var mobile = window.matchMedia("(max-width: 860px)").matches;
+      var stages = items.map(function (li, i) {
+        li.style.background = BG[i];
+        var f = makeStage(li, i);
+        return f;
+      });
+      function place() {
+        stages.forEach(function (f, i) {
+          var li = items[i], r = li.getBoundingClientRect(), t = texts[i];
+          var top = 24, bottom = mobile ? (t.offsetTop - 24) : r.height;
+          measure(f, r.width, r.height, mobile, top, bottom);
+          setStatic(f, i);
+        });
+      }
+      place();
+      ScrollTrigger.addEventListener("refreshInit", place);
+      return function () {
+        ScrollTrigger.removeEventListener("refreshInit", place);
+        stages.forEach(function (f) { f.stage.remove(); });
+        items.forEach(function (li) { li.style.background = ""; });
+        section.classList.remove("is-still");
+      };
+    };
+
+    mm.add("(min-width: 861px) and " + MOTION, function () { return build(1, false); });
+    mm.add("(max-width: 860px) and " + MOTION, function () { return build(0.8, true); });
+    mm.add("(prefers-reduced-motion: reduce)", function () { return buildStill(); });
   }
 
   /* ---------- 3. How I work: one figure travels down the line ---------- */

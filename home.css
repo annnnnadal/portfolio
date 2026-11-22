@@ -15,7 +15,16 @@
   --green: #007923;
   --blue: #0042e5;
   --lilac: #987fff;
-  --blue-hi: #104ffe;   /* the "Hi!" on the pill */
+  /* Hero shapes (floating and in the game) */
+  --hero-pill: #ffdb65;
+  --hero-hi: #e68e00;      /* the "Hi!" on the pill */
+  --hero-diamond: #b7c3f3;
+  --hero-half: #b8deab;
+  --hero-triangle: #ff8f73;
+  --hero-circle: #f0b7b3;
+  /* Principles backgrounds and figures */
+  --lavender: #b7c3f3;
+  --coral: #ff8f73;
   --black: #000;
   /* Shared variables used by styles.css (topbar, skip link, focus) */
   --bg: var(--cream);
@@ -61,12 +70,6 @@
   left: calc(var(--l) * 1%); top: calc(var(--t) * 1%); width: calc(var(--w) * 1%); height: calc(var(--h) * 1%);
   fill: var(--c, currentColor);
 }
-/* No seams: pieces that touch grow by one screen pixel on every side (a 2px stroke that never scales), so
-   neighbours overlap at any size, zoom or pixel density. (Half a pixel each side still left a faint joint at some
-   sizes, because each piece is drawn on its own.) */
-.figure-seamless .piece > * { stroke: var(--c, currentColor); stroke-width: 2px; vector-effect: non-scaling-stroke; stroke-linejoin: miter; }
-/* The cream cut-out of the arch ends on the same line as the pink under it: it grows a bit more, so no pink fringe shows */
-.figure-seamless .piece-hole > * { stroke-width: 4px; }
 
 /* ---------- 01 About ---------- */
 
@@ -130,38 +133,52 @@ html:not(.js) .hero-game { display: none; }
 
 /* ---------- 02 Principles ---------- */
 
+/* Pinned, one principle at a time (home-anim.js adds .is-anim and builds the stage). Each principle has its own
+   background (the page colour, set by the scroll) and figure: two steps, then the figure grows into the next
+   background. The figures are drawn on a stage in Figma px (a 1440 × 800 frame), scaled and placed by home-anim.js.
+   With reduced motion (.is-still): no pin, each principle at its step 2, on its own background. */
 .principles { position: relative; padding: 80px var(--inline) 80px; }
 .principle-list { margin-top: 40px; }
-.principle {
-  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center;
-  min-height: 280px;
-}
 .principle + .principle { margin-top: 40px; }
-.principle-text { grid-column: 1 / 7; }
+.principle-text { max-width: calc(556 * var(--s)); min-width: min(100%, 400px); }
 .principle-text .t-h3 { margin-top: 40px; }
-.principle-text .t-lead { margin-top: 40px; max-width: 680px; }
-.principle { position: relative; }
-/* Placed as in Figma, relative to the principle (--px / --py in Figma px at 1440) */
-.principle .figure { --k: var(--s); position: absolute; left: calc(var(--px) * var(--s)); top: calc(var(--py) * var(--s)); }
-#figure-direction { --px: 1003; --py: 72; --c: var(--yellow); }
-#figure-compelling { --px: 1010; --py: 17; }
-#figure-clean { --px: 1018; --py: 48.5; --c: var(--pink); }
+.principle-text .t-lead { margin-top: 40px; }
 
-/* Pinned, one principle at a time (home-anim.js adds .is-anim; without it, or with reduced motion, the three are stacked) */
 html.gsap-on { scroll-behavior: auto; }   /* smooth CSS scrolling fights the snapping */
-/* Pinned: as tall as the screen under the topbar, up to 900 px (on a tall screen it is pinned centred, so no large
-   empty area opens), with the label and the principle centred together as one block */
-.principles.is-anim { height: min(calc(100svh - 40px), 900px); min-height: 560px; display: flex; flex-direction: column; justify-content: center; padding-top: 40px; padding-bottom: 40px; }
-.principles.is-anim .principle-list { display: grid; margin-top: 40px; }
-.principles.is-anim .principle { grid-area: 1 / 1; margin-top: 0; align-items: start; }   /* the three texts share their top line */
-.principles.is-anim .principle .figure { display: none; }
-/* The stage: one box with the three figures as placed in Figma (223 × 233.5 Figma px), and a pool of 4 pieces */
-.morph {
-  grid-area: 1 / 1; align-self: start; justify-self: start; position: relative; z-index: 1;
-  margin: calc(17 * var(--s)) 0 0 calc(1003 * var(--s));
-  width: calc(223 * var(--s)); height: calc(233.5 * var(--s)); pointer-events: none;
+.principles.is-anim {
+  height: min(calc(100svh - 40px), 900px); min-height: 560px; padding: 0; overflow: hidden;
 }
-.morph-piece { position: absolute; display: block; will-change: left, top, width, height; }
+.principles.is-anim > h2 { position: absolute; z-index: 3; top: 40px; left: var(--inline); }
+.principles.is-anim .principle-list {
+  position: absolute; z-index: 2; inset: 0; margin: 0; display: grid; align-content: center;
+  padding: 0 var(--inline) 0 calc(max(var(--gutter), (100% - 1440px) / 2) + 124 * var(--s));
+}
+.principles.is-anim .principle { grid-area: 1 / 1; margin: 0; }
+/* The stage: figures in Figma px; overflow hidden at the section's edges */
+.p-stage { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+.p-design { position: absolute; left: 0; top: 0; width: 1440px; height: 800px; transform-origin: 0 0; }
+.p-design > div, .p-fig2 > div, .p-fig3 > div { position: absolute; }
+.p-col { background: var(--lavender); }
+.p-fig2 { left: 1075px; top: 406px; width: 0; height: 0; }
+.p-half-big { left: -338px; top: -338px; width: 676px; height: 338px; background: var(--sky); border-radius: 338px 338px 6px 6px / 338px 338px 6px 6px; }
+.p-half-coral { left: -188px; top: 0; width: 376px; height: 188px; background: var(--coral); border-radius: 0 0 188px 188px / 0 0 188px 188px; }
+.p-ring { left: -188px; top: -188px; width: 376px; height: 376px; border: 1.5px solid var(--lavender); border-radius: 50%; }
+.p-fig3 { left: 0; top: 0; width: 0; height: 0; }
+.p-arch { left: -265px; top: 0; width: 530px; height: 265px; box-sizing: border-box; border: 133px solid var(--lime); border-bottom: 0; border-radius: 265px 265px 0 0; }
+/* Scroll steps: three short segments at the far left; the active one 4 px wide and full colour */
+.p-steps { position: absolute; z-index: 3; left: var(--inline); top: 50%; display: flex; flex-direction: column; gap: 4px; transform: translateY(-50%); }
+.p-step { display: block; width: 1px; height: calc(82.67 * var(--s)); min-height: 48px; background: currentColor; opacity: 0.35; }
+.p-step.is-on { width: 4px; opacity: 1; }
+/* Reduced motion: no pin; each principle on its own background with its figure at step 2 */
+.principles.is-still { padding: 80px 0 0; }
+.principles.is-still > h2 { padding: 0 var(--inline); }
+.principles.is-still .principle-list { margin-top: 40px; }
+.principles.is-still .principle {
+  position: relative; overflow: hidden; display: flex; align-items: center;
+  min-height: min(calc(100svh - 40px), 800px); margin: 0;
+  padding: 80px var(--inline) 80px calc(max(var(--gutter), (100% - 1440px) / 2) + 124 * var(--s));
+}
+.principles.is-still .principle-text { position: relative; z-index: 2; }
 
 /* ---------- 03 Case studies ---------- */
 
@@ -304,13 +321,13 @@ a.case-link:focus-visible .case-thumb { outline-width: 2px; }
   .about.is-playing .hero-play { touch-action: none; }
 
   .principles { padding: 64px var(--inline); }
-  .principle { display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
-  .principle + .principle { margin-top: 64px; }
-  .principle .figure { --k: 0.62px; position: relative; left: auto; top: auto; order: -1; margin-bottom: 32px; }
-  /* Pinned on mobile: the figure above the text */
-  .principles.is-anim .principle-list { align-content: start; margin-top: 32px; }
-  .principles.is-anim .principle { grid-area: 2 / 1; }
-  .morph { grid-area: 1 / 1; margin: 0 0 32px; width: calc(223 * 0.62px); height: calc(233.5 * 0.62px); }
+  .principle-text { max-width: none; min-width: 0; }
+  /* Pinned on mobile: the figure above the text, smaller; the text at the bottom */
+  .principles.is-anim > h2 { top: 24px; }
+  .principles.is-anim .principle-list { align-content: end; padding: 0 var(--inline) 48px calc(var(--inline) + 24px); }
+  .p-steps { top: auto; bottom: 48px; transform: none; }
+  .p-step { min-height: 0; height: 40px; }
+  .principles.is-still .principle { flex-direction: column; align-items: stretch; justify-content: flex-end; min-height: 640px; padding: 0 var(--inline) 48px; }
   .principle-text .t-h3, .principle-text .t-lead { margin-top: 24px; }
 
   .cases { padding: 64px var(--inline); }

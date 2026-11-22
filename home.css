@@ -1,0 +1,352 @@
+/* Ana Nadal — homepage. Loaded only by index.html, on top of styles.css (shared: base, topbar, case pages).
+   Everything here is scoped to body.home. Shapes, figures and pixel edges are built from separate elements so later
+   prompts can animate them. */
+
+.home {
+  /* Tokens */
+  --cream: #f5f5f2;
+  --red: #cd2605;
+  --red-dark: #a41e04;
+  --lime: #e9ffaa;
+  --sky: #dde7ff;
+  --maroon: #490000;
+  --pink: #ff91c2;
+  --yellow: #ffc400;
+  --green: #007923;
+  --blue: #0042e5;
+  --lilac: #987fff;
+  /* Hero shapes (floating and in the game) */
+  --hero-pill: #ffdb65;
+  --hero-hi: #e68e00;      /* the "Hi!" on the pill */
+  --hero-diamond: #b7c3f3;
+  --hero-half: #b8deab;
+  --hero-triangle: #ff8f73;
+  --hero-circle: #f0b7b3;
+  /* Principles backgrounds and figures */
+  --lavender: #b7c3f3;
+  --coral: #ff8f73;
+  --black: #000;
+  /* Shared variables used by styles.css (topbar, skip link, focus) */
+  --bg: var(--cream);
+  --ink: var(--red);
+  --muted: var(--red);
+  --line: rgba(205, 38, 5, 0.25);
+  --line-strong: var(--red);
+  --gutter: clamp(1rem, 2.78vw, 2.5rem);   /* 40 px at 1440 */
+  --s: calc(min(100vw, 1440px) / 1440);    /* 1 Figma px at 1440, scaled (a length) */
+  /* One centred 1440 px container: the side padding of every section (backgrounds stay full-bleed) */
+  --inline: max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter)));
+  background: var(--cream);
+  color: var(--red);
+}
+/* The page has one background and one text colour; each section declares its pair (data-bg / data-fg) and
+   home-anim.js dissolves from one pair to the next with the scroll. Sections are transparent. The page stays
+   opaque over the fixed footer. */
+.home main {
+  --page-bg: var(--cream); --page-fg: var(--red);
+  position: relative; z-index: 1; background: var(--page-bg); color: var(--page-fg);
+}
+
+/* ---------- Type ---------- */
+
+.t-label { font-size: 11px; line-height: 1; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.t-label strong { font-weight: 700; }
+.t-lead { font-size: clamp(1.0625rem, 1.53vw, 1.375rem); line-height: 1.4; }                                   /* 22 / 30.8 */
+.t-h3 { font-size: clamp(1.75rem, 2.78vw, 2.5rem); line-height: 1.02; font-weight: 500; letter-spacing: -0.035em; } /* 40 / 40.8, −1.4 */
+.t-h2 { font-size: clamp(2.75rem, 5.2vw, 4.68rem); line-height: 0.95; font-weight: 500; letter-spacing: -0.045em; } /* 74.88 / 71.14, −3.37 */
+.t-card { font-size: clamp(1.25rem, 1.8vw, 1.62rem); line-height: 1.1; font-weight: 500; letter-spacing: -0.03em; } /* 25.92 / 28.51, −0.78 */
+.t-link { font-size: clamp(1.125rem, 1.67vw, 1.5rem); line-height: 1.55; }                                     /* 24 / 37.2 */
+.t-hero { font-size: clamp(3.25rem, 10.42vw, 9.375rem); line-height: 0.95; font-weight: 500; letter-spacing: -0.055em; } /* ≈150 */
+
+/* ---------- Pieces (shared by the shapes, the principle figures and the step figures) ---------- */
+
+/* A figure is a box with the proportions of its Figma frame (--fw × --fh, in Figma px; --k scales it).
+   Each piece is one path of the original SVG (images/shapes/), in its own small <svg> whose viewBox is that
+   path's bounding box, placed with --l / --t / --w / --h (% of the box). Colour: --c (a token), else currentColor.
+   Pieces can be moved one by one (transform). */
+.figure { position: relative; width: calc(var(--fw) * var(--k, 1px)); height: calc(var(--fh) * var(--k, 1px)); flex: none; }
+.piece {
+  position: absolute; display: block; overflow: visible;
+  left: calc(var(--l) * 1%); top: calc(var(--t) * 1%); width: calc(var(--w) * 1%); height: calc(var(--h) * 1%);
+  fill: var(--c, currentColor);
+}
+
+/* ---------- 01 About ---------- */
+
+/* The hero is as tall as its design (982 at 1440), at least the screen under the topbar, with the design centred */
+.about { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; min-height: calc(100svh - 40px); }
+.about-frame {
+  position: relative; width: 100%; max-width: 1440px; margin: 0 auto;
+  min-height: calc(982 * var(--s));
+  padding: calc(104 * var(--s)) var(--gutter) calc(150 * var(--s)) calc(315.5 * var(--s));
+}
+.about-text { position: relative; z-index: 1; max-width: calc(830 * var(--s)); }
+.about-eyebrow { margin-bottom: calc(40 * var(--s)); }
+.about .t-hero { margin-bottom: calc(40 * var(--s)); }
+.about-lead { font-size: clamp(1.25rem, 2.08vw, 1.875rem); line-height: 1.2; letter-spacing: -0.02em; max-width: calc(690 * var(--s)); }
+
+/* Shapes: one box each (its id is the shape), placed in Figma px at 1440 (--x / --y, box --w × --h, scaled by --s),
+   with the pieces of its SVG inside. */
+.shape {
+  position: absolute; display: block;
+  left: calc(var(--x) * var(--s)); top: calc(var(--y) * var(--s));
+  width: calc(var(--w) * var(--s)); height: calc(var(--h) * var(--s));
+}
+
+/* The hero game (hero.js). Each shape gets three nested layers: the game (.sh-play), the composed rotation and
+   scale (.sh-turn) and the floating (.sh-float), so the motions never fight over one transform. */
+.sh-play, .sh-turn, .sh-float { position: absolute; inset: 0; display: block; }
+/* The game copy and the shuffle button, to the right of the composition (Figma 42:568: x 1282, y 782) */
+.hero-game { position: absolute; z-index: 1; left: calc(1282 * var(--s)); top: calc(782 * var(--s)); width: calc(140 * var(--s)); min-width: 118px; }
+/* Narrower desktops: no room beside the stack, so the copy goes under the lead, in the text column */
+@media (min-width: 861px) and (max-width: 1279px) {
+  .hero-game { position: relative; left: auto; top: auto; width: auto; max-width: calc(560 * var(--s)); margin-top: 32px; }
+}
+.hero-game-label { margin-bottom: 8px; }
+.hero-game-text { font-size: 11px; line-height: 13px; }
+.hero-game-buttons { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.hero-play-btn { display: none; }
+.hero-play { display: none; }
+.hero-shuffle {
+  position: relative; z-index: 3; flex: none;
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; padding: 0;
+  border: 1px solid var(--page-fg); background: var(--page-bg); color: var(--page-fg); cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.hero-shuffle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hero-shuffle:focus-visible { background: var(--page-fg); color: var(--page-bg); }
+@media (hover: hover) { .hero-shuffle:hover { background: var(--page-fg); color: var(--page-bg); } }
+.hero-shuffle:focus-visible { outline: 2px solid var(--page-fg); outline-offset: 3px; }
+/* The tooltip opens to the left of the button (to the right there is no room) */
+.hero-tip {
+  position: absolute; right: calc(100% + 10px); top: 50%; white-space: nowrap;
+  padding: 6px 10px; background: var(--page-fg); color: var(--page-bg); font-size: 12px; line-height: 1;
+  opacity: 0; transform: translate(4px, -50%); pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+}
+.hero-shuffle:focus-visible .hero-tip { opacity: 1; transform: translate(0, -50%); }
+@media (hover: hover) { .hero-shuffle:hover .hero-tip { opacity: 1; transform: translate(0, -50%); } }
+/* Without JavaScript (or without the game) there is nothing to play */
+html:not(.js) .hero-game { display: none; }
+.about.is-game .shape .piece { cursor: grab; touch-action: none; }
+.about.is-dragging, .about.is-dragging .shape .piece { cursor: grabbing; }
+.about.is-dragging { user-select: none; -webkit-user-select: none; }
+
+/* ---------- 02 Principles ---------- */
+
+/* Pinned, one principle at a time (home-anim.js adds .is-anim and builds the stage). Each principle has its own
+   background (the page colour, set by the scroll) and figure: two steps, then the figure grows into the next
+   background. The figures are drawn on a stage in Figma px (a 1440 × 800 frame), scaled and placed by home-anim.js.
+   With reduced motion (.is-still): no pin, each principle at its step 2, on its own background. */
+.principles { position: relative; padding: 80px var(--inline) 80px; }
+.principle-list { margin-top: 40px; }
+.principle + .principle { margin-top: 40px; }
+.principle-text { max-width: calc(556 * var(--s)); min-width: min(100%, 400px); }
+.principle-text .t-h3 { margin-top: 40px; }
+.principle-text .t-lead { margin-top: 40px; }
+
+html.gsap-on { scroll-behavior: auto; }   /* smooth CSS scrolling fights the snapping */
+.principles.is-anim {
+  height: min(calc(100svh - 40px), 900px); min-height: 560px; padding: 0; overflow: hidden;
+}
+.principles.is-anim > h2 { position: absolute; z-index: 3; top: 40px; left: var(--inline); }
+.principles.is-anim .principle-list {
+  position: absolute; z-index: 2; inset: 0; margin: 0; display: grid; align-content: center;
+  padding: 0 var(--inline) 0 calc(max(var(--gutter), (100% - 1440px) / 2) + 124 * var(--s));
+}
+.principles.is-anim .principle { grid-area: 1 / 1; margin: 0; }
+/* The stage: figures in Figma px; overflow hidden at the section's edges */
+.p-stage { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+.p-design { position: absolute; left: 0; top: 0; width: 1440px; height: 800px; transform-origin: 0 0; }
+.p-design > div, .p-fig2 > div, .p-fig3 > div { position: absolute; }
+.p-col { background: var(--lavender); }
+.p-fig2 { left: 1075px; top: 406px; width: 0; height: 0; }
+.p-half-big { left: -338px; top: -338px; width: 676px; height: 338px; background: var(--sky); border-radius: 338px 338px 6px 6px / 338px 338px 6px 6px; }
+.p-half-coral { left: -188px; top: 0; width: 376px; height: 188px; background: var(--coral); border-radius: 0 0 188px 188px / 0 0 188px 188px; }
+.p-ring { left: -188px; top: -188px; width: 376px; height: 376px; border: 1.5px solid var(--lavender); border-radius: 50%; }
+.p-fig3 { left: 0; top: 0; width: 0; height: 0; }
+.p-arch { left: -265px; top: 0; width: 530px; height: 265px; box-sizing: border-box; border: 133px solid var(--lime); border-bottom: 0; border-radius: 265px 265px 0 0; }
+/* Scroll steps: three short segments at the far left; the active one 4 px wide and full colour */
+.p-steps { position: absolute; z-index: 3; left: var(--inline); top: 50%; display: flex; flex-direction: column; gap: 4px; transform: translateY(-50%); }
+.p-step { display: block; width: 1px; height: calc(82.67 * var(--s)); min-height: 48px; background: currentColor; opacity: 0.35; }
+.p-step.is-on { width: 4px; opacity: 1; }
+/* Reduced motion: no pin; each principle on its own background with its figure at step 2 */
+.principles.is-still { padding: 80px 0 0; }
+.principles.is-still > h2 { padding: 0 var(--inline); }
+.principles.is-still .principle-list { margin-top: 40px; }
+.principles.is-still .principle {
+  position: relative; overflow: hidden; display: flex; align-items: center;
+  min-height: min(calc(100svh - 40px), 800px); margin: 0;
+  padding: 80px var(--inline) 80px calc(max(var(--gutter), (100% - 1440px) / 2) + 124 * var(--s));
+}
+.principles.is-still .principle-text { position: relative; z-index: 2; }
+
+/* ---------- 03 Case studies ---------- */
+
+.cases { position: relative; padding: 80px var(--inline) 80px; }
+.cases > .t-label { margin-bottom: 40px; }
+.cases > .anchor { position: absolute; top: 0; }
+.case-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+.case-link { display: block; color: inherit; text-decoration: none; }
+.case-thumb { position: relative; display: block; overflow: hidden; aspect-ratio: 660 / 354; }
+.home .cases .card-thumb { border: 0; background: var(--red-dark); aspect-ratio: 660 / 354; }
+.case-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.case-title { display: block; margin-top: 12px; }
+.case-title + .t-label { display: block; margin-top: 8px; line-height: 1.3; }
+.case-soon { display: flex; align-items: center; justify-content: center; background: var(--red-dark); border: 1px solid var(--page-fg); }
+.case-soon em { font-style: italic; font-size: clamp(1.25rem, 1.8vw, 1.62rem); letter-spacing: -0.02em; }
+a.case-link:hover .case-thumb, a.case-link:focus-visible .case-thumb { outline: 1px solid var(--page-fg); outline-offset: 4px; }
+.home .card-btn:hover .card-thumb { outline-color: var(--page-fg); }
+.case-link:focus-visible { outline: none; }
+a.case-link:focus-visible .case-thumb { outline-width: 2px; }
+
+.wip-group { margin-top: 80px; }
+.wip-badge { display: flex; align-items: center; gap: 8px; }   /* a section label like "Case studies", with the pulsing dot */
+.wip-badge .dot { position: relative; width: 6.4px; height: 6.4px; border-radius: 50%; background: var(--page-fg); }
+.wip-badge .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--page-fg); animation: home-pulse 1.8s ease-out infinite; }
+@keyframes home-pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
+.case-grid-small { margin-top: 40px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+
+/* ---------- Brands marquee ---------- */
+
+.brands { padding: 80px 0; }
+.brands > .t-label { padding: 0 var(--inline); }
+.marquee { margin-top: 40px; overflow: hidden; border-top: 1px solid var(--page-fg); border-bottom: 1px solid var(--page-fg); }   /* rules above and below the logos, full width */
+.marquee-track { display: flex; width: max-content; animation: home-marquee 40s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-set { display: flex; }
+.marquee-set li { display: flex; align-items: center; justify-content: center; width: 225px; height: 60px; border-left: 1px solid var(--page-fg); }
+/* Each logo is a mask filled with the page's text colour, so it follows the colour changes */
+.logo {
+  display: block; width: calc(var(--lw) * 1px); max-width: 70%; aspect-ratio: var(--lw) / var(--lh); background: var(--page-fg);
+  -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat;
+}
+@keyframes home-marquee { to { transform: translateX(-50%); } }
+
+/* ---------- 04 How I work ---------- */
+
+.how { position: relative; padding: 80px var(--inline) 80px; }
+.timeline { position: relative; margin-top: 40px; }
+.timeline::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--page-fg); }
+.tl-step { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; }
+.tl-step:last-child { padding-bottom: 80px; }
+.tl-title { grid-column: 1; padding-right: 80px; }
+.tl-text { grid-column: 2; padding-left: 80px; max-width: 680px; }
+.tl-step .figure { position: absolute; top: 80px; left: calc(50% - 24px); z-index: 1; background: var(--page-bg); }   /* the line stops behind the figure, so its gaps read as in the SVG */
+/* Travelling figure (home-anim.js adds .is-anim): one figure in a track as long as the line; it is sticky in the middle
+   of the screen, so it travels down the line and stops at its end. Its pieces come from the static step figures. */
+.how.is-anim .tl-step .figure { display: none; }
+.tl-track { --run: 48px; position: absolute; top: 80px; bottom: 0; left: calc(50% - var(--run) / 2); width: var(--run); z-index: 1; pointer-events: none; }
+.tl-runner { position: sticky; top: calc(50vh - var(--run) / 2); top: calc(50dvh - var(--run) / 2); width: var(--run); height: var(--run); background: var(--page-bg); }   /* hides the line behind it; dvh: the same centre ScrollTrigger measures when phone toolbars come and go */
+.run-piece { position: absolute; display: block; }
+.run-piece svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--page-fg); overflow: visible; }
+
+/* Curved bottom edge: it overhangs the section and rises over the footer */
+.how-curve { position: absolute; top: calc(100% - 1px); left: 0; display: block; width: 100%; height: clamp(40px, 5vw, 72px); fill: var(--page-bg); }
+
+/* ---------- 05 Contact (fixed under the page; the content above slides up and reveals it) ---------- */
+
+.footer-spacer { height: var(--footer-h, 495px); pointer-events: none; }
+.contact {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 0;
+  background: var(--maroon); color: var(--red);
+  --edge: clamp(1rem, 3.6vw, 52px);
+  padding: 80px max(var(--edge), calc((100% - 1440px) / 2 + var(--edge))) 40px;
+}
+.contact.is-static { position: relative; }   /* taller than the screen: it just follows the page (home.js) */
+.contact-title { margin-top: 40px; font-size: clamp(4rem, 10.42vw, 9.375rem); line-height: 0.95; font-weight: 500; letter-spacing: -0.055em; margin-left: -0.04em; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 0 40px; margin-top: 40px; }
+.contact-links a { color: var(--red); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.contact-links a:hover { text-decoration-thickness: 2px; }
+.contact :focus-visible { outline-color: var(--red); }
+.contact-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
+.foot-left { display: flex; align-items: center; gap: 8px; padding: 6px; }
+.foot-text { line-height: 1.2; }
+.foot-right { display: flex; align-items: center; gap: 8px; }
+.foot-pill { display: inline-flex; align-items: center; justify-content: center; width: 65px; height: 23px; border: 1px solid var(--red); border-radius: 12px; }
+.mask-icon { display: block; flex: none; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+.icon-heads { --m: url("images/cabezas-footer.svg"); width: 59px; height: 44px; }
+.icon-date { --m: url("images/fecha-icons.svg"); width: 66px; height: 23px; }
+
+.cat { --cat-edge: clamp(1rem, 3.2vw, 46px); position: absolute; right: max(var(--cat-edge), calc((100% - 1440px) / 2 + var(--cat-edge))); top: 200px; width: clamp(120px, 15.56vw, 224px); }
+.cat svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cat-part { fill: var(--black); }
+.cat-iris { fill: var(--red); }
+.cat-pupil { fill: var(--black); }
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 1100px) {
+  .tl-title { padding-right: 48px; }
+  .tl-text { padding-left: 48px; }
+}
+
+@media (max-width: 860px) {
+  .home { --s: 1px; }
+  /* About: text full width, the shapes in a band above and a band below it (never over the text) */
+  .about-frame { min-height: 0; padding: 150px var(--gutter) 210px; }
+  .about-text, .about-lead { max-width: none; }
+  .about-eyebrow { margin-bottom: 24px; }
+  .about .t-hero { margin-bottom: 24px; }
+  /* Shapes at 0.6 of their size: two above the text, three below */
+  .shapes { --s: 0.6px; }
+  #shape-pill { left: 0; top: 30px; }
+  #shape-half { left: auto; right: 4px; top: 34px; }
+  #shape-diamond { top: auto; bottom: 64px; left: 26px; }
+  #shape-circle { top: auto; bottom: 22px; left: calc(50% - 51px); }
+  #shape-triangle { top: auto; bottom: 84px; left: auto; right: 34px; }
+  /* With the game: no band above the text; the copy with Play and Shuffle, then the area where the stack stands,
+     on the hero's bottom edge (the floor) */
+  .about { min-height: 0; }
+  html.js .about-frame { padding-top: 64px; padding-bottom: 0; }
+  html.js .about .shapes { visibility: hidden; }
+  html.js .about.is-ready .shapes { visibility: visible; }
+  .hero-game { position: relative; left: auto; top: auto; width: auto; min-width: 0; margin-top: 40px; }
+  .hero-game-label { margin-bottom: 10px; }
+  .hero-game-text { max-width: 34em; font-size: 13px; line-height: 1.35; }
+  .hero-game-buttons { margin-top: 14px; }
+  .hero-play-btn {
+    display: inline-block; padding: 9px 16px; border: 1px solid var(--page-fg); border-radius: 999px;
+    background: transparent; color: var(--page-fg); font: inherit; font-size: 13px; line-height: 1; cursor: pointer;
+  }
+  .hero-play-btn[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); }
+  .hero-play-btn:focus-visible { outline: 2px solid var(--page-fg); outline-offset: 3px; }
+  .hero-play { display: block; height: 380px; margin-top: 16px; }
+  html:not(.js) .hero-play { display: none; }
+  .about.is-game .shape .piece { cursor: default; touch-action: auto; }
+  .about.is-playing .shape .piece { cursor: grab; touch-action: none; }
+  .about.is-playing .hero-play { touch-action: none; }
+
+  .principles { padding: 64px var(--inline); }
+  .principle-text { max-width: none; min-width: 0; }
+  /* Pinned on mobile: the figure above the text, smaller; the text at the bottom */
+  .principles.is-anim > h2 { top: 24px; }
+  .principles.is-anim .principle-list { align-content: end; padding: 0 var(--inline) 48px calc(var(--inline) + 24px); }
+  .p-steps { top: auto; bottom: 48px; transform: none; }
+  .p-step { min-height: 0; height: 40px; }
+  .principles.is-still .principle { flex-direction: column; align-items: stretch; justify-content: flex-end; min-height: 640px; padding: 0 var(--inline) 48px; }
+  .principle-text .t-h3, .principle-text .t-lead { margin-top: 24px; }
+
+  .cases { padding: 64px var(--inline); }
+  .case-grid, .case-grid-small { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .wip-group { margin-top: 64px; }
+  .brands { padding: 64px 0; }
+  .marquee-set li { width: 160px; height: 52px; }
+
+  .how { padding: 64px var(--inline); }
+  .timeline::before { left: 23.5px; }
+  .tl-step { grid-template-columns: minmax(0, 1fr); padding: 56px 0 0 72px; }
+  .tl-step:last-child { padding-bottom: 56px; }
+  .tl-title, .tl-text { grid-column: 1; padding: 0; }
+  .tl-text { margin-top: 16px; }
+  .tl-step .figure { left: 0; top: 52px; }
+  .tl-track { --run: 36px; top: 58px; left: 6px; }   /* smaller, on the line at the left */
+
+  .contact { padding: 56px var(--gutter) 32px; }
+  .cat { position: static; width: 120px; margin: 32px 0 0 auto; }
+  .contact-foot { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .wip-badge .dot::after { animation: none; opacity: 0; }
+}

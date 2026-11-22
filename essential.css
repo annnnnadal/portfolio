@@ -1,0 +1,124 @@
+/* Ana Nadal — Essential homepage (Figma "Homepage — Plain", node 97:191). The base page: flat, still and light.
+   Cream background, near-black text, 1 px dark rules, DM Sans only; no shapes, no figures, no motion.
+   Everything is scoped to [data-mode="essential"], so this file never touches the Expressive layer (home.css). */
+
+/* While the Expressive layer is on its way, nothing of the Essential page shows (mode.js swaps it in) */
+html[data-mode="expressive"]:not(.layer-ready) body.home > main,
+html[data-mode="expressive"]:not(.layer-ready) body.home > footer { display: none; }
+
+html[data-mode="essential"] .home {
+  --ess-bg: #f5f5f2;
+  --ess-fg: #141413;
+  --bg: var(--ess-bg);
+  --ink: var(--ess-fg);
+  --muted: var(--ess-fg);
+  --line: rgba(20, 20, 19, 0.2);
+  --line-strong: var(--ess-fg);
+  background: var(--ess-bg);
+  color: var(--ess-fg);
+}
+html[data-mode="essential"] { scroll-behavior: auto; }
+html[data-mode="essential"] .home ::selection { background: var(--ess-fg); color: var(--ess-bg); }
+
+/* Type: the reading size (24 at 1440) and the small semibold titles (13) */
+[data-mode="essential"] .ess-text { margin: 0; font-size: clamp(1.125rem, 1.67vw, 1.5rem); font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; }
+[data-mode="essential"] .ess-small { margin: 0; font-size: 13px; font-weight: 600; line-height: 1.4; }
+[data-mode="essential"] .ess-title {
+  margin: 0; padding: 12px var(--inline); text-align: center;
+  font-size: 13px; font-weight: 600; line-height: 1; border-bottom: 1px solid var(--line-strong);
+}
+[data-mode="essential"] .ess a { color: inherit; }
+[data-mode="essential"] .row-link:focus-visible, [data-mode="essential"] .ess-links a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+/* About: the switch at the top, centred; then the greeting and the paragraph */
+[data-mode="essential"] .ess-about { position: relative; padding: 104px var(--inline) 80px; }
+[data-mode="essential"] .ess-about .ess-text + .ess-text { margin-top: 16px; }
+
+/* Principles: three columns (number, title, text) */
+[data-mode="essential"] .ess-principles {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 80px;
+  margin: 0; padding: 80px var(--inline); list-style: none;
+}
+[data-mode="essential"] .ess-principles li { display: flex; flex-direction: column; gap: 16px; }
+
+/* Case studies: rows (Title · Meta, a small thumbnail on the right), 1 px rules between them; the row is the link */
+[data-mode="essential"] .ess-cases { position: relative; }
+[data-mode="essential"] .ess-cases .anchor { position: absolute; top: 0; }
+[data-mode="essential"] .ess-rows { margin: 0; padding: 80px var(--inline) 0; list-style: none; }
+[data-mode="essential"] .ess-rows .row { border-bottom: 1px solid var(--line-strong); }
+[data-mode="essential"] .row-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  min-height: 109px; padding: 4px 0; text-decoration: none;
+  font-size: clamp(1.125rem, 1.67vw, 1.5rem); line-height: 1.4; letter-spacing: -0.01em;
+}
+[data-mode="essential"] a.row-link:hover .row-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+[data-mode="essential"] .row-thumb { flex: none; display: block; width: 160px; height: 100px; object-fit: cover; }
+[data-mode="essential"] .row-soon { display: flex; align-items: center; justify-content: center; background: #d6d6d2; font-size: 11px; }
+[data-mode="essential"] .ess-wip {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 80px 0 0; font-size: 13px; font-weight: 600; line-height: 1;
+}
+[data-mode="essential"] .ess-wip .dot { width: 6.4px; height: 6.4px; border-radius: 50%; background: currentColor; }   /* static: no pulse */
+[data-mode="essential"] .ess-wip + .ess-rows { padding-top: 56px; }
+[data-mode="essential"] .ess-cases .ess-rows:last-child { padding-bottom: 80px; }
+
+/* Brands ("Some of the brands I worked with"): static logos in a 4 × 2 grid, in black */
+[data-mode="essential"] .ess-logos {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0; padding: 80px var(--inline); list-style: none;
+}
+[data-mode="essential"] .ess-logos li { display: flex; align-items: center; justify-content: center; height: 60px; }
+/* Each logo is a mask filled with the text colour (the same files as the Expressive marquee, in lime there) */
+[data-mode="essential"] .ess-logos .logo {
+  display: block; width: calc(var(--lw) * 1px); max-width: 70%; aspect-ratio: var(--lw) / var(--lh); background: var(--ess-fg);
+  -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat;
+}
+
+/* How I work: title on the left, indented a little more at every step; the text on the right */
+[data-mode="essential"] .ess-steps { margin: 0; padding: 80px var(--inline); list-style: none; }
+[data-mode="essential"] .ess-steps li {
+  --indent: max(0px, calc(var(--i) * 80px - 40px));   /* 0, 40, 120, 200, 280 */
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 300px;
+}
+[data-mode="essential"] .ess-steps li:last-child { min-height: 0; }
+[data-mode="essential"] .ess-steps h3 { padding-left: var(--indent); padding-right: 24px; }
+[data-mode="essential"] .ess-steps p { padding-right: var(--indent); }
+
+/* Contact: a black band with cream text */
+[data-mode="essential"] .ess-contact { background: var(--ess-fg); color: var(--ess-bg); padding-bottom: 40px; }
+[data-mode="essential"] .ess-contact .ess-title { border-bottom-color: rgba(245, 245, 242, 0.6); }
+[data-mode="essential"] .ess-contact-main { display: flex; justify-content: space-between; gap: 40px; padding: 80px var(--inline); }
+[data-mode="essential"] .ess-links { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+[data-mode="essential"] .ess-links a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+[data-mode="essential"] .ess-foot { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--inline); }
+[data-mode="essential"] .ess-foot .foot-left, [data-mode="essential"] .ess-foot .foot-right { display: flex; align-items: center; gap: 8px; }
+[data-mode="essential"] .ess-foot .foot-text { margin: 0; font-size: 11px; font-weight: 500; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.06em; }
+[data-mode="essential"] .ess-foot .foot-pill {
+  display: inline-flex; align-items: center; justify-content: center; width: 65px; height: 23px;
+  border: 1px solid currentColor; border-radius: 12px; font-size: 11px; font-weight: 500;
+}
+[data-mode="essential"] .ess-foot .mask-icon { display: block; flex: none; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+[data-mode="essential"] .ess-foot .icon-heads { --m: url("images/cabezas-footer.svg"); width: 59px; height: 44px; }
+[data-mode="essential"] .ess-foot .icon-date { --m: url("images/fecha-icons.svg"); width: 66px; height: 23px; }
+
+/* Mobile: one column */
+@media (max-width: 860px) {
+  [data-mode="essential"] .ess-about { padding-top: 88px; padding-bottom: 56px; }
+  [data-mode="essential"] .ess-principles { grid-template-columns: minmax(0, 1fr); gap: 48px; padding-top: 56px; padding-bottom: 56px; }
+  [data-mode="essential"] .ess-rows { padding-top: 40px; }
+  [data-mode="essential"] .row-link { min-height: 96px; gap: 16px; }
+  [data-mode="essential"] .row-thumb { width: 112px; height: 70px; }
+  [data-mode="essential"] .row-sep { display: none; }
+  [data-mode="essential"] .row-meta { display: block; font-size: 13px; line-height: 1.4; margin-top: 4px; }
+  [data-mode="essential"] .ess-wip { margin-top: 56px; }
+  [data-mode="essential"] .ess-wip + .ess-rows { padding-top: 24px; }
+  [data-mode="essential"] .ess-cases .ess-rows:last-child { padding-bottom: 56px; }
+  [data-mode="essential"] .ess-logos { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 48px; padding-bottom: 48px; }
+  [data-mode="essential"] .ess-steps { padding-top: 56px; padding-bottom: 56px; }
+  [data-mode="essential"] .ess-steps li { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 12px; }
+  [data-mode="essential"] .ess-steps li + li { margin-top: 48px; }
+  [data-mode="essential"] .ess-steps h3, [data-mode="essential"] .ess-steps p { padding-left: 0; padding-right: 0; }
+  [data-mode="essential"] .ess-steps h3 { font-weight: 600; }
+  [data-mode="essential"] .ess-contact-main { flex-direction: column; padding-top: 48px; padding-bottom: 48px; }
+  [data-mode="essential"] .ess-foot { flex-direction: column; align-items: flex-start; gap: 16px; }
+}

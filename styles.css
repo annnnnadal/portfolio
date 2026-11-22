@@ -8,6 +8,8 @@
   --line-strong: #0044ff;
   --grid: rgba(0, 68, 255, 0.04);
   --gutter: clamp(1rem, 3vw, 2.5rem);
+  /* One centred 1440 px container: the side padding of every section and of the topbar (backgrounds full-bleed) */
+  --inline: max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter)));
   --pad: 0.75rem;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --font: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -66,13 +68,13 @@ a:hover { text-decoration-thickness: 2px; }
 
 .display {
   font-weight: 500;
-  font-size: clamp(3rem, 11.5vw, 11rem);
+  font-size: clamp(3rem, 11.5vw, 10.35rem);
   line-height: 0.88;
   letter-spacing: -0.055em;
 }
 .h2 {
   font-weight: 500;
-  font-size: clamp(2rem, 5.2vw, 4.75rem);
+  font-size: clamp(2rem, 5.2vw, 4.68rem);
   line-height: 0.95;
   letter-spacing: -0.045em;
 }
@@ -94,7 +96,7 @@ a:hover { text-decoration-thickness: 2px; }
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 2.5rem;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 var(--gutter); background: var(--bg); border-bottom: 1px solid var(--line-strong);
+  padding: 0 var(--inline); background: var(--bg); border-bottom: 1px solid var(--line-strong);
 }
 .topbar-meta { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .sep { color: var(--muted); margin: 0 0.4em; }
@@ -129,7 +131,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Layout ---------- */
 
-.section { position: relative; padding: clamp(4rem, 9vw, 8rem) var(--gutter); }
+.section { position: relative; padding: clamp(4rem, 9vw, 8rem) var(--inline); }
 
 .g {
   position: relative;
@@ -145,7 +147,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Visible 12-column grid, drawn like a blueprint. It stays in the background. */
 .gridlines {
-  position: absolute; inset: 0 var(--gutter);
+  position: absolute; inset: 0 var(--inline);
   display: grid; grid-template-columns: repeat(12, 1fr);
   pointer-events: none; z-index: 0;
 }
@@ -156,85 +158,8 @@ a:hover { text-decoration-thickness: 2px; }
 
 .section > *:not(.gridlines) { position: relative; z-index: 1; }
 
-/* ---------- Disclosure (Level 2) ---------- */
+/* ---------- Case thumbnails (the "next project" link on case pages, and the home cards) ---------- */
 
-.toggle {
-  display: inline-flex; align-items: center; gap: 0.75rem;
-  padding: 0.65rem 0; background: none; border: 0; border-bottom: 1px solid var(--ink);
-  font: inherit; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink); cursor: pointer; min-height: 2.75rem;
-}
-.toggle:hover { border-bottom-width: 2px; }
-
-.icon { position: relative; width: 0.75rem; height: 0.75rem; flex: none; }
-.icon::before, .icon::after {
-  content: ""; position: absolute; background: currentColor; transition: transform 0.4s var(--ease);
-}
-.icon::before { left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; }
-.icon::after  { top: 0; bottom: 0; left: calc(50% - 0.5px); width: 1px; }
-[aria-expanded="true"] > .icon::after { transform: scaleY(0); }
-
-.panel { display: grid; grid-template-rows: 1fr; }
-.panel > .panel-inner { min-height: 0; overflow: hidden; }
-.js .panel {
-  grid-template-rows: 0fr; visibility: hidden;
-  transition: grid-template-rows 0.55s var(--ease), visibility 0s linear 0.55s;
-}
-.js .panel[data-open] {
-  grid-template-rows: 1fr; visibility: visible;
-  transition: grid-template-rows 0.55s var(--ease), visibility 0s;
-}
-.js .panel > .panel-inner { opacity: 0; transition: opacity 0.4s var(--ease); }
-.js .panel[data-open] > .panel-inner { opacity: 1; transition-delay: 0.12s; }
-
-/* ---------- 01 Hero ---------- */
-
-.hero { padding-top: clamp(3.5rem, 7vw, 6rem); padding-bottom: clamp(3rem, 6vw, 5rem); display: flex; flex-direction: column; }
-.hero > .g { flex: none; }
-/* While the flower forms, About stays still (guide.js sets the wrapper height and the sticky offset). */
-.hero-pin { position: relative; }
-.hero-pin.is-pinned > .hero { position: sticky; min-height: 100svh; }
-.hero .eyebrow { margin-bottom: clamp(1.5rem, 4vw, 3.5rem); }
-.hero-row {
-  position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
-}
-.hero-row .about { grid-column: 1 / 8; padding: 1.25rem var(--pad) 0; }
-/* Flower (images/flower.svg, inline). Its base is the top centre and it opens downwards.
-   Desktop: four columns wide, in the last four columns, so its axis sits on the third grid line from the right, where the guide line runs.
-   Mobile: full width, under the About text. */
-.hero-flower { grid-column: 1 / -1; margin-top: 2rem; color: var(--ink); pointer-events: none; }
-.hero-flower svg { display: block; width: 100%; height: auto; overflow: hidden; stroke-width: var(--fsw, 1); }   /* 1 px: rings and fan (guide.js keeps it at 1 px at any size) */
-.hero-flower .heavy { stroke-width: calc(var(--fsw, 1) * 2.5); }   /* 2.5 px: the base line and the heavy arcs next to the base */
-#flower-axis { stroke: none; }                                      /* the guide line itself runs along the axis */
-.js .hero-flower path { stroke-dasharray: 1; stroke-dashoffset: 1; visibility: hidden; }
-.js .closing-wave path { visibility: hidden; }   /* guide.js draws the wave with the scroll */
-@media (min-width: 861px) {
-  .hero-flower { position: absolute; top: 0; left: calc(100% * 2 / 3); width: calc(100% / 3); margin: 0; z-index: 2; }
-}
-/* "About me": always visible, same size as the principle headings. */
-.about {
-  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-}
-
-/* ---------- 02 Principles + case studies ---------- */
-
-.principle { border-top: 1px solid var(--line-strong); padding-top: 1.25rem; padding-bottom: 2rem; }
-.principle .h3 { margin-bottom: 0.9rem; }
-.principle > .span-main > .lead { max-width: 54ch; }
-
-.cards-title { margin-top: 2rem; }
-.cards {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;
-  margin-top: 0.75rem;
-}
-.card-btn {
-  display: block; text-decoration: none; width: 100%; padding: 0; background: none; border: 0;
-  text-align: left; font: inherit; color: inherit; cursor: pointer;
-}
-.card-head { font: inherit; }
 .card-thumb {
   position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden;
   border: 1px solid var(--line-strong); background: var(--bg);
@@ -242,100 +167,8 @@ a:hover { text-decoration-thickness: 2px; }
 .card-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .js .card-btn .card-thumb img { will-change: transform; }   /* small parallax on scroll (script.js) */
 .card-thumb img.gen { object-fit: contain; padding: 2%; }
-.card-thumb img.fit { object-fit: contain; }   /* whole image, centred on the background (Resa) */
-.card-btn:hover .card-thumb { outline: 1px solid var(--ink); outline-offset: 3px; }
-.card-btn:focus-visible { outline: none; }
-.card-btn:focus-visible .card-thumb { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-
-.card-info { display: flex; flex-direction: column; gap: 0.25rem; padding-top: 0.75rem; }
-.card-title { font-size: clamp(1.25rem, 1.8vw, 1.625rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
-
-/* WIP label with a pulsing dot */
-.wip {
-  position: absolute; top: 0; left: 0; display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.4rem 0.6rem; background: var(--bg); border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
-  font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1;
-}
-.wip .dot { position: relative; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--ink); }
-.wip .dot::after {
-  content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--ink);
-  animation: pulse 1.8s ease-out infinite;
-}
-@keyframes pulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
-
-.figs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1rem; }
-.figs figure { grid-column: span 6; }
-.figs figure.full { grid-column: 1 / -1; }
-.figs img { width: 100%; height: auto; background: #e8e8e4; border-radius: 0; box-shadow: none; }
-.figs figcaption { margin-top: 0.5rem; }
-
-/* ---------- 03 How I work ---------- */
-
-.steps > li { --bt: 1px; border-top: var(--bt) solid var(--line-strong); }
-.steps > li:first-child { --bt: 0px; }   /* the list starts without a line */
-.step { font-weight: inherit; }
-.step-btn {
-  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: baseline;
-  width: 100%; padding: 1.25rem 0; background: none; border: 0; text-align: left;
-  font: inherit; color: inherit; cursor: pointer;
-}
-.step-btn > * { padding-left: var(--pad); padding-right: var(--pad); }
-.step-btn .name { grid-column: 1 / 7; }
-.step-btn .desc { grid-column: 7 / 12; }
-.step-btn .desc.lead { align-self: center; }
-.step-btn .icon {
-  grid-column: 12 / 13; justify-self: end; align-self: center; margin-right: var(--pad); padding: 0;
-  box-sizing: content-box; opacity: 0; transition: opacity 0.3s var(--ease);
-}
-.step-btn:hover .icon, .step-btn:focus-visible .icon, .step-btn[aria-expanded="true"] .icon { opacity: 1; }
-@media (hover: none) { .step-btn .icon { opacity: 1; } }
-
-.step-detail { padding: 0 0 1.75rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.step-detail > * { grid-column: 1 / 9; padding-left: var(--pad); padding-right: var(--pad); }
-.step-detail .body + .body { margin-top: 0.9em; }
-.step-detail em { font-style: italic; font-weight: 500; }
-
-/* ---------- 04 Contact ---------- */
-
-.contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: -0.02em; margin-left: -0.05em; }
-/* Contact is a stage that stays pinned (sticky) under the header while the scroll draws the guide line and the wave.
-   guide.js gives the section its extra height; it ends exactly when the wave is complete. */
-.contact { padding: 0; }
-.contact > .contact-stage {
-  position: sticky; top: 2.5rem; min-height: calc(100svh - 2.5rem); overflow: hidden;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 40px;
-}
-/* "Let's talk" and the links start on the grid line of column 4 (text indented only by the glyph's own side bearing);
-   "Let's talk" sits 64 px below the label, the links 165 px below the start of "Let's talk". */
-.contact .g > .span-main { padding-left: 0; margin-top: 64px; }
-.contact .display { min-height: 165px; margin: 0 0 0 -0.065em; }
-.finale { position: relative; height: 170px; margin: 230px 0 0; }   /* the wave: the grid's full width, 230 px under the links */
-.closing-wave { display: block; width: 100%; height: 170px; overflow: hidden; }
-.foot {
-  display: flex; justify-content: space-between; align-items: flex-end; margin-top: 28px;
-  position: relative; z-index: 1;
-}
-.foot-left { display: flex; align-items: center; gap: 16px; height: 56px; }
-.foot-left img { display: block; flex: none; }
-.foot-text, .foot-pill {
-  margin: 0; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.5;
-}
-.foot-right { display: flex; align-items: center; gap: 19px; height: 23px; }
-.foot-right img { display: block; flex: none; }
-.foot-pill { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 54px; height: 23px; border: 1px solid var(--ink); border-radius: 12px; line-height: 1; }
-/* Static ornament between Principles and How I work */
-.section > .semicircles { position: absolute; right: var(--gutter); top: calc(100% - 46px); z-index: 2; pointer-events: none; }
-
-/* ---------- Abstract line compositions (SVG) ---------- */
 
 /* ---------- Responsive ---------- */
-
-@media (min-width: 861px) {
-  .step-btn { min-height: calc(102px - var(--bt)); padding: 20px 0 0; align-items: start; }   /* every closed step is 102 px tall; text 21 px under the line */
-  .steps > li:first-child .step-btn { padding-top: 21px; }
-}
 
 @media (max-width: 860px) {
   .span-side, .span-main { grid-column: 1 / -1; }
@@ -343,26 +176,6 @@ a:hover { text-decoration-thickness: 2px; }
   .gridlines { grid-template-columns: repeat(4, 1fr); }
   .gridlines span:nth-child(n+5) { display: none; }
   .gridlines span:nth-child(4) { border-right: 1px solid var(--grid); }
-
-  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hero > .g { order: 1; }
-  .hero > .hero-row { order: 3; }
-  .hero-row .about { grid-column: 1 / -1; }
-  .finale { margin-top: 3rem; height: 110px; }   /* the wave keeps its proportions and shows only its left part (xMinYMid slice) */
-  .closing-wave { height: 110px; }
-  .contact .display { min-height: 0; }
-  .contact .g > .span-main { margin-top: 0; padding-left: var(--pad); }
-  .foot { flex-direction: column; align-items: flex-start; gap: 16px; }   /* heads block, then the © 2026 chip, left aligned */
-
-  .step-btn .name { grid-column: 1 / 11; }
-  .step-btn .desc { grid-column: 1 / 11; margin-top: 0.25rem; }
-  .step-btn .icon { grid-column: 11 / -1; grid-row: 1; }
-  .step-detail > * { grid-column: 1 / -1; }
-  .figs figure { grid-column: 1 / -1; }
-}
-
-@media (max-width: 560px) {
-  .cards { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 480px) {
@@ -372,24 +185,26 @@ a:hover { text-decoration-thickness: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .panel, .js .panel[data-open], .js .panel > .panel-inner,
-  .js .gridlines span, .icon::before, .icon::after, .chev, .chapter-menu,
-  .step-btn .icon { transition: none !important; }
-  .wip .dot::after { animation: none; opacity: 0; }
+  .js .gridlines span, .chev, .chapter-menu { transition: none !important; }
 }
 
 /* ---------- Case study pages ---------- */
 
-/* Colours inverted: black page, white text. */
+/* Light page in both modes: cream background; red text in Expressive (like the homepage), near-black in Essential */
 .case-page {
-  --bg: #0a0a0a;
-  --ink: #f5f5f2;
-  --muted: #a8a8a4;
-  --line: rgba(245, 245, 242, 0.18);
-  --line-strong: rgba(245, 245, 242, 0.9);
-  --grid: rgba(255, 255, 255, 0.03);
+  --bg: #f5f5f2;
+  --ink: #cd2605;
+  --muted: rgba(205, 38, 5, 0.78);
+  --line: rgba(205, 38, 5, 0.22);
+  --line-strong: #cd2605;
+  --grid: rgba(205, 38, 5, 0.05);
 }
-.case-page .gen { filter: brightness(0) invert(1); }   /* the blue line art turns white on the black page */
+[data-mode="essential"] .case-page {
+  --ink: #141413;
+  --muted: #4d4d4a;
+  --line: rgba(20, 20, 19, 0.2);
+  --line-strong: #141413;
+}
 
 /* "x" to close the case, top right of the header */
 .close-x { position: relative; display: block; width: 2.5rem; height: 2.5rem; margin-right: calc(var(--gutter) * -1); }
@@ -406,7 +221,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .case-intro { padding-bottom: clamp(2rem, 4vw, 3rem); }
 .case-title {
-  font-weight: 500; font-size: clamp(2.5rem, 8vw, 7.5rem); line-height: 0.92; letter-spacing: -0.05em;
+  font-weight: 500; font-size: clamp(2.5rem, 8vw, 7.2rem); line-height: 0.92; letter-spacing: -0.05em;
   margin-bottom: 1.5rem;
 }
 .case-intro .case-lead {
@@ -425,14 +240,17 @@ a:hover { text-decoration-thickness: 2px; }
 .case-row .link-out { padding-top: 0.25rem; }
 
 /* Direct access to the next project of the same principle */
-.case-next { padding: clamp(3rem, 6vw, 5rem) var(--gutter) clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line-strong); }
+.case-next { padding: clamp(3rem, 6vw, 5rem) var(--inline) clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line-strong); }
 .next-link {
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1rem; align-items: end;
   text-decoration: none; color: inherit;
 }
-.next-thumb { grid-column: 1 / 5; }
+/* The next project's thumbnail is its homepage card: same image, same 660 × 354 crop, straight corners; about a
+   third of the content width (at most 420 px). Without a photo, the WIP card's outline and its half-disc watermark. */
+.next-thumb { grid-column: 1 / 5; position: relative; display: block; width: 100%; max-width: 420px; aspect-ratio: 660 / 354; overflow: hidden; }
+.next-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; box-shadow: none; }
 .next-text { grid-column: 5 / -1; display: flex; flex-direction: column; gap: 0.75rem; padding-left: var(--pad); }
-.next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.5rem); line-height: 0.95; letter-spacing: -0.045em; }
+.next-title { font-weight: 500; font-size: clamp(2rem, 6vw, 5.4rem); line-height: 0.95; letter-spacing: -0.045em; }
 .next-title::after { content: " →"; display: inline-block; transition: transform 0.4s var(--ease); }
 .next-link:hover .next-title::after, .next-link:focus-visible .next-title::after { transform: translateX(0.2em); }
 .next-link:focus-visible { outline-offset: 6px; }
@@ -446,8 +264,8 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 1rem 0; background: var(--bg); border-top: 1px solid var(--line);
 }
 .gallery-track {
-  display: flex; gap: 1rem; margin: 0; padding: 0 var(--gutter); list-style: none;
-  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter);
+  display: flex; gap: 1rem; margin: 0; padding: 0 var(--inline); list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--inline);
   scrollbar-width: none; cursor: grab;
 }
 .gallery-track::-webkit-scrollbar { display: none; }
@@ -498,7 +316,7 @@ a:hover { text-decoration-thickness: 2px; }
 .float:focus-visible { outline: none; }
 .float-card { display: block; width: 100%; height: 100%; transform-origin: 50% 50%; will-change: transform; }
 .float-enter {
-  position: relative; display: block; width: 100%; height: 100%; background: #161616;
+  position: relative; display: block; width: 100%; height: 100%; background: #e6e6e2;
   opacity: 0; transform: translateY(calc(var(--from, 1) * 48px)) scale(0.96);
   transition: opacity 0.7s var(--ease), transform 0.9s var(--ease); transition-delay: calc(var(--k, 0) * 80ms);
 }
@@ -511,7 +329,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* View toggle, fixed bottom right; above the strip while the strip is shown */
 .view-toggle {
-  position: fixed; right: var(--gutter); bottom: 1rem; z-index: 30;
+  position: fixed; right: var(--inline); bottom: 1rem; z-index: 30;
   display: flex; border: 1px solid var(--ink); background: var(--bg);
 }
 .view-strip .view-toggle { bottom: calc(var(--strip-h, 0px) + 0.75rem); }
@@ -594,7 +412,7 @@ html.viewer-open { overflow: hidden; }
 
 @media (max-width: 860px) {
   .case-row .span-side { margin-bottom: 0.25rem; }
-  .next-thumb { grid-column: 1 / -1; margin-bottom: 1rem; }
+  .next-thumb { grid-column: 1 / -1; max-width: none; margin-bottom: 1rem; }
   .next-text { grid-column: 1 / -1; padding-left: var(--pad); }
 }
 
@@ -637,13 +455,64 @@ html:not(.js) .video-toggle { display: none; }
 
 .figs figcaption { overflow-wrap: anywhere; }
 
-/* ---------- Guide line (home only) ---------- */
+/* ---------- Site modes: the switch (mode.js) ---------- */
 
-.guide {
-  position: absolute; top: 0; left: 0; z-index: 55; overflow: visible;
-  pointer-events: none;                       /* the line never blocks clicks; guide.js listens on the window */
+/* Centred at the top of the first section, below the topbar, on every page and in both modes:
+   "Expressive", the switch, "Essential". On = Essential. Its description shows as a tooltip on hover and focus. */
+.mode-switch {
+  position: absolute; z-index: 6; top: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 16px;
 }
-.guide path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: miter; }
-.guide path { stroke-linecap: square; }       /* square caps fill the 90° corners */
-.guide-local { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 55; }
-.guide-local path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: square; }
+html:not(.js) .mode-switch { display: none; }
+.mode-label { font-size: 11px; font-weight: 500; line-height: 1; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; user-select: none; }
+.mode-toggle {
+  position: relative; flex: none; width: 64px; height: 32px; padding: 0; border: 0; border-radius: 99px;
+  background: #ecedee; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); cursor: pointer;
+}
+.mode-knob {
+  position: absolute; top: 2px; left: 2px; width: 28px; height: 28px; border-radius: 50%;
+  background: #ffdb65; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  transition: left 0.2s var(--ease);
+}
+/* Essential: black and white, and still */
+.mode-toggle[aria-checked="true"] { background: #141413; box-shadow: none; }
+.mode-toggle[aria-checked="true"] .mode-knob { left: 34px; background: #fff; box-shadow: none; }
+[data-mode="essential"] .mode-knob { transition: none; }
+.mode-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.mode-tip {
+  position: absolute; top: calc(100% + 10px); left: 50%; width: max-content; max-width: min(88vw, 360px);
+  padding: 7px 10px; background: var(--ink); color: var(--bg); font-size: 12px; line-height: 1.35; text-align: center;
+  opacity: 0; visibility: hidden; transform: translateX(-50%); pointer-events: none;
+}
+.mode-switch:hover .mode-tip, .mode-toggle:focus-visible ~ .mode-tip { opacity: 1; visibility: visible; }
+.case-intro { position: relative; }
+.section > .mode-switch { position: absolute; z-index: 6; }   /* over ".section > *" (which makes children relative) */
+
+/* ---------- Essential case pages ---------- */
+
+html[data-mode="essential"] { scroll-behavior: auto; }   /* no animated scrolling either */
+
+/* Single reading column; each section title small and centred, with a full-width rule below; the gallery is the
+   strip only (script.js), with no tilt, drift or entrance */
+[data-mode="essential"] .case-page .gridlines { display: none; }
+[data-mode="essential"] .case-page .g { display: block; }
+[data-mode="essential"] .case-page .case-intro .span-side { margin-bottom: 1.5rem; }
+[data-mode="essential"] .case-page .case-title { font-size: clamp(2.25rem, 6vw, 5rem); }
+[data-mode="essential"] .case-page .case-row { border-top: 0; padding: 0 0 4rem; }
+[data-mode="essential"] .case-page .case-row > .span-side {
+  margin: 0 calc(var(--inline) * -1) 2.5rem; padding: 12px var(--inline);
+  text-align: center; font-size: 13px; font-weight: 600; line-height: 1; letter-spacing: 0; text-transform: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+[data-mode="essential"] .case-page .case-row:first-of-type > .span-side { border-top: 1px solid var(--line-strong); }
+[data-mode="essential"] .case-page .case-row .text p { font-size: 1.125rem; line-height: 1.55; max-width: 42rem; }
+[data-mode="essential"] .case-page .view-toggle { display: none; }
+[data-mode="essential"] .case-page .gallery-play { animation: none; }
+/* Next project: the small thumbnail (a WIP project shows its homepage row's image instead of the outlined card) */
+[data-mode="essential"] .case-page .next-link { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+[data-mode="essential"] .case-page .next-thumb { order: 2; flex: none; width: 160px; height: 100px; max-width: none; aspect-ratio: auto; }
+[data-mode="essential"] .case-page .next-title { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+[data-mode="essential"] .case-page .next-title::after { transition: none; }
+@media (max-width: 860px) {
+  [data-mode="essential"] .case-page .next-thumb { width: 112px; height: 70px; margin: 0; }
+}

@@ -37,7 +37,9 @@
   /* Case study thumbnails: a small parallax. The image is a little larger than its frame and drifts
      as the card crosses the viewport. Not on images shown whole (.fit), and not with reduced motion. */
   var parallax = [];
-  var motionOK = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  // Essential mode (data-mode on <html>, see mode.js): no motion at all, wherever this file is used
+  var essential = document.documentElement.getAttribute("data-mode") === "essential";
+  var motionOK = !essential && !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   document.querySelectorAll(".card-btn .card-thumb img:not(.fit)").forEach(function (img) { parallax.push({ img: img, box: img.parentNode, y: null }); });
   var PX = { scale: 1.3, shift: 0.12 };            // shift: share of the frame height, each way (scale leaves 0.15 spare on each side)
   function updateParallax() {
@@ -101,8 +103,10 @@
      "Expanded" (default): the images float beside the text they illustrate, in small constellations, with a slight
      3D tilt, a scroll drift and an entrance. "Strip": a horizontal strip fixed to the bottom of the screen, each
      thumbnail with its own proportions. The list in .case-gallery is the source for both and sets the viewer order.
-     The view is remembered in localStorage ("galleryView"); a small script in <head> applies it before first paint. */
-  var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+     The view is remembered in localStorage ("galleryView"); a small script in <head> applies it before first paint.
+     In Essential mode the strip is the only view (no selector) and nothing moves: no tilt, drift or entrance, and
+     videos play only when asked to, in the viewer. */
+  var reduceMotion = essential || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   var gallery = document.querySelector(".case-gallery");
   if (gallery) {
     var root = document.documentElement;
@@ -154,7 +158,8 @@
 
     /* ----- Expanded view: constellations ----- */
 
-    var SIZE = { l: 34, m: 24, s: 16 };                 // width in vw
+    var SIZE = { l: 34, m: 24, s: 16 };                 // width in vw (of the 1440 px container at most)
+    var SIZE_MAX = { l: 560, m: 420, s: 300 };          // and never wider than this, in px
     var DEPTH = { l: 1, m: 0.7, s: 0.45 };              // drift and stacking: larger is closer
     var MOBILE_W = { l: 85, m: 78, s: 70 };             // width in vw on mobile
     var MOBILE_H = { l: 66, m: 60, s: 54 };             // height in svh for tall images on mobile
@@ -221,8 +226,8 @@
         b.setAttribute("aria-label", src.getAttribute("aria-label"));
         b.innerHTML = '<span class="float-card"><span class="float-enter"></span></span>';
         var enter = b.querySelector(".float-enter");
-        // Soft shadow that follows the tilt, plus a faint glow so the image separates from the dark page
-        enter.style.boxShadow = Math.round(f.ry * -1.6) + "px " + Math.round(22 + f.rx * 1.6) + "px 48px rgba(0, 0, 0, 0.75), 0 0 36px rgba(255, 255, 255, 0.06)";
+        // Soft shadow that follows the tilt
+        enter.style.boxShadow = Math.round(f.ry * -1.6) + "px " + Math.round(22 + f.rx * 1.6) + "px 48px rgba(60, 20, 10, 0.22)";
         if (d.video && !reduceMotion) {
           var v = document.createElement("video");
           v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none";
@@ -295,7 +300,7 @@
             if (f.ar < 1) { h = Math.min(MOBILE_H[f.size] * vh / 100, 1.5 * MOBILE_W[f.size] * vw / 100); w = h * f.ar; }
             else { w = MOBILE_W[f.size] * vw / 100; h = w / f.ar; }
           } else {
-            w = Math.max(SIZE[f.size] * vw / 100, f.ar < 1 ? 200 : 260);
+            w = Math.min(Math.max(SIZE[f.size] * Math.min(vw, 1440) / 100, f.ar < 1 ? 200 : 260), SIZE_MAX[f.size]);
             h = w / f.ar;
             if (h > vh * 0.75) { h = vh * 0.75; w = Math.max(h * f.ar, 200); h = w / f.ar; }   // very tall screens
           }
@@ -456,14 +461,15 @@
     window.addEventListener("load", layout);
     layout();
 
-    /* ----- View toggle: Expanded | Strip ----- */
+    /* ----- View toggle: Expanded | Strip (not in Essential: the strip only) ----- */
 
     var toggle = document.createElement("div");
+    if (essential) { root.classList.remove("view-expanded"); root.classList.add("view-strip"); }
     toggle.className = "view-toggle label";
     toggle.setAttribute("role", "group");
     toggle.setAttribute("aria-label", "Gallery view");
     toggle.innerHTML = '<button type="button" data-view="expanded">Expanded</button><button type="button" data-view="strip">Strip</button>';
-    document.body.appendChild(toggle);
+    if (!essential) document.body.appendChild(toggle);
     var viewBtns = toggle.querySelectorAll("button");
     function syncToggle() {
       var v = expanded() ? "expanded" : "strip";
@@ -494,7 +500,7 @@
       if (ref) window.scrollTo({ top: window.pageYOffset + ref.el.getBoundingClientRect().top - ref.top, behavior: "instant" });
     }
     viewBtns.forEach(function (b) { b.addEventListener("click", function () { setView(b.dataset.view); }); });
-    if (!root.classList.contains("view-strip") && !root.classList.contains("view-expanded")) root.classList.add("view-expanded");
+    if (!root.classList.contains("view-strip") && !root.classList.contains("view-expanded")) root.classList.add(essential ? "view-strip" : "view-expanded");
     syncToggle();
 
     /* Viewer: a native modal <dialog> (the rest of the page becomes inert, focus stays inside, Esc closes) */
@@ -622,7 +628,7 @@
 
   /* Header: current chapter + chapter menu. */
   var sectionLabel = document.getElementById("section-label");
-  var sections = document.querySelectorAll("main section[data-label]");
+  var sections = document.querySelectorAll("[data-label]");
   var menuLinks = document.querySelectorAll("#chapter-menu a");
   function setCurrent(section) {
     if (sectionLabel) sectionLabel.textContent = section.dataset.label;
